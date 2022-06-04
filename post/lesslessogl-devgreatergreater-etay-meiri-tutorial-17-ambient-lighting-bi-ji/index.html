@@ -1,0 +1,224 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《OGL dev》Etay Meiri Tutorial 17 - Ambient Lighting 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654342543105">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《OGL dev》Etay Meiri Tutorial 17 - Ambient Lighting 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="基本光照模型被称为“Ambient/Diffuse/Specular(环境光/漫反射/高光)”。
+Ambient light被建模作为没有来源，没有方向，对场景中的所有物体有相同的效果的光。
+Diffuse lighting强调光照射物体表..." />
+    <meta name="keywords" content="OGL dev" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654342543105" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《OGL dev》Etay Meiri Tutorial 17 - Ambient Lighting 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-03-29
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/YVy0O486v/" class="post-tag">
+                  # OGL dev
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>基本光照模型被称为“Ambient/Diffuse/Specular(环境光/漫反射/高光)”。</p>
+<p>Ambient light被建模作为没有来源，没有方向，对场景中的所有物体有相同的效果的光。</p>
+<p>Diffuse lighting强调光照射物体表面的角度会影响被照亮的物体的亮度。Diffuse lighting最重要的属性是方向。</p>
+<p>Specular lighting是物体的属性，当光以特定的角度照射物体，并且观察者位于特定的位置时，特体的一部分变得耀眼。金属通常有Specular属性。计算Specular lighting必须同时考虑光照(和反射)的方向，和观察者的位置。</p>
+<p>在3D应用中，通常通过光源来使用光照模型。光源是ambient、diffuse和specular强度和属性的组合。</p>
+<p>directional light(平行光)是有方向，没有原点的光源。光线互相平行，无论物体多远光照强度相同。</p>
+<p>太阳光有ambient和diffuse属性。太阳适合directional light。</p>
+<p>纹理采样得到的颜色，三个通道，每一个通道1 byte，因此取值区间为[0, 255]。<br>
+所有通道为0为黑色。<br>
+相同比例缩放所有通道，基本色不变，取决于缩放因子更亮或更暗。</p>
+<p>反射依据自身表面的颜色，反射入射光的一部分，当入射光为白光，反射光会表面的颜色，明暗取决于光照强度。</p>
+<p>将光源颜色指定为区间[0, 1]内的浮点数，ambient强度同样指定为区间[0, 1]内的浮点数，则ambient light的计算公式如下图：<br>
+<img src="https://fire1000.github.io/post-images/1648566875549.png" alt="" loading="lazy"></p>
+<p>ambient light看起来有些人为，不真实，但它能解决物体的一侧被照亮，另一侧全黑的问题。</p>
+<p>global illumination(全局照明)是更高级的技术，它考虑了从物体反射的光和照射其他物体的光，可以完全替代ambient light。</p>
+<p>编译好的shader链接到shader程序之后，就可以通过glDeleteShader()删除它，回收这部分内存。</p>
+<pre><code>struct DirectionalLight
+{
+    vec3 Color;
+    float AmbientIntensity;
+};
+
+uniform DirectionalLight gDirectionalLight;
+</code></pre>
+<pre><code>m_dirLightColorLocation = GetUniformLocation(&quot;gDirectionalLight.Color&quot;);
+m_dirLightAmbientIntensityLocation = GetUniformLocation(&quot;gDirectionalLight.AmbientIntensity&quot;);
+</code></pre>
+<p>shader中struct的用法与C/C++类似，应用需要为shader中struct的每一个字段传递值。</p>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-16-basic-texture-mapping-bi-ji/">
+              <h3 class="post-title">
+                《OGL dev》Etay Meiri Tutorial 16 - Basic Texture Mapping 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,222 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《Primer C++, 5th Edition》Stanley B. Lippman 第1章 开始 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654342543105">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《Primer C++, 5th Edition》Stanley B. Lippman 第1章 开始 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="编译、运行
+C++源文件，常见后辍名：.cc、.cxx、.cpp、.cp、.c。
+头文件，常见后辍名：.h、.H、.hpp、.hxx。标准库头文件无后辍。
+Windows系统下执行文件不需要后辍名，如$ prog1。Unix系统下需要，如$..." />
+    <meta name="keywords" content="Primer C++" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654342543105" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《Primer C++, 5th Edition》Stanley B. Lippman 第1章 开始 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-02-11
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/o9RLdT_jv/" class="post-tag">
+                  # Primer C++
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h2 id="编译-运行">编译、运行</h2>
+<p>C++源文件，常见后辍名：.cc、.cxx、.cpp、.cp、.c。<br>
+头文件，常见后辍名：.h、.H、.hpp、.hxx。标准库头文件无后辍。</p>
+<p>Windows系统下执行文件不需要后辍名，如<code>$ prog1</code>。Unix系统下需要，如<code>$ a.out</code>。一些系统中必须指名路径(即使在当前目录)。Windows使用反斜杠，如<code>$ .\prog1</code>，Unix使用斜杠，<code>$ ./a.out</code>。</p>
+<p>Windows系统中使用<code>$ echo %ERRORLEVEL%</code>，显示上一个执行的程序的main的返回值。Unix中对应的命令是<code>$ echo $?</code></p>
+<p>gcc、g++使用<code>-std=c++0x</code>启动C++11支持。<code>-Wall</code>启用警告。<br>
+VS编译命令<code>$ cl /EHsc prog1.cpp</code>，生成prog1.exe。cl为编译器，<code>/EHsc</code>打开标准异常处理，<code>/W4</code>启动警告。</p>
+<h2 id="输入-输出">输入、输出</h2>
+<p><iostream>包含四个对象：</p>
+<ol>
+<li>istream类型：cin(标准输入)</li>
+<li>ostream类型：cout(标准输出)、cerr(标准错误)、clog(用于输出一般信息)</li>
+</ol>
+<p>endl：换行，并将输出缓冲刷到设备中。<br>
+<code>std::cin &gt;&gt; v1 &gt;&gt; v2;</code>等价于<code>std::cin &gt;&gt; v1; std::cin &gt;&gt; v2;</code>。<br>
+<code>while(std::cin &gt;&gt; value)</code>，当遇到EOF，或无效果输入(这里为非整数)时，cin为false。<br>
+EOF，Windows快捷键为Ctrl+Z回车，Unix为Ctrl+D。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E7%BC%96%E8%AF%91-%E8%BF%90%E8%A1%8C">编译、运行</a></li>
+<li><a href="#%E8%BE%93%E5%85%A5-%E8%BE%93%E5%87%BA">输入、输出</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessthe-c-programming-language-2nd-editiongreatergreater-kandr-chapter-8-the-unix-system-interface-bi-ji/">
+              <h3 class="post-title">
+                《The C Programming Language, 2nd Edition》K&amp;R Chapter 8 - The UNIX System Interface 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

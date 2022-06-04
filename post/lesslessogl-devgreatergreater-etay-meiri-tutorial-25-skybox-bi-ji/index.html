@@ -1,0 +1,224 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《OGL dev》Etay Meiri Tutorial 25 - SkyBox 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654342543105">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《OGL dev》Etay Meiri Tutorial 25 - SkyBox 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="天空盒(SkyBox)的思路是创建一个立方体或球体，将摄像机放置在它的中心，它跟随摄像机移动。
+天空盒的纹理由6张图片组成，是一个立方体的6个面，相邻的面之间的画面是连续的，称为cubemap。如下图所示：
+
+cubemap为3d纹理，te..." />
+    <meta name="keywords" content="OGL dev" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654342543105" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《OGL dev》Etay Meiri Tutorial 25 - SkyBox 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-04-22
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/YVy0O486v/" class="post-tag">
+                  # OGL dev
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>天空盒(SkyBox)的思路是创建一个立方体或球体，将摄像机放置在它的中心，它跟随摄像机移动。</p>
+<p>天空盒的纹理由6张图片组成，是一个立方体的6个面，相邻的面之间的画面是连续的，称为cubemap。如下图所示：<br>
+<img src="https://fire1000.github.io/post-images/1650582841787.jpg" alt="" loading="lazy"></p>
+<p>cubemap为3d纹理，texture target为GL_TEXTURE_CUBE_MAP。</p>
+<p>cubemap需要调用6次glTexImage2D才能设置数据源，其中glTexImage2D的第一个参数接收一个枚举对应cubemap立方体的一个面，对应关系如下：</p>
+<pre><code>GL_TEXTURE_CUBE_MAP_POSITIVE_X  -&gt;  right
+GL_TEXTURE_CUBE_MAP_NEGATIVE_X  -&gt;  left
+GL_TEXTURE_CUBE_MAP_POSITIVE_Y  -&gt;  top
+GL_TEXTURE_CUBE_MAP_NEGATIVE_Y  -&gt;  bottom
+GL_TEXTURE_CUBE_MAP_POSITIVE_Z  -&gt;  front
+GL_TEXTURE_CUBE_MAP_NEGATIVE_Z  -&gt;  back
+</code></pre>
+<pre><code>glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+</code></pre>
+<p>其中GL_TEXTURE_WRAP_S、GL_TEXTURE_WRAP_T、GL_TEXTURE_WRAP_R分别对应纹理坐标的第一个维度、第二个维度、第三个维度的坐标。</p>
+<p>无论模型是立方体还是球体，天空盒的纹理都是cubemap。cubemap的采样方式与2D纹理不同，采样的结果为从原点出发的射线与立方体表面的交点的texel。因此，如果局部空间(local space)中原点在模型中心的话，局部空间的坐标就是纹理坐标。</p>
+<p>与2D纹理不同，cubemap对应的sampler uniform variable类型为samplerCube。采样函数都使用texture()。(2D纹理还可以使用texture2D())</p>
+<p>因为天空盒需要绘制的是内表面，而不是像通常那样绘制外表面，所以需要设置为剔除正面：<code>glCullFace(GL_FRONT);</code>。</p>
+<p>因为天空盒必须渲染在其他mesh的后方，所以需要进行以下操作：</p>
+<ol>
+<li>最后渲染天空盒，这样depth buffer中已经保存了其他mesh的深度值。</li>
+<li>在vertex shader，将经历WVP变换的天空盒的顶点的z值替换为w值，这样透视除法之后z值为1，确保在深度测试中总是失败。</li>
+<li>depth buffer的默认值为1，因为要将z值为1的天空盒顶点写入depth bufer，必须将深度测试的设定从默认的“小于”改为“小于等于”：<code>glDepthFunc(GL_LEQUAL);</code>。</li>
+</ol>
+<p>OpenGL渲染时经常需要切换渲染状态，因此OpenGL提供了Get*函数，可以获取当前的渲染状态，用于在切换渲染状态之后还原。依据渲染状态的类型，Get*函数分为glGetIntegerv()、glGetBooleanv()、glGetInteger64v()、glGetFloatv()和glGetDoublev()。</p>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-23-shadow-mapping-part-2-bi-ji/">
+              <h3 class="post-title">
+                《OGL dev》Etay Meiri Tutorial 24 - Shadow Mapping - Part 2 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

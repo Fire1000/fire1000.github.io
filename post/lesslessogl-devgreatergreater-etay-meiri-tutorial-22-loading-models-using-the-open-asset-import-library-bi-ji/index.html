@@ -1,0 +1,236 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《OGL dev》Etay Meiri Tutorial 22 - Loading models using the Open Asset Import Library 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654342543105">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《OGL dev》Etay Meiri Tutorial 22 - Loading models using the Open Asset Import Library 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="Open Asset Import Library，简称Assimp，地址：http://www.assimp.org/，是一个开源的C/C++模型加载库，支持的模型格式很多，包含大部分主流格式。并且Assimp是跨平台的。
+Assimp通..." />
+    <meta name="keywords" content="OGL dev" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654342543105" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《OGL dev》Etay Meiri Tutorial 22 - Loading models using the Open Asset Import Library 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-04-15
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/YVy0O486v/" class="post-tag">
+                  # OGL dev
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>Open Asset Import Library，简称Assimp，地址：http://www.assimp.org/，是一个开源的C/C++模型加载库，支持的模型格式很多，包含大部分主流格式。并且Assimp是跨平台的。</p>
+<p>Assimp通过Assimp::Importer对象的ReadFile方法加载模型，返回一个aiScene对象，代表加载的模型。</p>
+<p>ReadFile方法提供多个可选参数，对加载的模型进行处理，支持多选：</p>
+<ol>
+<li>aiProcess_Triangulate，将非三角形的mesh，转换为三角形的mesh。例如一个quad可以转换为两个三角形。</li>
+<li>aiProcess_GenSmoothNormals，如果模型不包含法线，生成顶点法线。</li>
+<li>aiProcess_FlipUVsv，沿Y轴翻转纹理坐标。</li>
+<li>aiProcess_JoinIdenticalVertices - 为每个顶点创建一个副本，在需要时，从多个索引引用它。有助于节省内存。</li>
+</ol>
+<p>一个aiScene对象至少包含1个aiMesh对象，可以包含多个。mNumMeshes属性描述aiMesh对象的个数。一个aiMesh对象是一个mesh structure。</p>
+<p>aiMesh对象的属性如下：</p>
+<ol>
+<li>mMaterialIndex，材质索引，指aiScene对象包含的材质的索引，aiMesh对象可以共享同一材质。</li>
+<li>mNumVertices，顶点数。</li>
+<li>mVertices，顶点，aiVector3D类型的数组。</li>
+<li>mNormals，法线，aiVector3D类型的数组。</li>
+<li>mTextureCoords，纹理坐标，aiVector3D*类型的二维数组。一个顶点可以包含零或一或多组纹理坐标。使用纹理坐标之前，需要先使用HasTextureCoords()函数进行检查。虽然纹理坐标类型为aiVector3D，但只有x、y分量是有效的，z无效。</li>
+<li>mNumVertices，顶点索引数。</li>
+<li>mFaces，顶点索引，aiFace类型数组。每一个aiFace对象是一个unsigned int数组，数组的长度取决于多边形的顶点数。aiFace对象的mNumIndices属性，描述多边形的顶点数。</li>
+</ol>
+<p>一个aiScene可以包含多个aiMaterial对象，mNumMaterials属性描述aiMaterial对象的个数。一个aiMaterial对象是一个材质。</p>
+<p>aiMaterial对象除了包含纹理以外，还包含blend和strength函数，blend用于混合颜色，strength指定颜色的强度。但本节教程中不使用。</p>
+<p>一个aiMaterial对象可以包含多种类型的纹理，比如diffuse texture、height map、 normal map、displacement map等。之前教程中使用的都是diffuse texture。</p>
+<p>一个aiMaterial对象每种类型的纹理也可以包含多个，GetTextureCount()函数可以获取指定类型纹理的数量，如<code>GetTextureCount(aiTextureType_DIFFUSE)</code>获取diffuse texture的数量。</p>
+<p>aiMaterial对象的<code>GetTexture(aiTextureType_DIFFUSE, 0, &amp;Path, NULL, NULL, NULL, NULL, NULL)</code>函数，获取第一张diffuse texture的名称。</p>
+<ol>
+<li>第二个参数0表示纹理的索引为0，即第一张。</li>
+<li>第三个参数&amp;Path是aiString类型对象，用于接收纹理名称，Path.data是char数组。</li>
+<li>之后五个NULL参数，是blend因子、映射模式、纹理操作等，暂时不需要关心。</li>
+</ol>
+<p>代码中之所以在找不到纹理文件时，使用一张单个texel的纯白纹理，是为了解决当纹理文件不存在时，采样结果为黑色，导致看不到模型的问题。也存在其他的解决方法，比如在shader中特殊处理，或使用专用的shader。</p>
+<p>depth test，深度测试，也称为Z-test。OpenGL默认不开启深度测试。这种情况下，离摄影机远的三角形可能绘制在近的三角形之上，导致视觉异常。开启深度测试的方法如下：</p>
+<ol>
+<li><code>glEnable(GL_DEPTH_TEST);</code>，启用深度测试。</li>
+<li><code>glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH);</code>，启用depth buffer，或称为Z buffer。</li>
+<li><code>glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);</code>，清空depth buffer。每个渲染帧之前都必须清空depth buffer。
+<ul>
+<li>经测试，不清空depth buffer的结果是什么也看不到，推测depth buffer默认值为0。</li>
+</ul>
+</li>
+</ol>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-21-spot-light-bi-ji/">
+              <h3 class="post-title">
+                《OGL dev》Etay Meiri Tutorial 21 - Spot Light 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

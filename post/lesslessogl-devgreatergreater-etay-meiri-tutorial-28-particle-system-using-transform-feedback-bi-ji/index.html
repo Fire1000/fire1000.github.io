@@ -1,0 +1,302 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《OGL dev》Etay Meiri Tutorial 28 - Particle System using Transform Feedback 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654342543105">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《OGL dev》Etay Meiri Tutorial 28 - Particle System using Transform Feedback 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="粒子系统是模拟由大量粒子构成的现象的技术，粒子以某种规律一起运动。
+粒子系统每一帧执行两个步骤：
+
+更新每个粒子的属性。
+渲染粒子。
+
+更新粒子属性的步骤，在DirectX10引入Stream Output之前在CPU完成，引入之后在GPU..." />
+    <meta name="keywords" content="OGL dev" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654342543105" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《OGL dev》Etay Meiri Tutorial 28 - Particle System using Transform Feedback 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-05-01
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/YVy0O486v/" class="post-tag">
+                  # OGL dev
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>粒子系统是模拟由大量粒子构成的现象的技术，粒子以某种规律一起运动。</p>
+<p>粒子系统每一帧执行两个步骤：</p>
+<ol>
+<li>更新每个粒子的属性。</li>
+<li>渲染粒子。</li>
+</ol>
+<p>更新粒子属性的步骤，在DirectX10引入Stream Output之前在CPU完成，引入之后在GPU完成。</p>
+<ul>
+<li>OpenGL在3.0版本引入相同的功能，命名为Transform Feedback。</li>
+</ul>
+<p>在CPU更新粒子属性存在两点劣势：</p>
+<ol>
+<li>CPU每帧都需要更新vertex buffer，写入到GPU内存(即显存)。而粒子的数量通常非常多，1万以上很常见。如果1秒60帧，那么每秒在CPU与GPU之间拷贝的数据量将非常大。</li>
+<li>单核CPU，需要逐个更新粒子属性。多核CPU需要额外的编码，才能并行执行。而并行执行是GPU最擅长的，不需要额外编码。</li>
+</ol>
+<p>渲染粒子的步骤，在GPU完成。一个粒子渲染结果，通常为一个像素或一个billboard的quad。</p>
+<p>Transform Feedback提供在GPU更新粒子属性的支持：</p>
+<ol>
+<li>提供一个Transform Feedback Buffer位于GS之后，裁剪之前，接收GS的结果，如果GS不存在，则为VS的结果。</li>
+<li>Transform Feedback Buffer可以作为draw call的vertex buffer。</li>
+<li>由于GS输出的顶点数是未知的，提供一个不接收顶点数的draw call，glDrawTransformFeedback()。它接收一个Transform Feedback Buffer。系统为每个Transform Feedback Buffer维护顶点数，由系统跟踪GS进行更新。Transform Feedback Buffer的顶点数支持手动重置。</li>
+<li>当管线到达Transform Feedback Buffer时，可以选择，图元以常规路线进入光栅器，或丢弃图元。</li>
+</ol>
+<p>OpenGL规定，draw call的输入输出，不能使用相同的buffer。因此，实际需要两个transform feedback buffer，每帧互相交换。</p>
+<p><code>glGenTransformFeedbacks(2, m_transformFeedback);</code>，创建两个transform feedback对象。其中m_transformFeedback，是GLuint类型的数组，用于接收创建的对象的handle。</p>
+<p><code>glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, m_transformFeedback[i]);</code>，将transform feedback对象m_transformFeedback[i]，绑定到GL_TRANSFORM_FEEDBACK，后续对transform feedback的操作都应用于m_transformFeedback[i]。</p>
+<ul>
+<li>每次调用glBindTransformFeedback，作为参数的transform feedback对象的顶点数被置0。</li>
+</ul>
+<p><code>glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, m_particleBuffer[i]);</code>，将vertex buffer对象m_particleBuffer[i]绑定到GL_TRANSFORM_FEEDBACK_BUFFER，使得m_particleBuffer[i]成为当前transform feedback对象的transform feedback buffer。</p>
+<ul>
+<li>其中第二个参数0，表示m_particleBuffer[i]成为当前transform feedback对象的索引为0的transform feedback buffer。之所以存在索引，是因为GS输出的顶点属性，其中哪些属性输出到哪个buffer是可以通过glTransformFeedbackVaryings()函数设置的。索引最大值，即buffer上限，为GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS。</li>
+</ul>
+<pre><code>const GLchar* Varyings[4];
+Varyings[0] = &quot;Type1&quot;;
+Varyings[1] = &quot;Position1&quot;;
+Varyings[2] = &quot;Velocity1&quot;;
+Varyings[3] = &quot;Age1&quot;;
+
+glTransformFeedbackVaryings(m_shaderProg, 4, Varyings, GL_INTERLEAVED_ATTRIBS);
+</code></pre>
+<p>glTransformFeedbackVaryings必须在shader链接之前调用。</p>
+<ol>
+<li>第一个参数为shader程序。</li>
+<li>第三个参数为输出到transform feedback buffer的属性名数组。</li>
+<li>第二个参数为属性名数组的元数个数。</li>
+<li>最后一个参数GL_INTERLEAVED_ATTRIBS表示，将属性名数组中的所有属性作为一个structure写入到transform feedback buffer中。这个参数还可以使用GL_SEPARATE_ATTRIBS，表示属性名数组中每一个属性写入到一个transform feedback buffer中。其中属性在属性名数组中的索引，对应glBindBufferBase的第二个参数。</li>
+</ol>
+<pre><code>glBeginTransformFeedback(GL_POINTS);
+
+if (m_isFirst) {
+    glDrawArrays(GL_POINTS, 0, 1);
+
+    m_isFirst = false;
+}
+else {
+    glDrawTransformFeedback(GL_POINTS, m_transformFeedback[m_currVB]);
+}            
+
+glEndTransformFeedback();
+</code></pre>
+<p>glBeginTransformFeedback()与glEndTransformFeedback()之间调用的draw call，输出被重定向到transform feedback buffer。</p>
+<ul>
+<li>glBeginTransformFeedback()与glEndTransformFeedback()必须成对出现，否则导致崩溃。</li>
+<li>不论draw call的拓扑类型如何，输出到transform feedback buffer的拓扑类型一定是点列表。比如参数为triangle strip的draw call绘制4个顶点，和参数为三角形列表的draw call绘制6个顶点，输出到transform feedback buffer的都是6个顶点(两个三角形)。</li>
+</ul>
+<p>glBeginTransformFeedback()接收一个拓扑类型作为参数，它限制draw call的拓扑类型。</p>
+<ul>
+<li>GL_POINTS，draw call的拓扑必须是GL_POINTS。</li>
+<li>GL_LINES，draw call的拓扑必须是GL_LINES、GL_LINE_LOOP或GL_LINE_STRIP。</li>
+<li>GL_TRIANGLES，draw call的拓扑必须GL_TRIANGLES、GL_TRIANGLE_STRIP或GL_TRIANGLE_FAN。</li>
+</ul>
+<p><code>glDrawTransformFeedback(GL_POINTS, m_transformFeedback[m_currVB]);</code>，glDrawTransformFeedback是不需要在顶点数的draw call。它的第一个参数为拓扑类型，它的顶点数从transform feedback对象参数m_transformFeedback[m_currVB]中获得。因为transform feedback对象的初始顶点数为0，所以第一次draw call这里使用<code>glDrawArrays(GL_POINTS, 0, 1);</code>提供1个顶点。</p>
+<p><code>glDisable(GL_RASTERIZER_DISCARD);</code>，禁用光栅化，transform feedback buffer之后的图元被丢弃。因为光栅化被禁用，所以不需要FS。</p>
+<pre><code>bool RandomTexture::InitRandomTexture(unsigned int Size)
+{
+    Vector3f* pRandomData = new Vector3f[Size];
+
+    for (unsigned int i = 0 ; i &lt; Size ; i++) {
+        pRandomData[i].x = RandomFloat();
+        pRandomData[i].y = RandomFloat();
+        pRandomData[i].z = RandomFloat();
+    }
+
+    glGenTextures(1, &amp;m_textureObj);
+    glBindTexture(GL_TEXTURE_1D, m_textureObj);
+    glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB, Size, 0.0f, GL_RGB, GL_FLOAT, pRandomData);
+    glTexParameterf(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+
+    delete [] pRandomData;
+
+    return GLCheckError();
+}
+</code></pre>
+<p>随机纹理，用于在shader内提供随机数。随机纹理是一个1D纹理。</p>
+<ul>
+<li>使用GL_RGB参数调用glTexImage1D，生成三个通道的1D纹理。</li>
+<li>使用GL_TEXTURE_WRAP_S和GL_REPEAT调用glTexParameterf，使得纹理采样以循环的方式支持超过[0, 1]区间的纹理坐标。</li>
+<li>在shader中通过<code>texture(gRandomTexture, gTime/1000.0).xyz</code>的方式获取随机数，其中gRandomTexture是随机纹理，gTime是接收应用传递的全局时间的uniform variable。</li>
+</ul>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-27-billboarding-and-the-geometry-shader-bi-ji/">
+              <h3 class="post-title">
+                《OGL dev》Etay Meiri Tutorial 27 - Billboarding and the Geometry Shader 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

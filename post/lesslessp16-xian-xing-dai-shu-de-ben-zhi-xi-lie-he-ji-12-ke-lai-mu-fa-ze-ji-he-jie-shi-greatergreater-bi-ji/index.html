@@ -1,0 +1,218 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《P16 线性代数的本质 - 系列合集 12 - 克莱姆法则，几何解释》3Blue1Brown 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654342543105">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《P16 线性代数的本质 - 系列合集 12 - 克莱姆法则，几何解释》3Blue1Brown 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="克莱姆法则是一种线性方程组的解法，但不是最好的方法，不如高斯消元法。
+已知解线性方程组可以转换为寻找一个目标向量，这个向量应用给定变换后为给定向量。
+
+当变换矩阵的行列式为0时，空间维度减少，要么不存在目标向量，要么存在无数个目标向量。
+
+..." />
+    <meta name="keywords" content="线性代数的本质" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654342543105" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《P16 线性代数的本质 - 系列合集 12 - 克莱姆法则，几何解释》3Blue1Brown 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-01-30
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/o3ms38lcd/" class="post-tag">
+                  # 线性代数的本质
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>克莱姆法则是一种线性方程组的解法，但不是最好的方法，不如高斯消元法。</p>
+<p>已知解线性方程组可以转换为寻找一个目标向量，这个向量应用给定变换后为给定向量。<br>
+<img src="https://fire1000.github.io/post-images/1643548651680.png" alt="" loading="lazy"><br>
+当变换矩阵的行列式为0时，空间维度减少，要么不存在目标向量，要么存在无数个目标向量。<br>
+<img src="https://fire1000.github.io/post-images/1643549015204.png" alt="" loading="lazy"><br>
+本文只考虑行列式不为0的情况。</p>
+<p>大部分变换前后，点积都会发生变化。<br>
+<img src="https://fire1000.github.io/post-images/1643549667858.png" alt="" loading="lazy"><br>
+变换前后，点积不发生变化的变换，称为正交变换，如旋转变换。</p>
+<p>如果给定变换是正交变换，那么点积不变，已知给定向量与变换后的基向量(变换矩阵的列向量)的点积，等于目标向量与变换前的基向量的点积，即目标向量对应轴上的坐标。<br>
+<img src="https://fire1000.github.io/post-images/1643550284315.png" alt="" loading="lazy"></p>
+<p>在二维空间中，向量在对应轴上的坐标分量等于这个向量与另一个轴上的基向量(长度为1)围成的平行四边形的有向面积，其中坐标分量为正时，面积为正，反之为负。这个有向面积又等于以这个向量和基向量为列向量的矩阵的行列式，调整这个向量和基向量的排列顺序，使得行列式与坐标分量同正负。<br>
+<img src="https://fire1000.github.io/post-images/1643551492642.png" alt="" loading="lazy"><br>
+在三维空间中，因为两个基向量围成的面积为1，所以向量在对应轴上的坐标分量等于这个向量与其他两个轴上的基向量围成的平行六面体的有向体积，其中坐标分量为正时，体积为正，反之为负。这个有向体积又等于以这个向量和对应的两个基向量为列向量的矩阵的行列式，调整这个向量和两个基向量的排列顺序，使得行列式与坐标分量同正负。<br>
+<img src="https://fire1000.github.io/post-images/1643551767796.png" alt="" loading="lazy"><br>
+已知线性变换后，空间的缩放值等于这个变换的行列式。那么，无论是上文的平行四边形还是平行六面体，变换后的有向大小都等于原来的有向大小乘以这个变换的行列式。换句话说，将变换后的有向大小除于这个变换的行列式，就能得到目标向量的坐标分量。<br>
+<img src="https://fire1000.github.io/post-images/1643552694697.png" alt="" loading="lazy"><br>
+因为，变换后的向量，即给定向量是已知的。变换后的基向量，即变换矩阵的列向量是也已知的。所以，给定向量与变换后的基向量围成的平行四边形、平行六面体的有向大小也是已知的，等于以它们为矩阵的行列式。所以目标向量的坐标分量，即线性方程组的解的计算方法如下：<br>
+<img src="https://fire1000.github.io/post-images/1643553578525.png" alt="" loading="lazy"></p>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessp15-xian-xing-dai-shu-de-ben-zhi-xi-lie-he-ji-11-chou-xiang-xiang-liang-kong-jian-greatergreater-bi-ji/">
+              <h3 class="post-title">
+                《P15 线性代数的本质 - 系列合集 11 - 抽象向量空间》3Blue1Brown 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

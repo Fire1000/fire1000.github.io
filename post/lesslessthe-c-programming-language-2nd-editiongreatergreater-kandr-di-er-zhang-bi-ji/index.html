@@ -1,0 +1,402 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《The C Programming Language, 2nd Edition》K&amp;R Chapter 2 - Types, Operators and Expressions 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654342543105">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《The C Programming Language, 2nd Edition》K&amp;R Chapter 2 - Types, Operators and Expressions 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="名称
+变量名由数字、字母、下划线组成，其中数字不能开头，下划线不建议开头，因库例程通常以下划线开头。
+内部名(内部链接)至少前31个字符有效，外部名(外部链接)至少前6个字符有效。
+变量类型
+C语言只提供四种基本类型：
+
+char，占1 b..." />
+    <meta name="keywords" content="The C Programming Language" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654342543105" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《The C Programming Language, 2nd Edition》K&amp;R Chapter 2 - Types, Operators and Expressions 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-02-01
+              </span>
+              <span>
+                7 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/p29rjtcKO/" class="post-tag">
+                  # The C Programming Language
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h2 id="名称">名称</h2>
+<p>变量名由数字、字母、下划线组成，其中数字不能开头，下划线不建议开头，因库例程通常以下划线开头。<br>
+内部名(内部链接)至少前31个字符有效，外部名(外部链接)至少前6个字符有效。</p>
+<h2 id="变量类型">变量类型</h2>
+<p>C语言只提供四种基本类型：</p>
+<ol>
+<li>char，占1 byte，能够容纳本地字符集的一个字符。</li>
+<li>int，整数，反映具体的机器整数的最自然长度。</li>
+<li>float，单精度浮点。</li>
+<li>double，双精度浮点。</li>
+</ol>
+<p>short和long为限定符。</p>
+<ol>
+<li>short int和long int等价于short和long。</li>
+<li>short通常16位。int通常16或32位。long通常32位。</li>
+<li>short和int至少16位。long至少32位。</li>
+<li>short不大于int，int不大于long。</li>
+</ol>
+<p>signed和unsigned，适用于char和int。</p>
+<p>float、double、long double的长度可以相同。</p>
+<p>取决于机器的类型的长度具体见&lt;limits.h&gt;和&lt;float.h&gt;。</p>
+<p>char有无符号取决于机器。<br>
+char转换为int时，符号扩展还是0扩展也取决于机器。<br>
+C语言只保证可打印的字符为正值。</p>
+<h2 id="常量">常量</h2>
+<p>整数，后辍为l或L为long，u或U为unsigned，ul或UL为unsigned long。<br>
+无后辍的整数，int能容纳为int，int不能容纳时，为能容纳它的最小整数类型(无法确定有无符号)。</p>
+<p>浮点，无后辍为double，f或F为float，l或L为long double。</p>
+<p>前辍0表示8进制，0x或0X为16进制，8和16进制数的后辍同理。<br>
+'\0xx'同前辍0，'\xhh'同辍0x。</p>
+<p>'\0'为0。</p>
+<p>常量表达式在编译时求值，比如<code>char line[INT_MAX + 1];</code>。<br>
+字符串常量也称为字符串字面值，在编译时连接，比如<code>&quot;hello, &quot; &quot;world&quot;</code>等价于<code>&quot;hello, world&quot;</code>。</p>
+<p>strlen()不包含字符串末尾的'\0'。</p>
+<p>字符常量的值取决于字符集，推荐使用&lt;ctype.h&gt;库函数进行操作。比如转换为小写字母tolower(c)。在ASCII字符集中大小写字母的间隔是固定的，但EBCDIC字符集中不成立。</p>
+<h2 id="枚举">枚举</h2>
+<pre><code>enum boolean {NO = 1, YES};
+enum boolean b = NO;
+</code></pre>
+<p>定义枚举时，成员按顺序自增1，第一个成员默认为0。</p>
+<p>与#define相比，枚举优势为：</p>
+<ol>
+<li>常量值自动生成。</li>
+<li>为枚举变量赋值时，编译器会进行类型检查。(不会进行枚举值是否有效的检查)</li>
+<li>Debug程序会使用枚举名显示枚举值。</li>
+</ol>
+<h2 id="声明与定义">声明与定义</h2>
+<p>变量必须先声明后使用(含隐式声明)。<br>
+变量声明时可以初始化，声明同时初始化是一个定义。</p>
+<p>静态变量，在程序开始时初始化，初始化表达式必须为常量， 默认初始值为0。<br>
+自动变量，每次进入函数时初始化，初始化表达式任意，默认初始值未定义。<br>
+外部变量和static变量都是静态变量。</p>
+<p>const变量，不能通过这个变量直接修改它的值。<br>
+const数组，不能通过这个数组直接修改它元素的值。</p>
+<h2 id="运算符">运算符</h2>
+<p>%不能用于浮点。</p>
+<p>整数除法和%处理负数的结果取决于机器。</p>
+<p>优先级(从高到低)：</p>
+<ol>
+<li>算术运算符「一元+和-」&gt;「* / %」&gt;「二元+和-」</li>
+<li>关系运算符「&gt; &gt;= &lt; &lt;=」&gt;「== !=」</li>
+<li>逻辑运算符「&amp;&amp;」&gt;「||」(短路运算符)</li>
+<li>赋值运算符「 =」</li>
+</ol>
+<p>关系和逻辑运算符结果为真返回1，为假返回0。</p>
+<p>逻辑非运算符「!」将非0变为0，0变为1。</p>
+<p>自增运算符的操作数只能是变量，(i+j)++是非法的。</p>
+<p>按位操作符「&amp; | ^ &lt;&lt; &gt;&gt; ~」只用于整数。<br>
+「&amp; | 」不是短路运算符。<br>
+「^」异或，相同为0，不同为1。<br>
+「&gt;&gt;」符号位扩展还是0扩展取决于机器。</p>
+<p>复合赋值运算符的优势时，左边的表达式只求值一次。</p>
+<p>条件运算符的后两个表达式只有一个被求值。<br>
+条件运算符的优先级仅比赋值运算符高。</p>
+<p>C语言没有约定多元运算符中操作数的求值顺序，取决于机器。比如<code>x = f() + g();</code>中f()和g()的求值顺序是未定义的。</p>
+<p>函数调用，复合赋值，自增和自减运算符可能产生副作用(改变变量的值)。多元运算符中操作数的副作用生效的顺序，取决于机器，比如<code>a[i] = i++;</code>。<br>
+C语言约定所有实参的副作用，在函数调用之前生效。</p>
+<p>运算符优先级与结合性如下：<br>
+<img src="https://fire1000.github.io/post-images/1643761886834.png" alt="" loading="lazy"></p>
+<h2 id="类型转换">类型转换</h2>
+<p>二元运算符会将较窄的操作数，转换为较宽的操作数的类型，再进行运算。</p>
+<ol>
+<li>char和short运算时转换为int。</li>
+<li>float运算时不会转换为double。</li>
+<li>整数与浮点运算时转换为浮点。</li>
+<li>同类型运算时signed转换为unsigned。</li>
+</ol>
+<p>假设int为16位，long为32位，那么-1L&lt;1U，-1L&gt;1UL。</p>
+<p>整数较宽的类型转换为较窄的类型时高位丢弃。<br>
+浮点转换为整数时，小数丢弃。<br>
+double转换为float时，是四舍五入还是截取取决于机器。</p>
+<p>没有函数原型的情况下，实参char、short转换为int，float转换为double。</p>
+<p>强制转换运算符与一元运算符优先级相同。<br>
+强制转换不改变变量的值。<br>
+有函数原型的情况下，实参按形参类型，自动强制转换。</p>
+<h2 id="例程">例程</h2>
+<h3 id="strlen函数">strlen函数</h3>
+<pre><code>/* strlen: return length of s */
+int strlen(char s[])
+{
+    int i;
+
+    i = 0;
+    while (s[i] != '\0')
+        ++i;
+    return i;
+}
+</code></pre>
+<h3 id="lower函数将字符转为小写仅ascii有效">lower函数(将字符转为小写，仅ASCII有效)</h3>
+<pre><code>/* lower: convert c to lower case; ASCII only */
+int lower(int c)
+{
+    if (c &gt;= 'A' &amp;&amp; c &lt;= 'Z')
+        return c + 'a' - 'A';
+    else
+        return c;
+}
+</code></pre>
+<h3 id="rand和srand函数">rand和srand函数</h3>
+<pre><code>unsigned long int next = 1;
+
+/* rand: return pseudo-random integer on 0..32767 */
+int rand(void)
+{
+    next = next * 1103515245 + 12345;
+    return (unsigned int)(next/65536) % 32768;
+}
+
+/* srand: set seed for rand() */
+void srand(unsigned int seed)
+{
+    next = seed;
+}
+</code></pre>
+<h3 id="字符串中删除所有指定字符">字符串中删除所有指定字符</h3>
+<pre><code>/* squeeze: delete all c from s */
+void squeeze(char s[], int c)
+{
+    int i, j;
+
+    for (i = j = 0; s[i] != '\0'; i++)
+        if (s[i] != c)
+            s[j++] = s[i];
+    s[j] = '\0';
+}
+</code></pre>
+<h3 id="strcat函数字符串连接">strcat函数(字符串连接)</h3>
+<pre><code>/* strcat: concatenate t to end of s; s must be big enough */
+void strcat(char s[], char t[])
+{
+    int i, j;
+
+    i = j = 0;
+    while (s[i] != '\0') /* find end of s */
+        i++;
+    while ((s[i++] = t[j++]) != '\0') /* copy t */
+        ;
+}
+</code></pre>
+<h3 id="返回整数x中从第p位0位起向左开始右n位含p">返回整数x中从第p位(0位起向左)开始右n位(含p)</h3>
+<pre><code>/* getbits: get n bits from position p */
+unsigned getbits(unsigned x, int p, int n)
+{
+    return (x &gt;&gt; (p+1-n)) &amp; ~(~0 &lt;&lt; n);
+}
+</code></pre>
+<h3 id="统计整数x中值为1的二进制位数">统计整数x中值为1的二进制位数</h3>
+<pre><code>/* bitcount: count 1 bits in x */
+int bitcount(unsigned x)
+{
+    int b;
+
+    for (b = 0; x != 0; x &gt;&gt;= 1)
+        if (x &amp; 01)
+            b++;
+    return b;
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%90%8D%E7%A7%B0">名称</a></li>
+<li><a href="#%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B">变量类型</a></li>
+<li><a href="#%E5%B8%B8%E9%87%8F">常量</a></li>
+<li><a href="#%E6%9E%9A%E4%B8%BE">枚举</a></li>
+<li><a href="#%E5%A3%B0%E6%98%8E%E4%B8%8E%E5%AE%9A%E4%B9%89">声明与定义</a></li>
+<li><a href="#%E8%BF%90%E7%AE%97%E7%AC%A6">运算符</a></li>
+<li><a href="#%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2">类型转换</a></li>
+<li><a href="#%E4%BE%8B%E7%A8%8B">例程</a>
+<ul>
+<li><a href="#strlen%E5%87%BD%E6%95%B0">strlen函数</a></li>
+<li><a href="#lower%E5%87%BD%E6%95%B0%E5%B0%86%E5%AD%97%E7%AC%A6%E8%BD%AC%E4%B8%BA%E5%B0%8F%E5%86%99%E4%BB%85ascii%E6%9C%89%E6%95%88">lower函数(将字符转为小写，仅ASCII有效)</a></li>
+<li><a href="#rand%E5%92%8Csrand%E5%87%BD%E6%95%B0">rand和srand函数</a></li>
+<li><a href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%AD%E5%88%A0%E9%99%A4%E6%89%80%E6%9C%89%E6%8C%87%E5%AE%9A%E5%AD%97%E7%AC%A6">字符串中删除所有指定字符</a></li>
+<li><a href="#strcat%E5%87%BD%E6%95%B0%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BF%9E%E6%8E%A5">strcat函数(字符串连接)</a></li>
+<li><a href="#%E8%BF%94%E5%9B%9E%E6%95%B4%E6%95%B0x%E4%B8%AD%E4%BB%8E%E7%AC%ACp%E4%BD%8D0%E4%BD%8D%E8%B5%B7%E5%90%91%E5%B7%A6%E5%BC%80%E5%A7%8B%E5%8F%B3n%E4%BD%8D%E5%90%ABp">返回整数x中从第p位(0位起向左)开始右n位(含p)</a></li>
+<li><a href="#%E7%BB%9F%E8%AE%A1%E6%95%B4%E6%95%B0x%E4%B8%AD%E5%80%BC%E4%B8%BA1%E7%9A%84%E4%BA%8C%E8%BF%9B%E5%88%B6%E4%BD%8D%E6%95%B0">统计整数x中值为1的二进制位数</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessthe-c-programming-language-2nd-editiongreatergreater-kandr-di-yi-zhang-bi-ji/">
+              <h3 class="post-title">
+                《The C Programming Language, 2nd Edition》K&amp;R Chapter 1 - A Tutorial Introduction 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

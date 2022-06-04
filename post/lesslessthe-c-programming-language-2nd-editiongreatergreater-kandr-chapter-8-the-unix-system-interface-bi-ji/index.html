@@ -1,0 +1,777 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《The C Programming Language, 2nd Edition》K&amp;R Chapter 8 - The UNIX System Interface 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654342543105">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《The C Programming Language, 2nd Edition》K&amp;R Chapter 8 - The UNIX System Interface 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="文件描述符
+UNIX中所有外围设备(包括键盘和显示器)都被看作文件。因此，所有输入\输出都通过读写文件完成。单一接口处理所有通信。
+读写文件之前，需要先通知操作系统，这个过程称为打开文件。
+如果文件存在，并拥有访问它的权限，操作系统返回一个..." />
+    <meta name="keywords" content="The C Programming Language" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654342543105" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《The C Programming Language, 2nd Edition》K&amp;R Chapter 8 - The UNIX System Interface 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-02-04
+              </span>
+              <span>
+                18 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/p29rjtcKO/" class="post-tag">
+                  # The C Programming Language
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h2 id="文件描述符">文件描述符</h2>
+<p>UNIX中所有外围设备(包括键盘和显示器)都被看作文件。因此，所有输入\输出都通过读写文件完成。单一接口处理所有通信。<br>
+读写文件之前，需要先通知操作系统，这个过程称为打开文件。<br>
+如果文件存在，并拥有访问它的权限，操作系统返回一个小的非负整数，称为文件描述符。<br>
+文件描述符类似于文件指针或MS-DOS中的文件句柄，是文件的标识。(文件的标识不是文件名，可能重名)</p>
+<p>UNIX中，当shell运行一个程序，它将打开3个文件，文件描述符分别为0、1、2，依次表示标准输入、标准输出和标准错误。程序可以从文件0中读，向1和2中写。</p>
+<p>使用&lt;&gt;可以重定向I/O：<code>prog &lt;输入文件名&gt;输出文件名</code>。这种情况下shell会把文件描述符0和1的默认赋值变为指定文件。</p>
+<h2 id="低级ioread和write">低级I/O——read和write</h2>
+<p>输入和输出是通过read和write系统调用实现的，read和write函数访问这两个系统调用。</p>
+<pre><code>int n_read = read(int fd, char *buf, int n);
+int n_written = write(int fd, char *buf, int n);
+</code></pre>
+<p>fd是文件描述符，buf是字符串，n是传输的字节数。返回实际传输的字节数。<br>
+读文件时，返回0表示到达文件末尾，返回-1表示发生错误。<br>
+写文件时，返回与请求写入的字节数不相等说明发生错误。<br>
+一次调用传输的字节数为任意，越大越效率，因系统调用次数减少。</p>
+<h2 id="open-creat-close和unlink">open、creat、close和unlink</h2>
+<p>open用于打开文件。打开成功返回文件描述符，失败返回-1。<br>
+open打开一个不存在的文件，将报错。<br>
+open声明为<code>int open(char *name, int flags, int perms);</code>。其中name为文件名，flag是模式，perms在本章始终为0。<br>
+flag的值可选以下常量。System V UNIX中这些常量在&lt;fcnt1.h&gt;中定义，BSD则在&lt;sys/file.h&gt;中定义。</p>
+<ol>
+<li>O_RDONLY open for reading only</li>
+<li>O_WRONLY open for writing only</li>
+<li>O_RDWR  open for both reading and writing</li>
+</ol>
+<p>creat创建一个新文件或覆盖已有的文件。创建成功返回文件描述符，失败返回-1。<br>
+creat创建的文件如果已存在，则将长度截断为0。<br>
+creat的声明为<code>int creat(char *name, int perms);</code>。其中perms为一个9比特的权限信息。</p>
+<p>一个程序同时打开的文件数限制通常为20。<br>
+close(int fd)函数用来断开文件描述符与已打开的文件之间的连接，释放此描述符。但close不清洗(flush)缓冲区。<br>
+如果程序通过exit函数退出或从主程序返回，所有打开的文件将被关闭。</p>
+<p>unlink(char* name)将文件name从文件系统中删除，对应标准库函数remove。</p>
+<h2 id="随机访问lseek">随机访问——lseek</h2>
+<p><code>long lseek(int fd, long offset, int origin);</code>，将文件描述符为fd的文件的当前位置设置为offset。调用成功返回当前位置，失败返回-1。<br>
+其中offset相对比orgin。orgin可选0、1或2，分别对应文件开始、当前位置、文件末尾(最后一个字符的下一个位置)。</p>
+<h2 id="file">FILE</h2>
+<p>&lt;stdio.h&gt;中定义了FILE的结构，包含：</p>
+<ol>
+<li>缓冲区剩余字符计数。</li>
+<li>指向缓冲区下一个字符的指针。</li>
+<li>文件描述符。</li>
+<li>描述读写的标志。</li>
+<li>描述错误状态的标志。</li>
+</ol>
+<pre><code>#define NULL 0
+#define EOF (-1)
+#define BUFSIZ 1024
+#define OPEN_MAX 20 /* max #files open at once */
+
+typedef struct _iobuf {
+    int cnt; /* characters left */
+    char *ptr; /* next character position */
+    char *base; /* location of buffer */
+    int flag; /* mode of file access */
+    int fd; /* file descriptor */
+} FILE;
+extern FILE _iob[OPEN_MAX];
+
+#define stdin (&amp;_iob[0])
+#define stdout (&amp;_iob[1])
+#define stderr (&amp;_iob[2])
+
+enum _flags {
+    _READ = 01, /* file open for reading */
+    _WRITE = 02, /* file open for writing */
+    _UNBUF = 04, /* file is unbuffered */
+    _EOF = 010, /* EOF has occurred on this file */
+    _ERR = 020 /* error occurred on this file */
+};
+
+int _fillbuf(FILE *);
+int _flushbuf(int, FILE *);
+
+#define feof(p) ((p)-&gt;flag &amp; _EOF) != 0)
+#define ferror(p) ((p)-&gt;flag &amp; _ERR) != 0)
+#define fileno(p) ((p)-&gt;fd)
+
+#define getc(p) (--(p)-&gt;cnt &gt;= 0 \
+    ? (unsigned char) *(p)-&gt;ptr++ : _fillbuf(p))
+#define putc(x,p) (--(p)-&gt;cnt &gt;= 0 \
+    ? *(p)-&gt;ptr++ = (x) : _flushbuf((x),p))
+
+#define getchar() getc(stdin)
+#define putcher(x) putc((x), stdout)
+</code></pre>
+<h2 id="ls">ls</h2>
+<p>在UNIX中命令ls打印目录下的文件名和其他文件信息，MS-DOS中dir类似。<br>
+UNIX中的目录是文件，包含文件名列表和i结点表索引。文件的i结点存放文件除名称以外的信息。<br>
+因此UNIX读目录文件，就能获取所有文件名，但获取文件的其它信息需要系统调用。<br>
+MS-DOS中获取目录中的文件名也需要系统调用。</p>
+<p>系统调用<code>int stat(char *, struct stat *);</code>以文件名为参数，返回文件i结点中的所有信息，出错返回-1。<br>
+&lt;sys/stat.h&gt;中声明了struct stat：</p>
+<pre><code>struct stat /* inode information returned by stat */
+{
+    dev_t st_dev; /* device of inode */
+    ino_t st_ino; /* inode number */
+    short st_mode; /* mode bits */
+    short st_nlink; /* number of links to file */
+    short st_uid; /* owners user id */
+    short st_gid; /* owners group id */
+    dev_t st_rdev; /* for special files */
+    off_t st_size; /* file size in characters */
+    time_t st_atime; /* time last accessed */
+    time_t st_mtime; /* time last modified */
+    time_t st_ctime; /* time originally created */
+};
+</code></pre>
+<p>其中dev_t和ino_t在&lt;sys/types.h&gt;中typedef定义。所有的“系统”类型都可以在&lt;sys/types.h&gt;中找到。<br>
+st_mode包含了描述文件的一系列标志：</p>
+<pre><code>#define S_IFMT 0160000 /* type of file: */
+#define S_IFDIR 0040000 /* directory */
+#define S_IFCHR 0020000 /* character special */
+#define S_IFBLK 0060000 /* block special */
+#define S_IFREG 0010000 /* regular */
+/* ... */
+</code></pre>
+<p>使用S_IFMT和S_IFDIR能够判断一个文件是不是一个目录。如<code>(stbuf.st_mode &amp; S_IFMT) == S_IFDIR</code>。</p>
+<p>Version 7和system V UNIX的目录文件结构在&lt;sys/dir.h&gt;中声明：</p>
+<pre><code>#ifndef DIRSIZ
+#define DIRSIZ 14
+#endif
+struct direct { /* directory entry */
+    ino_t d_ino; /* inode number */
+    char d_name[DIRSIZ]; /* long name does not have '\0' */
+};
+</code></pre>
+<p>ino_t通常是unsigned short类型，用于描述i结点表的索引。<br>
+如果i结点编号为0，说明该文件被删除。</p>
+<p>每个目录都会包含.和..表示当前目录和上级目录。</p>
+<h2 id="malloc和free">malloc和free</h2>
+<p>malloc维护的空闲块链表是一个循环链表，按地址递增的顺序排列。<br>
+<img src="https://fire1000.github.io/post-images/1644035074867.png" alt="" loading="lazy">。</p>
+<p>malloc分配内存时有两种算法：</p>
+<ol>
+<li>扫描空闲块链表，找到最大的块为止。称为“首次适应”(first fit)。</li>
+<li>找到满足条件的最小的块。称为“最佳适应”(best fit)。</li>
+</ol>
+<p>malloc找到满足条件块之后，或找不到时：</p>
+<ol>
+<li>如果块与请求相等，将它从链表中移走，返回给用户。</li>
+<li>如果块太大，分成两部分，将大小合适的块返回给用户，剩下的留在空闲链表中。</li>
+<li>如果找不到足够大的块，向系统申请一个大的块放到空闲块链表中。</li>
+</ol>
+<p>free释放内存时，搜索空闲块链表，以地址递增的顺序，查找插入位置。如果释放的块的位置与空闲块相邻，将两个块合成一个更大的块。</p>
+<p>malloc返回的内存满足保存的对象的对齐要求。每个特定的机器都一个最受限的类型，如果最受限的类型可以保存在特定的地址，那么其他的类型也可以放在这个地址。一些机器中最受限的类型是double，另一些机器中是int或long。以下代码，保证以long对齐：</p>
+<pre><code>typedef long Align; /* for alignment to long boundary */
+
+union header { /* block header */
+    struct {
+        union header *ptr; /* next block if on free list */
+        unsigned size; /* size of this block */
+    } s;
+    Align x; /* force alignment of blocks */
+};
+</code></pre>
+<p>每个空闲块包含指向下一个块的指针，一个块大小的记录，一个指向空闲内存本身的指针<br>
+malloc返回的块将多包含一个单元用于头部本身，实际分配的块大小被记录在size字段中，返回的指针指向空闲内存，而不是块头部。</p>
+<p>每次请求空闲空间时，都从上一次找到空闲块的地方开始搜索，保证链表均匀。</p>
+<p>UNIX系统调用sbrk(n)返回一个指针，指向n字节的内存。如果没有空闲内存返回-1。(注意不是0)<br>
+ANSI标准只允许同一数组内的指针能够比较，但UNIX下一般指针的比较也有意义。</p>
+<h2 id="其他">其他</h2>
+<p>在&lt;stdio.h&gt;中getchar是宏定义，可以使用#undef取消。</p>
+<p>vprintf是使用形参替代变长参数表的printf。vfprintf和vsprintf与fprintf和sprintf的关系类似。</p>
+<p>UNIX中要向文件追加内容使用重定向&gt;&gt;，或在系统调用fopen中使用参数&quot;a&quot;。</p>
+<h2 id="例程">例程</h2>
+<h3 id="复制输入到输出">复制输入到输出</h3>
+<pre><code>#include &quot;syscalls.h&quot;
+
+main() /* copy input to output */
+{
+    char buf[BUFSIZ];
+    int n;
+
+    while ((n = read(0, buf, BUFSIZ)) &gt; 0)
+        write(1, buf, n);
+    return 0;
+}
+</code></pre>
+<ul>
+<li>&quot;syscalls.h&quot;是一个自定义头文件，包含了read和write的声明，BUFSIZ的声明。</li>
+</ul>
+<h3 id="getchar函数">getchar函数</h3>
+<pre><code>#include &quot;syscalls.h&quot;
+
+/* getchar: unbuffered single character input */
+int getchar(void)
+{
+    char c;
+
+    return (read(0, &amp;c, 1) == 1) ? (unsigned char) c : EOF;
+}
+</code></pre>
+<ul>
+<li>将c转换为unsigned char消除了符号扩展问题。</li>
+</ul>
+<h3 id="带缓冲区的getchar函数">带缓冲区的getchar函数</h3>
+<pre><code>#include &quot;syscalls.h&quot;
+
+/* getchar: simple buffered version */
+int getchar(void)
+{
+    static char buf[BUFSIZ];
+    static char *bufp = buf;
+    static int n = 0;
+
+    if (n == 0) { /* buffer is empty */
+        n = read(0, buf, sizeof buf);
+        bufp = buf;
+    }
+    return (--n &gt;= 0) ? (unsigned char) *bufp++ : EOF;
+}
+</code></pre>
+<h3 id="文件复制">文件复制</h3>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;fcntl.h&gt;
+#include &quot;syscalls.h&quot;
+#define PERMS 0666 /* RW for owner, group, others */
+
+void error(char *, ...);
+
+/* cp: copy f1 to f2 */
+main(int argc, char *argv[])
+{
+    int f1, f2, n;
+    char buf[BUFSIZ];
+
+    if (argc != 3)
+        error(&quot;Usage: cp from to&quot;);
+    if ((f1 = open(argv[1], O_RDONLY, 0)) == -1)
+        error(&quot;cp: can't open %s&quot;, argv[1]);
+    if ((f2 = creat(argv[2], PERMS)) == -1)
+        error(&quot;cp: can't create %s, mode %03o&quot;,
+            argv[2], PERMS);
+    while ((n = read(f1, buf, BUFSIZ)) &gt; 0)
+        if (write(f2, buf, n) != n)
+            error(&quot;cp: write error on file %s&quot;, argv[2]);
+    return 0;
+}
+</code></pre>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;stdarg.h&gt;
+
+/* error: print an error message and die */
+void error(char *fmt, ...)
+{
+    va_list args;
+
+    va_start(args, fmt);
+    fprintf(stderr, &quot;error: &quot;);
+    vprintf(stderr, fmt, args);
+    fprintf(stderr, &quot;\n&quot;);
+    va_end(args);
+    exit(1);
+}
+</code></pre>
+<h3 id="在文件任意位置读n个字节">在文件任意位置读n个字节</h3>
+<pre><code>#include &quot;syscalls.h&quot;
+
+/*get: read n bytes from position pos */
+int get(int fd, long pos, char *buf, int n)
+{
+    if (lseek(fd, pos, 0) &gt;= 0) /* get to pos */
+        return read(fd, buf, n);
+    else
+        return -1;
+}
+</code></pre>
+<h3 id="fopen函数">fopen函数</h3>
+<pre><code>#include &lt;fcntl.h&gt;
+#include &quot;syscalls.h&quot;
+#define PERMS 0666 /* RW for owner, group, others */
+
+FILE *fopen(char *name, char *mode)
+{
+    int fd;
+    FILE *fp;
+
+    if (*mode != 'r' &amp;&amp; *mode != 'w' &amp;&amp; *mode != 'a')
+        return NULL;
+    for (fp = _iob; fp &lt; _iob + OPEN_MAX; fp++)
+        if ((fp-&gt;flag &amp; (_READ | _WRITE)) == 0)
+            break; /* found free slot */
+    if (fp &gt;= _iob + OPEN_MAX) /* no free slots */
+        return NULL;
+
+    if (*mode == 'w')
+        fd = creat(name, PERMS);
+    else if (*mode == 'a') {
+        if ((fd = open(name, O_WRONLY, 0)) == -1)
+            fd = creat(name, PERMS);
+        lseek(fd, 0L, 2);
+    } else
+        fd = open(name, O_RDONLY, 0);
+    if (fd == -1) /* couldn't access name */
+        return NULL;
+    fp-&gt;fd = fd;
+    fp-&gt;cnt = 0;
+    fp-&gt;base = NULL;
+    fp-&gt;flag = (*mode == 'r') ? _READ : _WRITE;
+    return fp;
+}
+</code></pre>
+<pre><code>#include &quot;syscalls.h&quot;
+
+/* _fillbuf: allocate and fill input buffer */
+int _fillbuf(FILE *fp)
+{
+    int bufsize;
+
+    if ((fp-&gt;flag&amp;(_READ|_EOF_ERR)) != _READ)
+        return EOF;
+    bufsize = (fp-&gt;flag &amp; _UNBUF) ? 1 : BUFSIZ;
+    if (fp-&gt;base == NULL) /* no buffer yet */
+        if ((fp-&gt;base = (char *) malloc(bufsize)) == NULL)
+            return EOF; /* can't get buffer */
+    fp-&gt;ptr = fp-&gt;base;
+    fp-&gt;cnt = read(fp-&gt;fd, fp-&gt;ptr, bufsize);
+    if (--fp-&gt;cnt &lt; 0) {
+        if (fp-&gt;cnt == -1)
+            fp-&gt;flag |= _EOF;
+        else
+            fp-&gt;flag |= _ERR;
+        fp-&gt;cnt = 0;
+         return EOF;
+    }
+    return (unsigned char) *fp-&gt;ptr++;
+}
+</code></pre>
+<pre><code>FILE _iob[OPEN_MAX] = { /* stdin, stdout, stderr */
+    { 0, (char *) 0, (char *) 0, _READ, 0 },
+    { 0, (char *) 0, (char *) 0, _WRITE, 1 },
+    { 0, (char *) 0, (char *) 0, _WRITE, | _UNBUF, 2 }
+};
+</code></pre>
+<h3 id="递归打印给定目录下的文件名和文件长度">递归打印给定目录下的文件名和文件长度</h3>
+<pre><code>#define NAME_MAX 14 /* longest filename component; */
+
+/* system-dependent */
+typedef struct { /* portable directory entry */
+    long ino; /* inode number */
+    char name[NAME_MAX+1]; /* name + '\0' terminator */
+} Dirent;
+
+typedef struct { /* minimal DIR: no buffering, etc. */
+    int fd; /* file descriptor for the directory */
+    Dirent d; /* the directory entry */
+} DIR;
+
+DIR *opendir(char *dirname);
+Dirent *readdir(DIR *dfd);
+void closedir(DIR *dfd);
+</code></pre>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &quot;syscalls.h&quot;
+#include &lt;fcntl.h&gt; /* flags for read and write */
+#include &lt;sys/types.h&gt; /* typedefs */
+#include &lt;sys/stat.h&gt; /* structure returned by stat */
+#include &quot;dirent.h&quot;
+
+void fsize(char *)
+
+/* print file name */
+main(int argc, char **argv)
+{
+    if (argc == 1) /* default: current directory */
+        fsize(&quot;.&quot;);
+    else
+        while (--argc &gt; 0)
+    fsize(*++argv);
+    return 0;
+}
+</code></pre>
+<pre><code>int stat(char *, struct stat *);
+void dirwalk(char *, void (*fcn)(char *));
+
+/* fsize: print the name of file &quot;name&quot; */
+void fsize(char *name)
+{
+    struct stat stbuf;
+
+    if (stat(name, &amp;stbuf) == -1) {
+        fprintf(stderr, &quot;fsize: can't access %s\n&quot;, name);
+        return;
+    }
+    if ((stbuf.st_mode &amp; S_IFMT) == S_IFDIR)
+        dirwalk(name, fsize);
+    printf(&quot;%8ld %s\n&quot;, stbuf.st_size, name);
+}
+</code></pre>
+<pre><code>#define MAX_PATH 1024
+
+/* dirwalk: apply fcn to all files in dir */
+void dirwalk(char *dir, void (*fcn)(char *))
+{
+    char name[MAX_PATH];
+    Dirent *dp;
+    DIR *dfd;
+
+    if ((dfd = opendir(dir)) == NULL) {
+        fprintf(stderr, &quot;dirwalk: can't open %s\n&quot;, dir);
+        return;
+    }
+    while ((dp = readdir(dfd)) != NULL) {
+        if (strcmp(dp-&gt;name, &quot;.&quot;) == 0
+         || strcmp(dp-&gt;name, &quot;..&quot;))
+            continue; /* skip self and parent */
+        if (strlen(dir)+strlen(dp-&gt;name)+2 &gt; sizeof(name))
+            fprintf(stderr, &quot;dirwalk: name %s %s too long\n&quot;,
+                dir, dp-&gt;name);
+        else {
+            sprintf(name, &quot;%s/%s&quot;, dir, dp-&gt;name);
+            (*fcn)(name);
+        }
+    }
+    closedir(dfd);
+}
+</code></pre>
+<pre><code>int fstat(int fd, struct stat *);
+
+/* opendir: open a directory for readdir calls */
+DIR *opendir(char *dirname)
+{
+    int fd;
+    struct stat stbuf;
+    DIR *dp;
+
+    if ((fd = open(dirname, O_RDONLY, 0)) == -1
+     || fstat(fd, &amp;stbuf) == -1
+     || (stbuf.st_mode &amp; S_IFMT) != S_IFDIR
+     || (dp = (DIR *) malloc(sizeof(DIR))) == NULL)
+        return NULL;
+    dp-&gt;fd = fd;
+    return dp;
+}
+</code></pre>
+<pre><code>/* closedir: close directory opened by opendir */
+void closedir(DIR *dp)
+{
+    if (dp) {
+        close(dp-&gt;fd);
+        free(dp);
+    }
+}
+</code></pre>
+<pre><code>#include &lt;sys/dir.h&gt; /* local directory structure */
+
+/* readdir: read directory entries in sequence */
+Dirent *readdir(DIR *dp)
+{
+    struct direct dirbuf; /* local directory structure */
+    static Dirent d; /* return: portable structure */
+
+    while (read(dp-&gt;fd, (char *) &amp;dirbuf, sizeof(dirbuf))
+                    == sizeof(dirbuf)) {
+        if (dirbuf.d_ino == 0) /* slot not in use */
+            continue;
+        d.ino = dirbuf.d_ino;
+        strncpy(d.name, dirbuf.d_name, DIRSIZ);
+        d.name[DIRSIZ] = '\0'; /* ensure termination */
+        return &amp;d;
+    }
+    return NULL;
+}
+</code></pre>
+<h3 id="malloc和free函数以long对齐">malloc和free函数(以long对齐)</h3>
+<pre><code>typedef long Align; /* for alignment to long boundary */
+
+union header { /* block header */
+    struct {
+        union header *ptr; /* next block if on free list */
+        unsigned size; /* size of this block */
+    } s;
+    Align x; /* force alignment of blocks */
+};
+
+typedef union header Header;
+</code></pre>
+<pre><code>static Header base; /* empty list to get started */
+static Header *freep = NULL; /* start of free list */
+
+/* malloc: general-purpose storage allocator */
+void *malloc(unsigned nbytes)
+{
+    Header *p, *prevp;
+    Header *moreroce(unsigned);
+    unsigned nunits;
+
+    nunits = (nbytes+sizeof(Header)-1)/sizeof(header) + 1;
+    if ((prevp = freep) == NULL) { /* no free list yet */
+        base.s.ptr = freeptr = prevptr = &amp;base;
+        base.s.size = 0;
+    }
+    for (p = prevp-&gt;s.ptr; ; prevp = p, p = p-&gt;s.ptr) {
+        if (p-&gt;s.size &gt;= nunits) { /* big enough */
+            if (p-&gt;s.size == nunits) /* exactly */
+                prevp-&gt;s.ptr = p-&gt;s.ptr;
+        else { /* allocate tail end */
+            p-&gt;s.size -= nunits;
+            p += p-&gt;s.size;
+            p-&gt;s.size = nunits;
+        }
+        freep = prevp;
+        return (void *)(p+1);
+    }
+    if (p == freep) /* wrapped around free list */
+        if ((p = morecore(nunits)) == NULL)
+            return NULL; /* none left */
+    }
+}
+</code></pre>
+<pre><code>#define NALLOC 1024 /* minimum #units to request */
+
+/* morecore: ask system for more memory */
+static Header *morecore(unsigned nu)
+{
+    char *cp, *sbrk(int);
+    Header *up;
+
+    if (nu &lt; NALLOC)
+        nu = NALLOC;
+    cp = sbrk(nu * sizeof(Header));
+    if (cp == (char *) -1) /* no space at all */
+        return NULL;
+    up = (Header *) cp;
+    up-&gt;s.size = nu;
+    free((void *)(up+1));
+    return freep;
+}
+</code></pre>
+<pre><code>/* free: put block ap in free list */
+void free(void *ap)
+{
+    Header *bp, *p;
+
+    bp = (Header *)ap - 1; /* point to block header */
+    for (p = freep; !(bp &gt; p &amp;&amp; bp &lt; p-&gt;s.ptr); p = p-&gt;s.ptr)
+        if (p &gt;= p-&gt;s.ptr &amp;&amp; (bp &gt; p || bp &lt; p-&gt;s.ptr))
+            break; /* freed block at start or end of arena */
+
+    if (bp + bp-&gt;size == p-&gt;s.ptr) { /* join to upper nbr */
+        bp-&gt;s.size += p-&gt;s.ptr-&gt;s.size;
+        bp-&gt;s.ptr = p-&gt;s.ptr-&gt;s.ptr;
+    } else
+        bp-&gt;s.ptr = p-&gt;s.ptr;
+    if (p + p-&gt;size == bp) { /* join to lower nbr */
+        p-&gt;s.size += bp-&gt;s.size;
+        p-&gt;s.ptr = bp-&gt;s.ptr;
+    } else
+        p-&gt;s.ptr = bp;
+    freep = p;
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6">文件描述符</a></li>
+<li><a href="#%E4%BD%8E%E7%BA%A7ioread%E5%92%8Cwrite">低级I/O——read和write</a></li>
+<li><a href="#open-creat-close%E5%92%8Cunlink">open、creat、close和unlink</a></li>
+<li><a href="#%E9%9A%8F%E6%9C%BA%E8%AE%BF%E9%97%AElseek">随机访问——lseek</a></li>
+<li><a href="#file">FILE</a></li>
+<li><a href="#ls">ls</a></li>
+<li><a href="#malloc%E5%92%8Cfree">malloc和free</a></li>
+<li><a href="#%E5%85%B6%E4%BB%96">其他</a></li>
+<li><a href="#%E4%BE%8B%E7%A8%8B">例程</a>
+<ul>
+<li><a href="#%E5%A4%8D%E5%88%B6%E8%BE%93%E5%85%A5%E5%88%B0%E8%BE%93%E5%87%BA">复制输入到输出</a></li>
+<li><a href="#getchar%E5%87%BD%E6%95%B0">getchar函数</a></li>
+<li><a href="#%E5%B8%A6%E7%BC%93%E5%86%B2%E5%8C%BA%E7%9A%84getchar%E5%87%BD%E6%95%B0">带缓冲区的getchar函数</a></li>
+<li><a href="#%E6%96%87%E4%BB%B6%E5%A4%8D%E5%88%B6">文件复制</a></li>
+<li><a href="#%E5%9C%A8%E6%96%87%E4%BB%B6%E4%BB%BB%E6%84%8F%E4%BD%8D%E7%BD%AE%E8%AF%BBn%E4%B8%AA%E5%AD%97%E8%8A%82">在文件任意位置读n个字节</a></li>
+<li><a href="#fopen%E5%87%BD%E6%95%B0">fopen函数</a></li>
+<li><a href="#%E9%80%92%E5%BD%92%E6%89%93%E5%8D%B0%E7%BB%99%E5%AE%9A%E7%9B%AE%E5%BD%95%E4%B8%8B%E7%9A%84%E6%96%87%E4%BB%B6%E5%90%8D%E5%92%8C%E6%96%87%E4%BB%B6%E9%95%BF%E5%BA%A6">递归打印给定目录下的文件名和文件长度</a></li>
+<li><a href="#malloc%E5%92%8Cfree%E5%87%BD%E6%95%B0%E4%BB%A5long%E5%AF%B9%E9%BD%90">malloc和free函数(以long对齐)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessthe-c-programming-language-2nd-editiongreatergreater-kandr-chapter-7-input-and-output-bi-ji/">
+              <h3 class="post-title">
+                《The C Programming Language, 2nd Edition》K&amp;R Chapter 7 - Input and Output 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

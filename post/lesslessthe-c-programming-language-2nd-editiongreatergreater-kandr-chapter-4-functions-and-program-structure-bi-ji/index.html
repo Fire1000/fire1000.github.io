@@ -1,0 +1,520 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《The C Programming Language, 2nd Edition》K&amp;R Chapter 4 - Functions and Program Structure 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654342543105">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《The C Programming Language, 2nd Edition》K&amp;R Chapter 4 - Functions and Program Structure 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="编译
+UNIX中cc命令cc main.c getline.o strindex.o将main.c重新编译，之后与getline.o、strindex.o一起加到到可执行文件a.out中。
+外部变量和函数
+C程序可以看作由一系列外部对象组成..." />
+    <meta name="keywords" content="The C Programming Language" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654342543105" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《The C Programming Language, 2nd Edition》K&amp;R Chapter 4 - Functions and Program Structure 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-02-02
+              </span>
+              <span>
+                9 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/p29rjtcKO/" class="post-tag">
+                  # The C Programming Language
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h2 id="编译">编译</h2>
+<p>UNIX中cc命令<code>cc main.c getline.o strindex.o</code>将main.c重新编译，之后与getline.o、strindex.o一起加到到可执行文件a.out中。</p>
+<h2 id="外部变量和函数">外部变量和函数</h2>
+<p>C程序可以看作由一系列外部对象组成，外部对象可以是函数或变量。外部指函数外，内部指函数内。<br>
+因为C语言不允许在函数内定义函数，所以函数本身是外部的。</p>
+<p>没有声明原型的函数，在第一被调用时，隐式声明为返回int。</p>
+<p>同一个名字的所有外部变量(函数)的所有引用，都指向同一个对象，即外部链接。<br>
+外部变量和函数的作用域从声明开始到文件末尾。</p>
+<p>使用在其他源文件中的外部变量时，必须使用extern显式声明。<br>
+extern声明不需要指明数组的长度。</p>
+<p>static可以将外部变量(函数)声明为静态，static声明的外部变量对其他源文件不可见，避免了名称冲突。<br>
+static声明的内部变量只能在函数中被访问(与自动变量相同)，之后一直占据存储空间不随函数退出消失(与自动变量不同)。</p>
+<h2 id="register">register</h2>
+<p>register声明表示该变量使用频率较高，建议编译器将变量放在寄存器中(程序更小，速度更快)，但编译器可以选择无视。<br>
+register声明只适用于自动变量和函数形参。<br>
+无论register声明的变量是否最终放在寄存器中，它的地址都是不可访问的。</p>
+<h2 id="初始化">初始化</h2>
+<p>block内声明的自动变量，每次进入block时都初始化，离开block时消失。<br>
+block内声明的静态变量，第一次进入block时初始化。<br>
+block内声明block外存在的变量，会隐藏block外的变量，声明新的变量。</p>
+<p>不进行显式初始化的情况下，外部变量和静态变量都初始化为0，自动变量和寄存器变量是未定义的。<br>
+外部变量与静态变量的初始化表达式必须是常量表达式，且只初始化一次(在程序开始前)。<br>
+自动变量与寄存器变量的初始化表达式任意，每次进入函数或block时都被初始化。</p>
+<p>数组声明时允许后跟一个初始化表达式列表进行初始化。当省略数组长度时，长度为列表中初始化表达式的个数。当初始化表达式的个数比数组长度小时，则初始化为0。如果初始化表达式的个数大于数组长度是错误的。<br>
+字符数组允许以一个字符串替代初始化表达式列表，数组元素包含字符串末尾的'\0'。</p>
+<h2 id="递归">递归</h2>
+<p>递归不节省内存，执行速度也不快，但代码紧凑，更容易编写和理解。</p>
+<h2 id="预处理">预处理</h2>
+<p>#include如果文件名用引号，则表示先从源文件位置查找该文件，如果没找到则按文件名用尖括号相同的规则查找该文件，具体规则取决于具体实现。<br>
+在大程序中用#include将所有声明放在一起是比较好的方法，保证了所有源文件使用相同的声明。缺点是当内容发生变化时，所有依赖于这个文件的源文件都必须重新编译。</p>
+<p>#define定义的名字，作用域从定义位置起到文件末尾。太长的宏定义可以使用「\」换行。<br>
+#define允许带参数，如<code>#define max(A, B) ((A) &gt; (B) ? (A) : (B))</code>。<br>
+将函数定义成宏，可以减少函数调用的开销。<br>
+#undef取消#define定义的名称。<br>
+「#」：<code>#define dprint(expr) printf(#expr &quot; = %g\n&quot;, expr)</code>，<code>dprint(x/y); </code>等价于<code>printf(&quot;x/y = %g\n&quot;, x/y);</code>。<br>
+「##」：<code>#define paste(front, back) front ## back</code>，<code>paste(front, back);</code>结果为name1。</p>
+<p>#elif类似于else if。<br>
+<code>#if define(名字)</code>，当名字定义时，值1，否则为0。等价于#ifdef。<code>#if !define(名字)</code>等价于#ifndef。</p>
+<h2 id="例程">例程</h2>
+<h3 id="找出所有包含指定字符串的行">找出所有包含指定字符串的行</h3>
+<pre><code>#include &lt;stdio.h&gt;
+#define MAXLINE 1000 /* maximum input line length */
+
+int getline(char line[], int max);
+int strindex(char source[], char searchfor[]);
+
+char pattern[] = &quot;ould&quot;; /* pattern to search for */
+
+/* find all lines matching pattern */
+main()
+{
+    char line[MAXLINE];
+    int found = 0;
+
+    while (getline(line, MAXLINE) &gt; 0)
+        if (strindex(line, pattern) &gt;= 0) {
+            printf(&quot;%s&quot;, line);
+            found++;
+        }
+    return found;
+}
+
+/* getline: get line into s, return length */
+int getline(char s[], int lim)
+{
+    int c, i;
+    i = 0;
+    while (--lim &gt; 0 &amp;&amp; (c=getchar()) != EOF &amp;&amp; c != '\n')
+        s[i++] = c;
+    if (c == '\n')
+        s[i++] = c;
+    s[i] = '\0';
+    return i;
+}
+
+/* strindex: return index of t in s, -1 if none */
+int strindex(char s[], char t[])
+{
+    int i, j, k;
+    for (i = 0; s[i] != '\0'; i++) {
+        for (j=i, k=0; t[k]!='\0' &amp;&amp; s[j]==t[k]; j++, k++)
+            ;
+        if (k &gt; 0 &amp;&amp; t[k] == '\0')
+            return i;
+    }
+    return -1;
+}
+</code></pre>
+<h3 id="atof函数将字符串转换为浮点">atof函数(将字符串转换为浮点)</h3>
+<pre><code>#include &lt;ctype.h&gt;
+
+/* atof: convert string s to double */
+double atof(char s[])
+{
+    double val, power;
+    int i, sign;
+
+    for (i = 0; isspace(s[i]); i++) /* skip white space */
+        ;
+    sign = (s[i] == '-') ? -1 : 1;
+    if (s[i] == '+' || s[i] == '-')
+        i++;
+    for (val = 0.0; isdigit(s[i]); i++)
+        val = 10.0 * val + (s[i] - '0');
+    if (s[i] == '.')
+        i++;
+    for (power = 1.0; isdigit(s[i]); i++) {
+        val = 10.0 * val + (s[i] - '0');
+        power *= 10;
+    }
+    return sign * val / power;
+}
+</code></pre>
+<h3 id="atoi函数将字符数转换为整数">atoi函数(将字符数转换为整数)</h3>
+<pre><code>/* atoi: convert string s to integer using atof */
+int atoi(char s[])
+{
+    double atof(char s[]);
+    return (int) atof(s);
+}
+</code></pre>
+<h3 id="逆波兰计算器">逆波兰计算器</h3>
+<p><code>(1 - 2) * (4 + 5)</code>逆波兰表示法为<code>1 2 - 4 5 + *</code>。</p>
+<p>calc.h</p>
+<pre><code>#define NUMBER '0' /* signal that a number was found */
+
+void push(double);
+double pop(void);
+int getop(char []);
+int getch(void);
+void ungetch(int c);
+</code></pre>
+<p>main.c</p>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt; /* for atof() */
+#include &quot;calc.h&quot;
+
+#define MAXOP 100 /* max size of operand or operator */
+
+/* reverse Polish calculator */
+main()
+{
+    int type;
+    double op2;
+    char s[MAXOP];
+
+    while ((type = getop(s)) != EOF) {
+        switch (type) {
+        case NUMBER:
+            push(atof(s));
+            break;
+        case '+':
+            push(pop() + pop());
+            break;
+        case '*':
+            push(pop() * pop());
+            break;
+        case '-':
+            op2 = pop();
+            push(pop() - op2);
+            break;
+        case '/':
+            op2 = pop();
+            if (op2 != 0.0)
+                push(pop() / op2);
+            else
+                printf(&quot;error: zero divisor\n&quot;);
+            break;
+        case '\n':
+            printf(&quot;\t%.8g\n&quot;, pop());
+            break;
+        default:
+            printf(&quot;error: unknown command %s\n&quot;, s);
+            break;
+        }
+    }
+    return 0;
+}
+</code></pre>
+<p>getop.c</p>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;ctype.h&gt;
+#include &quot;calc.h&quot;
+
+/* getop: get next character or numeric operand */
+int getop(char s[])
+{
+    int i, c;
+
+    while ((s[0] = c = getch()) == ' ' || c == '\t')
+        ;
+    s[1] = '\0';
+    if (!isdigit(c) &amp;&amp; c != '.')
+        return c; /* not a number */
+    i = 0;
+    if (isdigit(c)) /* collect integer part */
+        while (isdigit(s[++i] = c = getch()))
+            ;
+    if (c == '.') /* collect fraction part */
+        while (isdigit(s[++i] = c = getch()))
+            ;
+    s[i] = '\0';
+    if (c != EOF)
+        ungetch(c);
+    return NUMBER;
+}
+</code></pre>
+<p>stack.h</p>
+<pre><code>#include &lt;stdio.h&gt;
+#include &quot;calc.h&quot;
+
+#define MAXVAL 100 /* maximum depth of val stack */
+
+int sp = 0; /* next free stack position */
+double val[MAXVAL]; /* value stack */
+
+/* push: push f onto value stack */
+void push(double f)
+{
+    if (sp &lt; MAXVAL)
+        val[sp++] = f;
+    else
+        printf(&quot;error: stack full, can't push %g\n&quot;, f);
+}
+
+/* pop: pop and return top value from stack */
+double pop(void)
+{
+    if (sp &gt; 0)
+        return val[--sp];
+    else {
+        printf(&quot;error: stack empty\n&quot;);
+        return 0.0;
+    }
+}
+</code></pre>
+<p>getch.c</p>
+<pre><code>#include &lt;stdio.h&gt;
+
+#define BUFSIZE 100
+
+char buf[BUFSIZE]; /* buffer for ungetch */
+int bufp = 0; /* next free position in buf */
+
+int getch(void) /* get a (possibly pushed-back) character */
+{
+    return (bufp &gt; 0) ? buf[--bufp] : getchar();
+}
+
+void ungetch(int c) /* push character back on input */
+{
+    if (bufp &gt;= BUFSIZE)
+        printf(&quot;ungetch: too many characters\n&quot;);
+    else
+        buf[bufp++] = c;
+}
+</code></pre>
+<h3 id="打印十进制数">打印十进制数</h3>
+<pre><code>#include &lt;stdio.h&gt;
+
+/* printd: print n in decimal */
+void printd(int n)
+{
+    if (n &lt; 0) {
+        putchar('-');
+        n = -n;
+    }
+    if (n / 10)
+        printd(n / 10);
+    putchar(n % 10 + '0');
+}
+</code></pre>
+<h3 id="快速排序">快速排序</h3>
+<pre><code>/* qsort: sort v[left]...v[right] into increasing order */
+void qsort(int v[], int left, int right)
+{
+    int i, last;
+    void swap(int v[], int i, int j);
+    
+    if (left &gt;= right) /* do nothing if array contains */
+        return; /* fewer than two elements */
+    swap(v, left, (left + right)/2); /* move partition elem */
+    last = left; /* to v[0] */
+    for (i = left + 1; i &lt;= right; i++) /* partition */
+        if (v[i] &lt; v[left])
+            swap(v, ++last, i);
+    swap(v, left, last); /* restore partition elem */
+    qsort(v, left, last-1);
+    qsort(v, last+1, right);
+}
+
+/* swap: interchange v[i] and v[j] */
+void swap(int v[], int i, int j)
+{
+    int temp;
+
+    temp = v[i];
+    v[i] = v[j];
+    v[j] = temp;
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E7%BC%96%E8%AF%91">编译</a></li>
+<li><a href="#%E5%A4%96%E9%83%A8%E5%8F%98%E9%87%8F%E5%92%8C%E5%87%BD%E6%95%B0">外部变量和函数</a></li>
+<li><a href="#register">register</a></li>
+<li><a href="#%E5%88%9D%E5%A7%8B%E5%8C%96">初始化</a></li>
+<li><a href="#%E9%80%92%E5%BD%92">递归</a></li>
+<li><a href="#%E9%A2%84%E5%A4%84%E7%90%86">预处理</a></li>
+<li><a href="#%E4%BE%8B%E7%A8%8B">例程</a>
+<ul>
+<li><a href="#%E6%89%BE%E5%87%BA%E6%89%80%E6%9C%89%E5%8C%85%E5%90%AB%E6%8C%87%E5%AE%9A%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E8%A1%8C">找出所有包含指定字符串的行</a></li>
+<li><a href="#atof%E5%87%BD%E6%95%B0%E5%B0%86%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BD%AC%E6%8D%A2%E4%B8%BA%E6%B5%AE%E7%82%B9">atof函数(将字符串转换为浮点)</a></li>
+<li><a href="#atoi%E5%87%BD%E6%95%B0%E5%B0%86%E5%AD%97%E7%AC%A6%E6%95%B0%E8%BD%AC%E6%8D%A2%E4%B8%BA%E6%95%B4%E6%95%B0">atoi函数(将字符数转换为整数)</a></li>
+<li><a href="#%E9%80%86%E6%B3%A2%E5%85%B0%E8%AE%A1%E7%AE%97%E5%99%A8">逆波兰计算器</a></li>
+<li><a href="#%E6%89%93%E5%8D%B0%E5%8D%81%E8%BF%9B%E5%88%B6%E6%95%B0">打印十进制数</a></li>
+<li><a href="#%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F">快速排序</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessthe-c-programming-language-2nd-editiongreatergreater-kandr-chapter-3-control-flow-bi-ji/">
+              <h3 class="post-title">
+                《The C Programming Language, 2nd Edition》K&amp;R Chapter 3 - Control Flow 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

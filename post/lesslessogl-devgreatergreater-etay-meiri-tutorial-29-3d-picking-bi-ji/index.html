@@ -1,0 +1,242 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《OGL dev》Etay Meiri Tutorial 29 - 3D Picking 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654342543105">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《OGL dev》Etay Meiri Tutorial 29 - 3D Picking 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="3D拾取指获取屏幕上点击的像素对应的图元的技术。
+3D拾取的原理是在正常渲染pass之前，插入一个将图元信息渲染到picking texture的各个通道中的pass。之后，点击屏幕时，从picking texture中读取到点击的像素对应..." />
+    <meta name="keywords" content="OGL dev" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654342543105" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《OGL dev》Etay Meiri Tutorial 29 - 3D Picking 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-05-11
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/YVy0O486v/" class="post-tag">
+                  # OGL dev
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>3D拾取指获取屏幕上点击的像素对应的图元的技术。</p>
+<p>3D拾取的原理是在正常渲染pass之前，插入一个将图元信息渲染到picking texture的各个通道中的pass。之后，点击屏幕时，从picking texture中读取到点击的像素对应的图元信息。</p>
+<p>渲染到picking texture时，必须启用深度测试，当像素重叠时丢弃离摄影机较远的像素。以保证鼠标点击，读取picking texture时，获取的是离屏幕(摄影机)最近的图元。</p>
+<p>场景中对象的索引，绘制一个对象内部调用draw call的索引，draw call内部图元的索引，三者唯一确定一个图元。</p>
+<p>GS和FS的内置变量gl_PrimitiveID存储draw call内部图元的索引。如果存在GS，在GS中可以直接使用gl_PrimitiveID，在FS只能接收从GS输出的全局变量以获取gl_PrimitiveID的值。如果不存在GS，在FS中可以直接使用gl_PrimitiveID。gl_PrimitiveID中图元索引，从0开始编号。</p>
+<pre><code>glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, WindowWidth, WindowHeight, 0, GL_RGB, GL_FLOAT, NULL);
+</code></pre>
+<ul>
+<li>GL_RGB32F是纹理内部格式，表示每个texel有三个浮点通道，对应的数据源格式为GL_RGB和GL_FLOAT。虽然数据源为NULL，但纹理要被写入，数据源格式是必须正确填写的。</li>
+</ul>
+<pre><code>PickingTexture::PixelInfo PickingTexture::ReadPixel(unsigned int x, unsigned int y)
+{
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fbo);
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+
+    PixelInfo Pixel;
+    glReadPixels(x, y, 1, 1, GL_RGB, GL_FLOAT, &amp;Pixel);
+
+    glReadBuffer(GL_NONE);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+
+    return Pixel;
+}
+</code></pre>
+<ul>
+<li><code>glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fbo);</code>，将framebuffer m_fbo绑定到读取。<code>glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);</code>，将framebuffer重置为默认framebuffer。</li>
+<li><code>glReadBuffer(GL_COLOR_ATTACHMENT0);</code>，表示从索引为0的color buffer读取，因为framebuffer支持包含多个color buffer，一次draw call，FS可以同时渲染到多个color buffer。虽然可以一次渲染到多个color buffer，但一次只能从一个color buffer读取。<code>glReadBuffer(GL_NONE);</code>，禁用从framebuffer读取。</li>
+<li><code>glReadPixels(x, y, 1, 1, GL_RGB, GL_FLOAT, &amp;Pixel);</code>，从buffer中读取一个矩形区域的像素信息，返回到最后一个参数Pixel的地址中。Pixel的类型是由倒数第二和第三个参数确定的，这里使用GL_RGB和GL_FLOAT获取原始数据，如果使用其他参数，函数会在输出时转换到参数确定的类型。第一和第二个参数确定矩阵区域的左下角，之后两个参数是长宽，这里使用1和1表示只获取一个像素。</li>
+</ul>
+<pre><code>static void MouseCB(int Button, int State, int x, int y)
+{
+    s_pCallbacks-&gt;MouseCB(Button, State, x, y);
+}
+
+
+static void InitCallbacks()
+{
+    ...
+    glutMouseFunc(MouseCB);
+}
+</code></pre>
+<ul>
+<li>glutMouseFunc()获取鼠标点击事件。</li>
+<li>MouseCB()的第一参数Button为GLUT_LEFT_BUTTON、 GLUT_MIDDLE_BUTTON和GLUT_RIGHT_BUTTON其中之一，表示哪个按键被按下。第二个参数State为GLUT_DOWN或GLUT_UP，表示按下或抬起。</li>
+</ul>
+<p>虽然OpenGL默认是禁用混合的，但在某些没有明确禁用混合的平台上，需要调用<code>glDisable(GL_BLEND);</code>显式禁用混合。</p>
+<p>glutReshapeFunc()获取窗口大小变化。当窗口大小变化时需要重新设定picking texture的宽高，才能保证3D拾取正确。</p>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-28-particle-system-using-transform-feedback-bi-ji/">
+              <h3 class="post-title">
+                《OGL dev》Etay Meiri Tutorial 28 - Particle System using Transform Feedback 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,268 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《OGL dev》Etay Meiri Tutorial 23 - Shadow Mapping - Part 1 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654342543105">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《OGL dev》Etay Meiri Tutorial 23 - Shadow Mapping - Part 1 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="生成阴影的技术有很多种，Shadow Mapping是其中比较简单基础的一种。
+一次深度测试能在depth buffer中得到与屏幕上每个像素对应的每个离摄像机最近的片元的z值。shadow mapping利用这个原理， 通过两次draw ..." />
+    <meta name="keywords" content="OGL dev" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654342543105" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《OGL dev》Etay Meiri Tutorial 23 - Shadow Mapping - Part 1 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-04-18
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/YVy0O486v/" class="post-tag">
+                  # OGL dev
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>生成阴影的技术有很多种，Shadow Mapping是其中比较简单基础的一种。</p>
+<p>一次深度测试能在depth buffer中得到与屏幕上每个像素对应的每个离摄像机最近的片元的z值。shadow mapping利用这个原理， 通过两次draw call调用，实现一个光源的阴影。其中每一次draw call调用称为一个pass。</p>
+<ol>
+<li>第一个pass，将摄影机置于光源，得到depth buffer。这个pass不渲染到color buffer，不显示到屏幕上。而是将depth buffer的内容写入到一张纹理，称为shadow map。向这样将一次渲染的结果写入到纹理的技术称为“render to texture(渲染到纹理)”，简称RTT。</li>
+<li>第二个pass，将摄影机放置回它本来的位置，正常渲染。在fragment shader中将shadow map作为纹理读入，将每一个片元变换到以光源为摄影机的NDC空间中，再将它的深度值与shadow map对应像素的深度值进行比较。如果片元的深度值与shadow map对应深度值不同，说明它不是离光源最近的片元，需要绘制阴影。如果相同，则不需绘制阴影。</li>
+</ol>
+<p>Part1教程只学习第一个pass，因此第二个pass改为将shadow map渲染到屏幕上。具体OpenGL的API调用如下。</p>
+<p>第一个pass：</p>
+<p>首先需要创建一个纹理对象和framebuffer对象。</p>
+<ol>
+<li>纹理对象用于保存shadow map。纹理对象，通过<code>glGenTextures(1, &amp;m_shadowMap);</code>创建，<code>glDeleteTextures(1, &amp;m_shadowMap);</code>销毁，其中m_shadowMap是GLuint类型的handle。</li>
+<li>而framebuffer对象则是因为，默认情况下，OpenGL渲染到默认的framebuffer的color buffer，从而显示到屏幕上。将OpenGL渲染的到的framebuffer改为用户创建的framebuffer对象，可以通过配置这个framebuffer，使OpenGL渲染到纹理对象，并阻止它显示在屏幕上。framebuffer对象，通过<code>glGenFramebuffers(1, &amp;m_fbo);</code>创建，<code>glDeleteFramebuffers(1, &amp;m_fbo);</code>销毁，其中m_fbo是GLuint类型的handle。</li>
+</ol>
+<p>然后初始化纹理对象和framebuffer对象。</p>
+<ol>
+<li>初始化纹理对象。
+<ol>
+<li>绑定texture target：<code>glBindTexture(GL_TEXTURE_2D, m_shadowMap);</code>将m_shadowMap绑定到当前texture unit的GL_TEXTURE_2D。(默认texture unit为texture unit 0)。</li>
+<li>初始化纹理数据：<code>glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, WindowWidth, WindowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);</code>
+<ul>
+<li>第一个参数为要操作的texture target。</li>
+<li>第二个为mipmap level参数，0表示最高分辨率。</li>
+<li>第三个表示OpenGL中存储纹理数据的格式，GL_DEPTH_COMPONENT表示归一化单浮点深度。</li>
+<li>WindowWidth和WindowHeight表示纹理的宽高。</li>
+<li>之后的0是border(边界)参数，目前不使用。</li>
+<li>之后的GL_DEPTH_COMPONENT表示内存中纹理数据的格式。</li>
+<li>之后的GL_FLOAT，表示每个通道为单精度浮点。</li>
+<li>最后是NULL是内存中的数据源，因为shadow map是从渲染写入的，赋值初始数据源没有意义。</li>
+</ul>
+</li>
+<li>设定filter，不设置的话是无法对浮点纹理坐标进行采样的。<code>glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);</code>将放大和缩小都设定为线性过滤(即双线性过滤)。</li>
+<li>设定纹理坐标超过[0, 1]区间的情况如何采样。这是可选的，默认值为GL_REPEAT，表示重复。GL_CLAMP_TO_EDGE表示超出部分使用边界颜色。<code>glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);</code>分别设置u和v坐标。</li>
+</ol>
+</li>
+<li>初始化framebuffer对象。
+<ol>
+<li>绑定：<code>glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);</code>，将m_fbo绑定到GL_FRAMEBUFFER，后续对GL_FRAMEBUFFER的操作，应用于m_fbo。
+<ul>
+<li>glBindFramebuffer的第一个参数可选GL_FRAMEBUFFER、GL_DRAW_FRAMEBUFFER或GL_READ_FRAMEBUFFER。其中GL_FRAMEBUFFER表示读写，GL_DRAW_FRAMEBUFFER表示写入，GL_READ_FRAMEBUFFER表示读取。GL_FRAMEBUFFER是初始化framebuffer对象时推荐的方式。渲染时会使用GL_DRAW_FRAMEBUFFER。使用glReadPixels函数时，会用到GL_READ_FRAMEBUFFER(教程目前不使用)。</li>
+<li><code>glBindFramebuffer(GL_FRAMEBUFFER, 0);</code>绑定到默认的framebuffer。</li>
+</ul>
+</li>
+<li>将纹理对象附加到framebuffer对象：<code>glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_shadowMap, 0);</code>，GL_DEPTH_ATTACHMENT表示附加到depth attachment point，纹理对象将用于接收深度测试的结果，即depth buffer。attachment point还支持以下选项：
+<ul>
+<li>COLOR_ATTACHMENTi，纹理对象将接收fragment shader的颜色，即color buffer。i为整数后辍，因为fragment shader可以同时渲染到多个color buffer。</li>
+<li>STENCIL_ATTACHMENT，纹理对象将接收模版测试的结果，即stencil buffer。</li>
+<li>DEPTH_STENCIL_ATTACHMENT，纹理对象将接收depth buffer和stencil buffer的组合，因两者常一起使用。</li>
+</ul>
+</li>
+<li>可选 ，<code>glDrawBuffer(GL_NONE);</code>，参数可选COLOR_ATTACHMENTi，默认color buffer附加到GL_COLOR_ATTACHMENT0。GL_NONE表示不写入到color buffer，同时禁用fragment shader。
+<ul>
+<li>默认的framebuffer的选项只能是GL_NONE、GL_FRONT_LEFT、GL_FRONT_RIGHT、GL_BACK_LEFT和GL_BACK_RIGHT其中之一，FRONT和BACK分别对应front和back buffer，LEFT和RIGHT是因为每个buffer都有left和right buffer。</li>
+</ul>
+</li>
+<li>可选，<code>glReadBuffer(GL_NONE);</code>禁用framebuffer读取，这是为了避免仅支持OpenGL 3.x而不支持4.x的GPU出问题。</li>
+<li>错误检查：<code>GLenum Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);</code>，Status != GL_FRAMEBUFFER_COMPLETE表示发生错误。</li>
+</ol>
+</li>
+</ol>
+<p>最后渲染：</p>
+<ol>
+<li>绑定：<code>glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo);</code></li>
+<li>清空depth buffer：<code>glClear(GL_DEPTH_BUFFER_BIT);</code></li>
+<li>以光源作为摄影机调用draw call。</li>
+<li>绑定到默认framebuffer：<code>glBindFramebuffer(GL_FRAMEBUFFER, 0);</code>，因为第二个pass要渲染到color buffer。</li>
+</ol>
+<p>第二个Pass：</p>
+<ol>
+<li>清空color buffer和depth buffer：<code>glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);</code></li>
+<li>激活texture unit 0，并将shadow map绑定到它的2D纹理，以供fragment shader中读取。</li>
+<li>正常摄影机调用draw call。</li>
+</ol>
+<p>教程中的fragment shader代码<code>Depth = 1.0 - (1.0 - Depth) * 25.0; </code>是因为以光源为摄像机时，由于透视投影矩阵与物体的位置设定，shadow map的深度值接近于1，直接输出到color buffer颜色会非常淡，因为rgb为0为黑，为1为白。因此对从shadow map的深度值到1这段区域，向深度值为0的方向，进行了25倍缩放，以使得颜色更深。</p>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-22-loading-models-using-the-open-asset-import-library-bi-ji/">
+              <h3 class="post-title">
+                《OGL dev》Etay Meiri Tutorial 22 - Loading models using the Open Asset Import Library 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

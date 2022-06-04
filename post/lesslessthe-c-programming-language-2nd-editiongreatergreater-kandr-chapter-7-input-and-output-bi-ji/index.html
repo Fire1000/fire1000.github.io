@@ -1,0 +1,474 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《The C Programming Language, 2nd Edition》K&amp;R Chapter 7 - Input and Output 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654342543105">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《The C Programming Language, 2nd Edition》K&amp;R Chapter 7 - Input and Output 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="标准库
+标准库将输入的回车符和换页符都转换为换行符，输出时反向转换。
+&lt;ctype.h&gt;中的函数一般都是宏，减少了函数调用开销。
+重定向
+prog &lt;infile表示从infile文件输入。&lt;infile不会包含在m..." />
+    <meta name="keywords" content="The C Programming Language" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654342543105" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《The C Programming Language, 2nd Edition》K&amp;R Chapter 7 - Input and Output 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-02-04
+              </span>
+              <span>
+                13 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/p29rjtcKO/" class="post-tag">
+                  # The C Programming Language
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h2 id="标准库">标准库</h2>
+<p>标准库将输入的回车符和换页符都转换为换行符，输出时反向转换。</p>
+<p>&lt;ctype.h&gt;中的函数一般都是宏，减少了函数调用开销。</p>
+<h2 id="重定向">重定向</h2>
+<p><code>prog &lt;infile</code>表示从infile文件输入。<code>&lt;infile</code>不会包含在main的argv参数中。<br>
+<code>otherprog | prog</code>将otherprog的标准输出重定向到prog的标准输入。<br>
+<code>prog &gt;输出文件名</code>表示输出到指定文件中。</p>
+<h2 id="printf">printf</h2>
+<p>printf格式化字符串中每个转换说明都由一个%开始一个转换字符结束，中间依次包含以下内容：</p>
+<ol>
+<li>负号，表示左对齐输出。</li>
+<li>数，最小字段宽度。空格填充。</li>
+<li>小数点</li>
+<li>数，精度。指字符串中最大字符数，浮点小数位数，整数最少输出的数字数目。</li>
+<li>字母h或l，h表示整数作为short打印，l表示作为long。</li>
+</ol>
+<p>printf的转换字母表：<br>
+d, i  int 类型；十进制数<br>
+o  int 类型；无符号八进制数（没有前导 0）<br>
+x, X  int 类型；无符号十六进制数（没有前导 0x 或 0X），10～15 分别用 abcdef 或 ABCDEF 表示<br>
+u  int 类型；无符号十进制数<br>
+c  int 类型；单个字符<br>
+s  char *类型；顺序打印字符串中的字符，直到遇到'\0'或已打印了由精度指定的字符数为止<br>
+f  double 类型；十进制小数[-]m.dddddd，其中 d 的个数由精度指定（默认值为 6）<br>
+e, E  double 类型；[-]m.dddddd e ±xx 或[-]m.dddddd E ±xx，其中 d 的个数由精度指定（默认值为 6）<br>
+g, G  double 类型；如果指数小于-4 或大于等于精度，则用%e 或%E 格式输出，否则用%f 格式输出。尾部的 0 和小数点不打印<br>
+p  void *类型；指针（取决于具体实现）<br>
+%  不转换参数；打印一个百分号%</p>
+<p>转换说明中的宽度和精度可以用*表示，宽度和精度的值通过下一个实参(必须为int)来计算，比如<code>printf(&quot;%.*s&quot;, max, s)</code>表示打印字符串s中最多max个字段。</p>
+<p>printf的实参不够时，打印错误的结果。</p>
+<p>sprintf将printf的输出保存在字符串string中。前提是string足够大。</p>
+<h2 id="变长参数表">变长参数表</h2>
+<p>printf的正确声明为<code>int printf(char *fmt, ...)</code>。</p>
+<p>&lt;stdarg.h&gt;中定义了一组宏用来遍历参数表。具体实现取决于机器。</p>
+<p>va_list声明一个变量，用于访问参数，如ap。<br>
+va_start初始化用有名参数，初始化ap，使它指向第一个无名参数。因此函数必须至少有一个有名参数。<br>
+每次调用va_arg返回一个参数，va_arg使用一个类型名决定返回对象的类型和指针移动的步长。<br>
+函数返回之前必须调用va_end完成清理工作。</p>
+<h2 id="scanf">scanf</h2>
+<p>scanf除格式字符串外的实参必须为指针。<br>
+scanf遇到与格式字符串不匹配的情况时终止，返回匹配的个数，并给对应的实参赋值。<br>
+scanf返回0表示下一个输入字符与格式字符串中第一个格式说明不匹配，下一次调用scanf从下一个字符开始继续。<br>
+scanf返回EOF表示遇到文件末尾。</p>
+<p>scanf的格式字符串，可以包含以下：</p>
+<ol>
+<li>空格或制表符，处理时被忽略。</li>
+<li>普通字符，用于匹配下一个非空白字符。</li>
+<li>转换说明，依次由一个%，一个可选的赋值禁止字符*，一个可选的数值(指定最大字段宽度)，一个可选的h、l(指定目标对象的宽度)和一个转换字符组成。</li>
+</ol>
+<p>scanf会跳过换行符，因为换行符是空白字符。<br>
+sscanf从字符串中读入。<br>
+scanf读取格式不固定的输入，最好每次读入一行，之后用sscanf分离合适的格式。</p>
+<p>scanf可以与其他输入函数混合使用，输入函数从scanf没读取的第一个字符开始读取。</p>
+<p>scanf转换字符表：<br>
+d  十进制整数；int *类型<br>
+i  整数；int *类型，可以是八进制（以 0 开头）或十六进制（以 0x 或 0X 开头）<br>
+o  八进制整数（可以以 0 开头，也可以不以 0 开头）；int *类型<br>
+u  无符号十进制整数；unsigned int *类型<br>
+x  十六进制整数（可以 0x 或 0X 开头，也可以不以 0x 或 0X 开头）；int *类型<br>
+c  字符；char *类型，将接下来的多个输入字符（默认为 1 个字符）存放到指定位置。该转换规范通常不跳过空白符。如果需要读入下一个非空白符，可以使用%1s<br>
+s  字符串（不加引号）；char *类型，指向一个足以存放该字符串（还包括尾部的字符'\0'）的字符数组。字符串的末尾将被添加一个结束符'\0'<br>
+e, f, g  浮点数，它可以包括正负号（可选）、小数点（可选）及指数部分（可选）；float *类型<br>
+%  字符%；不进行任何赋值操作</p>
+<p>转换说明d、i、o、u、x前辍h表示指向short的指针，l表示指向long的指针。<br>
+转换说明e、f、g前辍l表示指向double的指针。</p>
+<h2 id="文件操作">文件操作</h2>
+<p>&lt;stdio.h&gt;中定义了结构FILE，FILE是类型名不是结构标记。</p>
+<p>fopen的mode参数支持读(&quot;r&quot;)、写(&quot;w&quot;)、追加(&quot;a&quot;)。一些系统还区分文本文件和二进制文件，访问二进制文件需要添加&quot;b&quot;。</p>
+<p>fopen打开一个不存在的文件用于写或追加，将创建这个文件(如果可能)。<br>
+fopen以写的方式打开一个已存在的文件，原来的内容会被覆盖。<br>
+fopen以追加的的方式打开一个已存在的文件，原来的内容保留。<br>
+fopen读一个不存在的文件将报错。<br>
+fopen读一个无权限的文件将报错。<br>
+fopen发生错误时fopen返回NULL。</p>
+<p>getc从文件中读取一个字符，文件末尾或出错返回EOF。<br>
+putc向文件中写入一个字符，返回写入的字符，出错返回EOF。<br>
+getc和putc是宏不是函数。</p>
+<p>启动C程序时，操作系统打开三个文件stdin、stdout、stderr，它们是常量，都在&lt;stdio.h&gt;中声明。<br>
+freopen可以重定向stdin和stdout。</p>
+<p>fclose断开fopen的文件指针与外部名之间的连接，并释放指针。因为大多数操作系统都限制了一个程序可以同时打开的文件数。<br>
+fclose会将缓冲区中的输出，写入到文件。<br>
+当文件正常终止时，程序会自动为每个打开的文件调用fclose。</p>
+<h2 id="exit函数">exit函数</h2>
+<p>程序使用了exit，那么任何调用这个程序的进程都可以获得exit的实参。<br>
+通常exit返回0表示正常，非0表示出错。<br>
+exit为每个打开的输出文件调用fclose，将缓冲区中的输出写到文件中。<br>
+main函数中<code>return expr</code>等价于<code>exit(expr)</code>。</p>
+<h2 id="ferror和feof函数">ferror和feof函数</h2>
+<p>当流出现错误时ferror返回非0。<br>
+当到达文件末尾时feof返回非0。</p>
+<h2 id="行输入输出">行输入/输出</h2>
+<p>fgets的声明：<code>char *fgets(char *line, int maxline, FILE *fp)</code>。<br>
+fgets读取一行，最多读取maxline-1个字符，读取的行以'\0'结尾。<br>
+fgets正常返回line，如果到达文件末尾或发生错误返回NULL。</p>
+<p>fputs写入一行(不需要包含换行符)，返回非负值，发生错误返回EOF。</p>
+<p>gets和puts与fgets和fputs类似，区别是它们操作stdin和stdout。</p>
+<h2 id="字符串操作">字符串操作</h2>
+<p>&lt;stding.h&gt;中定义了一系列字符串操作函数：<br>
+strcat(s, t)  将 t 指向的字符串连接到 s 指向的字符串的末尾<br>
+strncat(s, t, n) 将 t 指向的字符串中前 n 个字符连接到 s 指向的字符串的末尾<br>
+strcmp(s, t)  根据 s 指向的字符串小于（s&lt;t）、等于（s==t）或大于（s&gt;t）t<br>
+指向的字符串的不同情况，分别返回负整数、0 或正整数<br>
+strncmp(s, t, n) 同 strcmp 相同，但只在前 n 个字符中比较<br>
+strcpy(s, t)  将 t 指向的字符串复制到 s 指向的位置<br>
+strncpy(s, t, n) 将 t 指向的字符串中前 n 个字符复制到 s 指向的位置<br>
+strlen(s)  返回 s 指向的字符串的长度<br>
+strchr(s, c)  在 s 指向的字符串中查找 c，若找到，则返回指向它第一次出现的位<br>
+置的指针，否则返回 NULL<br>
+strrchr(s, c)  在 s 指向的字符串中查找 c，若找到，则返回指向它最后一次出现的<br>
+位置的指针，否则返回 NULL</p>
+<h2 id="字符操作">字符操作</h2>
+<p>&lt;ctype.h&gt;中定义了一系列字符操作函数：<br>
+isalpha(c)  若 c 是字母，则返回一个非 0 值，否则返回 0<br>
+isupper(c)  若 c 是大写字母，则返回一个非 0 值，否则返回 0<br>
+islower(c)  若 c 是小写字母，则返回一个非 0 值，否则返回 0<br>
+isdigit(c)  若 c 是数字，则返回一个非 0 值，否则返回 0<br>
+isalnum(c)  若 isalpha(c)或 isdigit(c)，则返回一个非 0 值，否则返回 0<br>
+isspace(c)  若 c 是空格、横向制表符、换行符、回车符，换页符或纵向制表符，<br>
+则返回一个非 0 值<br>
+toupper(c)  返回 c 的大写形式<br>
+tolower(c)  返回 c 的小写形式</p>
+<h2 id="ungetc函数">ungetc函数</h2>
+<p>ungetc支持向每个文件写回一个字符，最多一个。写回成功返回写回的字符，失败返回EOF。</p>
+<h2 id="system函数">system函数</h2>
+<p>system函数的参数，是操作系统中执行的命令，返回值来自所执行的命令，取决于具体的操作系统。UNIX中，返回值是exit的返回值。</p>
+<h2 id="内存操作">内存操作</h2>
+<p>malloc和calloc都返回的指针都满足对齐要求，发生错误返回NULL。区别是calloc初始化内存空间为0，malloc不初始化。</p>
+<p>free释放malloc和calloc分配的内存。但如果释放一个不是malloc和calloc分配的内存是严重的错误。访问已释放的内存也是错误。</p>
+<h2 id="数学函数">数学函数</h2>
+<p>&lt;math.h&gt;中声明了20多个数学函数：<br>
+sin(x)  x 的正弦函数，其中 x 用弧度表示<br>
+cos(x)  x 的余弦函数，其中 x 用弧度表示<br>
+atan2(y, x)  y/x 的反正切函数，其中，x 和 y 用弧度表示<br>
+exp(x)  指数函数 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>e</mi><mi>x</mi></msup></mrow><annotation encoding="application/x-tex">e^x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.664392em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span></span></span></span></span></span></span></span><br>
+log(x)  x 的自然对数（以 e 为底），其中，x&gt;0<br>
+log10(x)  x 的常用对数（以 10 为底），其中，x&gt;0<br>
+pow(x, y)  计算 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>x</mi><mi>y</mi></msup></mrow><annotation encoding="application/x-tex">x^y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.664392em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">y</span></span></span></span></span></span></span></span></span></span></span> 的值<br>
+sqrt(x)  x 的平方根（x≥0）<br>
+fabs(x)  x 的绝对值</p>
+<h2 id="随机数">随机数</h2>
+<p>rand()生成介于0与RAND_MAX之间的伪随机整数。RAND_MAX在&lt;stdlib.h&gt;中定义。</p>
+<p>生成大于等于0小于1的随机浮点数的方法：<code>#define frand() ((double) rand() / (RAND_MAX+1.0))</code>。</p>
+<p>srand(unsigned)设置rand的种子。</p>
+<h2 id="例程">例程</h2>
+<h3 id="简化版printf实现只支持d-f和s">简化版printf实现(只支持%d、%f和%s)</h3>
+<pre><code>#include &lt;stdarg.h&gt;
+
+/* minprintf: minimal printf with variable argument list */
+void minprintf(char *fmt, ...)
+{
+    va_list ap; /* points to each unnamed arg in turn */
+    char *p, *sval;
+    int ival;
+    double dval;
+
+    va_start(ap, fmt); /* make ap point to 1st unnamed arg */
+        for (p = fmt; *p; p++) {
+            if (*p != '%') {
+                putchar(*p);
+                continue;
+            }
+            switch (*++p) {
+            case 'd':
+                ival = va_arg(ap, int);
+                printf(&quot;%d&quot;, ival);
+                break;
+            case 'f':
+                dval = va_arg(ap, double);
+                printf(&quot;%f&quot;, dval);
+                break;
+            case 's':
+                for (sval = va_arg(ap, char *); *sval; sval++)
+                putchar(*sval);
+                break;
+            default:
+                putchar(*p);
+            break;
+        }
+    }
+    va_end(ap); /* clean up when done */
+}
+</code></pre>
+<h3 id="cat函数连接多个文件">cat函数(连接多个文件)</h3>
+<pre><code>#include &lt;stdio.h&gt;
+
+/* cat: concatenate files, version 2 */
+main(int argc, char *argv[])
+{
+    FILE *fp;
+    void filecopy(FILE *, FILE *);
+    char *prog = argv[0]; /* program name for errors */
+
+    if (argc == 1 ) /* no args; copy standard input */
+        filecopy(stdin, stdout);
+    else
+        while (--argc &gt; 0)
+            if ((fp = fopen(*++argv, &quot;r&quot;)) == NULL) {
+                fprintf(stderr, &quot;%s: can't open %s\n&quot;,
+                    prog, *argv);
+                exit(1);
+            } else {
+                filecopy(fp, stdout);
+                fclose(fp);
+            }
+    if (ferror(stdout)) {
+        fprintf(stderr, &quot;%s: error writing stdout\n&quot;, prog);
+        exit(2);
+    }
+    exit(0);
+}
+</code></pre>
+<h3 id="fgets和fputs函数">fgets和fputs函数</h3>
+<pre><code>/* fgets: get at most n chars from iop */
+char *fgets(char *s, int n, FILE *iop)
+{
+    register int c;
+    register char *cs;
+
+    cs = s;
+    while (--n &gt; 0 &amp;&amp; (c = getc(iop)) != EOF)
+        if ((*cs++ = c) == '\n')
+            break;
+    *cs = '\0';
+    return (c == EOF &amp;&amp; cs == s) ? NULL : s;
+}
+
+/* fputs: put string s on file iop */
+int fputs(char *s, FILE *iop)
+{
+    int c;
+
+    while (c = *s++)
+        putc(c, iop);
+    return ferror(iop) ? EOF : 0;
+}
+</code></pre>
+<h3 id="读入一行返回长度">读入一行返回长度</h3>
+<pre><code>/* getline: read a line, return length */
+int getline(char *line, int max)
+{
+    if (fgets(line, max, stdin) == NULL)
+        return 0;
+    else
+        return strlen(line);
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E6%A0%87%E5%87%86%E5%BA%93">标准库</a></li>
+<li><a href="#%E9%87%8D%E5%AE%9A%E5%90%91">重定向</a></li>
+<li><a href="#printf">printf</a></li>
+<li><a href="#%E5%8F%98%E9%95%BF%E5%8F%82%E6%95%B0%E8%A1%A8">变长参数表</a></li>
+<li><a href="#scanf">scanf</a></li>
+<li><a href="#%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C">文件操作</a></li>
+<li><a href="#exit%E5%87%BD%E6%95%B0">exit函数</a></li>
+<li><a href="#ferror%E5%92%8Cfeof%E5%87%BD%E6%95%B0">ferror和feof函数</a></li>
+<li><a href="#%E8%A1%8C%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA">行输入/输出</a></li>
+<li><a href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C">字符串操作</a></li>
+<li><a href="#%E5%AD%97%E7%AC%A6%E6%93%8D%E4%BD%9C">字符操作</a></li>
+<li><a href="#ungetc%E5%87%BD%E6%95%B0">ungetc函数</a></li>
+<li><a href="#system%E5%87%BD%E6%95%B0">system函数</a></li>
+<li><a href="#%E5%86%85%E5%AD%98%E6%93%8D%E4%BD%9C">内存操作</a></li>
+<li><a href="#%E6%95%B0%E5%AD%A6%E5%87%BD%E6%95%B0">数学函数</a></li>
+<li><a href="#%E9%9A%8F%E6%9C%BA%E6%95%B0">随机数</a></li>
+<li><a href="#%E4%BE%8B%E7%A8%8B">例程</a>
+<ul>
+<li><a href="#%E7%AE%80%E5%8C%96%E7%89%88printf%E5%AE%9E%E7%8E%B0%E5%8F%AA%E6%94%AF%E6%8C%81d-f%E5%92%8Cs">简化版printf实现(只支持%d、%f和%s)</a></li>
+<li><a href="#cat%E5%87%BD%E6%95%B0%E8%BF%9E%E6%8E%A5%E5%A4%9A%E4%B8%AA%E6%96%87%E4%BB%B6">cat函数(连接多个文件)</a></li>
+<li><a href="#fgets%E5%92%8Cfputs%E5%87%BD%E6%95%B0">fgets和fputs函数</a></li>
+<li><a href="#%E8%AF%BB%E5%85%A5%E4%B8%80%E8%A1%8C%E8%BF%94%E5%9B%9E%E9%95%BF%E5%BA%A6">读入一行返回长度</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessthe-c-programming-language-2nd-editiongreatergreater-kandr-chapter-6-structures-bi-ji/">
+              <h3 class="post-title">
+                《The C Programming Language, 2nd Edition》K&amp;R Chapter 6 - Structures 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

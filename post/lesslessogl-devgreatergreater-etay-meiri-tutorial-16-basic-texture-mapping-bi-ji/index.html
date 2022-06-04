@@ -1,0 +1,316 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《OGL dev》Etay Meiri Tutorial 16 - Basic Texture Mapping 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654342543105">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《OGL dev》Etay Meiri Tutorial 16 - Basic Texture Mapping 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="纹理映射的流程：
+
+将纹理加载到OpenGL。
+提供与顶点一起的纹理坐标。
+光栅化三角形时，对纹理坐标进行插值。
+在fragment shader中，开发者依据插值后的纹理坐标进行采样，得到texel(纹素)。
+
+texel是纹理中的一像素..." />
+    <meta name="keywords" content="OGL dev" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654342543105" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《OGL dev》Etay Meiri Tutorial 16 - Basic Texture Mapping 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-03-23
+              </span>
+              <span>
+                7 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/YVy0O486v/" class="post-tag">
+                  # OGL dev
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>纹理映射的流程：</p>
+<ol>
+<li>将纹理加载到OpenGL。</li>
+<li>提供与顶点一起的纹理坐标。</li>
+<li>光栅化三角形时，对纹理坐标进行插值。</li>
+<li>在fragment shader中，开发者依据插值后的纹理坐标进行采样，得到texel(纹素)。
+<ul>
+<li>texel是纹理中的一像素，包含一个颜色。</li>
+</ul>
+</li>
+</ol>
+<p>虽然我们只使用2D纹理，但OpenGL支持多种纹理： 1D、2D、3D、cube等。<br>
+2D纹理，宽乘以高就是texel的数量。</p>
+<p>纹理坐标是纹理空间中的坐标，纹理空间如图：<br>
+<img src="https://fire1000.github.io/post-images/1648021579262.png" alt="" loading="lazy"></p>
+<p>纹理坐标会“粘”在顶点上，在顶点变换后，保持不变。也存在改变纹理坐标的技术，但现在我们不涉及。</p>
+<p>filtering(过滤)是纹理映射中非常重要的概念。因为texel在纹理中的位置总是整数，而纹理坐标映射到纹理中的位置却很可能是浮点数，需要一种方案将浮点数转换为整数，这样才能得到texel。这个方案称为filtering。</p>
+<p>filtering有很多种，例如：</p>
+<ol>
+<li>nearest filtering(最近过滤)，又称为point filtering(点过滤)：对浮点数位置进行四舍五入。</li>
+<li>linear filtering(线性过滤)：取得浮点数位置附近的四个整数位置的texel，对它们的颜色进行插值，得到浮点数位置的颜色。
+<ul>
+<li>例如(152.34,745.14)，就取(152,745)、(153,745)、(152,744)和(153,744) 四个texel进行插值。因为小数部分为(0.34, 0.14)，最终颜色会更接近(152,745)。</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>效果更好的filtering通常需要消耗GPU更多性能。</li>
+</ul>
+<p>OpenGL中通过纹理对象、texture unit(纹理单元)、sampler object和sampler uniform这四个概念，实现纹理映射。</p>
+<p>纹理对象的数据是texel，类型可以是1D、2D等，底层数据类型可以是RGB、RGBA等。<br>
+纹理对象必须指定一个数据源，以加载纹理。<br>
+纹理对象可以设置filtering类型。<br>
+纹理对象关联一个handle，可以通过动态绑定handle到OpenGL state来切换纹理。由OpenGL保证在渲染之前加载纹理到GPU。</p>
+<p>纹理对象与shader无法直接交互，必须通过texture unit。<br>
+texture unit通常有很多个，具体数量取决于显卡的能力。<br>
+先激活某个texture unit，然后将纹理对象绑定到这个texture unit，之后shader可以通过texture unit的索引访问到绑定的纹理对象。<br>
+一个纹理对象可以绑定到多个texture unit。</p>
+<p>一个texture unit包含多个类型不同的target，target的类型分为1D、2D等。<br>
+一个纹理对象绑定到texture unit，实际上是绑定到这个texture unit中某个类型的target。<br>
+因此，一个texture unit可以绑定多个的纹理对象，每个绑定到不同类型的target。</p>
+<ul>
+<li>教程没有说明纹理对象与target的类型是否必须相同。</li>
+</ul>
+<p>采样通常发生在fragment shader中，一个特殊的函数执行这个操作。它需要知道对哪个texture unit的哪个target进行采样，sampler uniform variable负责这件事。<br>
+sampler uniform variable从应用接收一个整数作为texture unit的索引。sampler uniform variable的类型说明target的类型，可以是sampler1D、sampler2D、sampler3D、samplerCube等。<br>
+可以存在多个sampler uniform variable对应同一个texture unit。</p>
+<p>sampler object和纹理对象一样都可以绑定到texture unit。<br>
+sampler object和纹理对象一样都可以设置采样操作的参数，这是sampling state的一部分。<br>
+当一个texture unit同时绑定了sampler object和纹理对象，则sampler object的设置sampling state会覆盖纹理对象的设置。<br>
+现在我们不使用sampler object。</p>
+<p>这些概念之间的关系如下图：<br>
+<img src="https://fire1000.github.io/post-images/1648044562894.png" alt="" loading="lazy"></p>
+<p><code>glGenTextures(1, &amp;m_textureObj);</code>，创建纹理对象。与glGenBuffers()类似，第一个参数是要创建的纹理对象数量。第二个参数是GLuint数组指针，用于存放handle。</p>
+<p><code>glBindTexture(m_textureTarget, m_textureObj);</code>，将一个纹理对象绑定到OpenGL，在绑定新的纹理对象之前，OpenGL所有纹理相关的调用都引用这个纹理对象。绑定时纹理对象，还要指定绑定到的texture target的类型，可以是GL_TEXTURE_1D、GL_TEXTURE_2D等。</p>
+<ul>
+<li>第二个参数为0，表示使用默认的纹理。</li>
+</ul>
+<p><code>glTexImage2D(m_textureTarget, 0, GL_RGBA, m_pImage-&gt;columns(), m_pImage-&gt;rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_blob.data());</code>，从内存中加载纹理数据到纹理对象。</p>
+<ol>
+<li>第二个参数是LOD(Level-Of-Detail)。一个纹理对象可以包含不同分辨率的相同纹理，称为mip-mapping。每一个mip-map有不同的LOD索引，从0开始，0表示最高的分辨率，随分辨率减少增加。因为我们只有一个mip-map，所以使用0。</li>
+<li>第三个参数是在OpenGL中存储纹理数据的格式，可以是1-4的数字，或GL开头的枚举，如GL_RED、GL_RGBA。经测试1和2会显示黑白纹理，3和4会显示完整的纹理，GL_RED只显示红色通道的纹理，GL_RGBA显示完整的纹理。</li>
+<li>之后两个参数是以texel为单位的纹理的宽高。</li>
+<li>第六个参数是边界，暂时我们只使用0。</li>
+<li>倒数第三个参数说明内存中纹理数据的格式。</li>
+<li>倒数第二个参数说明每个通道占的内存大小，GL_UNSIGNED_BYTE表示1 byte。</li>
+<li>最后一个参数是内存中纹理数据的数据源。(加载纹理之后就可以释放)</li>
+</ol>
+<pre><code>glTexParameterf(m_textureTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+glTexParameterf(m_textureTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+</code></pre>
+<p>glTexParameterf可以设置一部分sampling state。这里设置缩小和放大都使用linear filtering，因为根据与摄影机距离的不同，纹理会被缩放。</p>
+<pre><code>void Texture::Bind(GLenum TextureUnit)
+{
+    glActiveTexture(TextureUnit);
+    glBindTexture(m_textureTarget, m_textureObj);
+}
+</code></pre>
+<p>glActiveTexture()激活texture unit，texture unit可以是GL_TEXTURE0、GL_TEXTURE1等枚举(不能使用索引)。<br>
+glBindTexture()将纹理对象绑定到激活的texture unit。</p>
+<pre><code>FragColor = texture2D(gSampler, TexCoord0.st);
+</code></pre>
+<p>内置texture2D函数采样纹理。</p>
+<ol>
+<li>第一个参数，gSampler是sampler2D类型的sampler uniform variable，值为texture unit的索引。</li>
+<li>第二个参数是纹理坐标。</li>
+<li>返回值是经过filtering的采样的texel。</li>
+</ol>
+<pre><code>...
+glEnableVertexAttribArray(1);
+...
+glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)12);
+...
+pTexture-&gt;Bind(GL_TEXTURE0);
+...
+glDisableVertexAttribArray(1);
+</code></pre>
+<p>glVertexAttribPointer()、glVertexAttribPointer()、glDisableVertexAttribArray()的第一个参数1，对应vertex shader中的<code>layout (location = 1) in vec2 TexCoord;</code>，用于纹理坐标。<br>
+第二个glVertexAttribPointer()说明纹理坐标在vertex buffer中的位置。</p>
+<ol>
+<li>倒数第二个参数表示一个vertex attribute到下一个vertex相同的attribute之间的byte数，称为vertex stride。如果只有一个attribute，vertex stride可以设置为0。</li>
+<li>最后一个参数是vertex buffer首地址开始到第一个attribute的byte数，类型必须强转为GLvoid*，这是这个函数所期望的。</li>
+</ol>
+<pre><code>glFrontFace(GL_CW);
+glCullFace(GL_BACK);
+glEnable(GL_CULL_FACE);
+</code></pre>
+<p>背面剔除默认是禁用的，以下启用背面剔除：</p>
+<ol>
+<li><code>glFrontFace(GL_CW);</code>，设定顺时针为正面。</li>
+<li><code>glCullFace(GL_BACK);</code>，设定剔除背面。</li>
+<li><code>glEnable(GL_CULL_FACE);</code>，启动背面剔除。</li>
+</ol>
+<p><code>glUniform1i(gSampler, 0);</code>，将texture unit的索引传递到sampler uniform variable中。(注意不能使用枚举)</p>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-14-camera-control-part-2-bi-ji/">
+              <h3 class="post-title">
+                《OGL dev》Etay Meiri Tutorial 15 - Camera Control - Part 2 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

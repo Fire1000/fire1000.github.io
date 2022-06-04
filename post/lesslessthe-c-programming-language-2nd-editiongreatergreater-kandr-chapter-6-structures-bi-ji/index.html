@@ -1,0 +1,642 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《The C Programming Language, 2nd Edition》K&amp;R Chapter 6 - Structures 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654342543105">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《The C Programming Language, 2nd Edition》K&amp;R Chapter 6 - Structures 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="结构
+如果结构声明不后跟变量表，则只是结构的模板或轮廓，不分配内存，如：
+struct point {
+    int x;
+    int y;
+};
+
+如果结构声明后跟变量表，会为变量分配内存，这是个定义，如struct { ... }..." />
+    <meta name="keywords" content="The C Programming Language" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654342543105" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《The C Programming Language, 2nd Edition》K&amp;R Chapter 6 - Structures 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-02-04
+              </span>
+              <span>
+                11 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/p29rjtcKO/" class="post-tag">
+                  # The C Programming Language
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h2 id="结构">结构</h2>
+<p>如果结构声明不后跟变量表，则只是结构的模板或轮廓，不分配内存，如：</p>
+<pre><code>struct point {
+    int x;
+    int y;
+};
+</code></pre>
+<p>如果结构声明后跟变量表，会为变量分配内存，这是个定义，如<code>struct { ... } x, y, z;</code>。<br>
+如果结构声明带有标记，那么，可以使用这个标记定义变量，如<code>struct point pt;</code>。</p>
+<p>结构定义可以后跟初值表进行初始化，初值表中每个成员对应的初始必须为常量表达式，如<code>struct maxpt = { 320, 200 };</code>。<br>
+自动结构可以通过赋值初始化，也可以通过函数返回的结构初始化。</p>
+<p>结构支持赋值、取址、成员访问。不支持比较。<br>
+结构可以嵌套。</p>
+<p>结构传递时，指针复制的效率要比复制整个结构要高。<br>
+访问结构指针成员，如(*pp).x，()是必须的，因为.的优先级比*高。<br>
+C语言提供访问结构指针成员的简写：p-&gt;结构成员。<br>
+.和-&gt;都是从左向右结合。<br>
+所有运算符中，结构运算符.和-&gt;，函数调用()，下标[]优先级最高。<br>
+++p-&gt;len等价于++(p-&gt;len)。<br>
+*p-&gt;str等价于*(p-&gt;str)。<br>
+*p-&gt;str++等价于(*(p-&gt;str))++。<br>
+*p++-&gt;str先读str指向的对象的值，然后再将p加1。</p>
+<p>结构体数组支持初始化列表进行初始化：</p>
+<pre><code>struct key {
+    char *word;
+    int count;
+} keytab[] = {
+    &quot;auto&quot;, 0,
+    &quot;break&quot;, 0,
+    &quot;case&quot;, 0,
+    &quot;char&quot;, 0,
+    &quot;const&quot;, 0,
+    &quot;continue&quot;, 0,
+    &quot;default&quot;, 0,
+    /* ... */
+    &quot;unsigned&quot;, 0,
+    &quot;void&quot;, 0,
+    &quot;volatile&quot;, 0,
+    &quot;while&quot;, 0
+};
+</code></pre>
+<p>当然以下这种也支持：</p>
+<pre><code>    { &quot;auto&quot;, 0 },
+    { &quot;break&quot;, 0 },
+    { &quot;case&quot;, 0 },
+    ...
+</code></pre>
+<p>结构的长度不等于成员长度之和，因为对齐要求，结构中会出现空穴(hole)。</p>
+<pre><code>struct {
+    char c;
+    int i;
+};
+</code></pre>
+<p>假如char占1字节，int占4字节，这个结构占8字节，而不是5字节。</p>
+<h2 id="sizeof">sizeof</h2>
+<p>编译时(compile-time)一元运算符sizeof，支持<code>sizeof 对象</code>或<code>sizeof(类型名)</code>。<br>
+sizeof返回字节数，返回值为size_t类型，在&lt;stddef.h&gt;中定义。<br>
+sizeof支持结构和指针。<br>
+获取数组长度的常用方法为<code>#define NKEYS (sizeof keytab / sizeof(keytab[0]))</code>。</p>
+<p>#if语句中不能使用sizeof，预处理器不分析类型名。<br>
+#define语句中可以使用sizeof，因为#define语句不求值。</p>
+<h2 id="指针">指针</h2>
+<p>两个指针之间的加法运算是非法的，但减法运算是合法的。<br>
+&amp;tab[-1]和&amp;tab[n]都超过了数组边界，但前者是非法的，后者是合法的，C语言保证数组末尾之后的第一个元素的指针运算合法，间接取址非法。</p>
+<h2 id="typedef">typedef</h2>
+<p>typedef语法：<code>typedef int Length;</code>，Length与int同义。<br>
+<code>typedef char *String;</code>，String与char<em>同义。<br>
+typedef不创建新的类义，也不增加新的语义。<br>
+typedef由编译器解释，功能超过预处理器的能力。<br>
+<code>typedef int (*PFI)(char *, char *)</code>，PFI是形参为两个char</em>，返回int的函数指针。<br>
+typedef为不同大小的整型定义类型名，提高可移植性。</p>
+<h2 id="联合">联合</h2>
+<p>联合语法：</p>
+<pre><code>union u_tag {
+    int ival;
+    float fval;
+    char *sval;
+} u;
+</code></pre>
+<p>联合读取的类型必须是最近一次存入的类型，否则结果取决于具体实现。<br>
+联合与结构、数组之间可以嵌套。<br>
+联合本质上是一个结构，所有成员相对于基地址的偏移量都为0。<br>
+联合的大小要足够容纳最宽的成员，对齐方式要适合所有成员。<br>
+联合只能用第一个成员类型进行初始化。</p>
+<h2 id="位字段bit-field">位字段(bit-field)</h2>
+<p>位字段语法：</p>
+<pre><code>struct {
+    unsigned int is_keyword : 1;
+    unsigned int is_extern : 1;
+    unsigned int is_static : 1;
+} flags;
+</code></pre>
+<p>冒号后的数字表示字段的宽度，单位为bit。<br>
+与结构相同，字段可以像小整数一样，出现在算术表达式中。<br>
+字段是否能覆盖字边界取决于具体实现。<br>
+字段可以不命名(只有冒号和宽度，起填充作用。<br>
+宽度0表示强制在下一个字边界上对齐。<br>
+字段是从左向右分配，还是相反取决于机器。<br>
+字段没有地址，不能&amp;取地址。</p>
+<h2 id="其他">其他</h2>
+<p>malloc函数保证内存对整齐。</p>
+<h2 id="例程">例程</h2>
+<h3 id="构造点">构造点</h3>
+<pre><code>/* makepoint: make a point from x and y components */
+struct point makepoint(int x, int y)
+{
+    struct point temp;
+
+    temp.x = x;
+    temp.y = y;
+    return temp;
+}
+</code></pre>
+<h3 id="两个点相加">两个点相加</h3>
+<pre><code>/* addpoints: add two points */
+struct addpoint(struct point p1, struct point p2)
+{
+    p1.x += p2.x;
+    p1.y += p2.y;
+    return p1;
+}
+</code></pre>
+<h3 id="判断点是否在矩形中">判断点是否在矩形中</h3>
+<pre><code>/* ptinrect: return 1 if p in r, 0 if not */
+int ptinrect(struct point p, struct rect r)
+{
+    return p.x &gt;= r.pt1.x &amp;&amp; p.x &lt; r.pt2.x
+        &amp;&amp; p.y &gt;= r.pt1.y &amp;&amp; p.y &lt; r.pt2.y;
+}
+</code></pre>
+<h3 id="矩形坐标规范化">矩形坐标规范化</h3>
+<pre><code>#define min(a, b) ((a) &lt; (b) ? (a) : (b))
+#define max(a, b) ((a) &gt; (b) ? (a) : (b))
+
+/* canonrect: canonicalize coordinates of rectangle */
+struct rect canonrect(struct rect r)
+{
+    struct rect temp;
+
+    temp.pt1.x = min(r.pt1.x, r.pt2.x);
+    temp.pt1.y = min(r.pt1.y, r.pt2.y);
+    temp.pt2.x = max(r.pt1.x, r.pt2.x);
+    temp.pt2.y = max(r.pt1.y, r.pt2.y);
+    return temp;
+}
+</code></pre>
+<h3 id="不同版本的统计源代码中的关键字出现次数">不同版本的统计源代码中的关键字出现次数</h3>
+<p>相同代码：</p>
+<pre><code>struct key {
+    char *word;
+    int count;
+} keytab[] = {
+    &quot;auto&quot;, 0,
+    &quot;break&quot;, 0,
+    &quot;case&quot;, 0,
+    &quot;char&quot;, 0,
+    &quot;const&quot;, 0,
+    &quot;continue&quot;, 0,
+    &quot;default&quot;, 0,
+    /* ... */
+    &quot;unsigned&quot;, 0,
+    &quot;void&quot;, 0,
+    &quot;volatile&quot;, 0,
+    &quot;while&quot;, 0
+};
+</code></pre>
+<pre><code>/* getword: get next word or character from input */
+int getword(char *word, int lim)
+{
+    int c, getch(void);
+    void ungetch(int);
+    char *w = word;
+
+    while (isspace(c = getch()))
+        ;
+    if (c != EOF)
+        *w++ = c;
+    if (!isalpha(c)) {
+        *w = '\0';
+        return c;
+    }
+    for ( ; --lim &gt; 0; w++)
+        if (!isalnum(*w = getch())) {
+            ungetch(*w);
+            break;
+        }
+    *w = '\0';
+    return word[0];
+}
+</code></pre>
+<p>差异代码：</p>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;ctype.h&gt;
+#include &lt;string.h&gt;
+
+#define MAXWORD 100
+
+int getword(char *, int);
+int binsearch(char *, struct key *, int);
+
+/* count C keywords */
+main()
+{
+    int n;
+    char word[MAXWORD];
+
+    while (getword(word, MAXWORD) != EOF)
+        if (isalpha(word[0]))
+            if ((n = binsearch(word, keytab, NKEYS)) &gt;= 0)
+            keytab[n].count++;
+    for (n = 0; n &lt; NKEYS; n++)
+        if (keytab[n].count &gt; 0)
+            printf(&quot;%4d %s\n&quot;,
+    keytab[n].count, keytab[n].word);
+    return 0;
+}
+
+/* binsearch: find word in tab[0]...tab[n-1] */
+int binsearch(char *word, struct key tab[], int n)
+{
+    int cond;
+    int low, high, mid;
+    
+    low = 0;
+    high = n - 1;
+    while (low &lt;= high) {
+        mid = (low+high) / 2;
+        if ((cond = strcmp(word, tab[mid].word)) &lt; 0)
+            high = mid - 1;
+        else if (cond &gt; 0)
+            low = mid + 1;
+        else
+            return mid;
+    }
+    return -1;
+}
+</code></pre>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;ctype.h&gt;
+#include &lt;string.h&gt;
+#define MAXWORD 100
+
+int getword(char *, int);
+struct key *binsearch(char *, struct key *, int);
+
+/* count C keywords; pointer version */
+main()
+{
+    char word[MAXWORD];
+    struct key *p;
+
+    while (getword(word, MAXWORD) != EOF)
+        if (isalpha(word[0]))
+            if ((p=binsearch(word, keytab, NKEYS)) != NULL)
+                p-&gt;count++;
+    for (p = keytab; p &lt; keytab + NKEYS; p++)
+        if (p-&gt;count &gt; 0)
+            printf(&quot;%4d %s\n&quot;, p-&gt;count, p-&gt;word);
+    return 0;
+}
+
+/* binsearch: find word in tab[0]...tab[n-1] */
+struct key *binsearch(char *word, struck key *tab, int n)
+{
+    int cond;
+    struct key *low = &amp;tab[0];
+    struct key *high = &amp;tab[n];
+    struct key *mid;
+
+    while (low &lt; high) {
+        mid = low + (high-low) / 2;
+        if ((cond = strcmp(word, mid-&gt;word)) &lt; 0)
+            high = mid;
+        else if (cond &gt; 0)
+            low = mid + 1;
+        else
+            return mid;
+    }
+    return NULL;
+}
+</code></pre>
+<h3 id="统计出现的单词和频率二叉树实现">统计出现的单词和频率(二叉树实现)</h3>
+<pre><code>struct tnode { /* the tree node: */
+    char *word; /* points to the text */
+    int count; /* number of occurrences */
+    struct tnode *left; /* left child */
+    struct tnode *right; /* right child */
+};
+</code></pre>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;ctype.h&gt;
+#include &lt;string.h&gt;
+
+#define MAXWORD 100
+
+struct tnode *addtree(struct tnode *, char *);
+void treeprint(struct tnode *);
+int getword(char *, int);
+
+/* word frequency count */
+main()
+{
+    struct tnode *root;
+    char word[MAXWORD];
+
+    root = NULL;
+    while (getword(word, MAXWORD) != EOF)
+        if (isalpha(word[0]))
+            root = addtree(root, word);
+    treeprint(root);
+    return 0;
+}
+
+struct tnode *talloc(void);
+char *strdup(char *);
+
+/* addtree: add a node with w, at or below p */
+struct tnode *addtree(struct tnode *p, char *w)
+{
+    int cond;
+
+    if (p == NULL) { /* a new word has arrived */
+        p = talloc(); /* make a new node */
+        p-&gt;word = strdup(w);
+        p-&gt;count = 1;
+        p-&gt;left = p-&gt;right = NULL;
+    } else if ((cond = strcmp(w, p-&gt;word)) == 0)
+        p-&gt;count++; /* repeated word */
+    else if (cond &lt; 0) /* less than into left subtree */
+        p-&gt;left = addtree(p-&gt;left, w);
+    else /* greater than into right subtree */
+        p-&gt;right = addtree(p-&gt;right, w);
+    return p;
+}
+</code></pre>
+<pre><code>/* treeprint: in-order print of tree p */
+void treeprint(struct tnode *p)
+{
+    if (p != NULL) {
+        treeprint(p-&gt;left);
+        printf(&quot;%4d %s\n&quot;, p-&gt;count, p-&gt;word);
+        treeprint(p-&gt;right);
+    }
+}
+</code></pre>
+<pre><code>#include &lt;stdlib.h&gt;
+
+/* talloc: make a tnode */
+struct tnode *talloc(void)
+{
+    return (struct tnode *) malloc(sizeof(struct tnode));
+}
+</code></pre>
+<pre><code>char *strdup(char *s) /* make a duplicate of s */
+{
+    char *p;
+
+    p = (char *) malloc(strlen(s)+1); /* +1 for '\0' */
+    if (p != NULL)
+        strcpy(p, s);
+    return p;
+}
+</code></pre>
+<h3 id="宏替换hash实现">宏替换(Hash实现)</h3>
+<pre><code>struct nlist { /* table entry: */
+    struct nlist *next; /* next entry in chain */
+    char *name; /* defined name */
+    char *defn; /* replacement text */
+};
+</code></pre>
+<pre><code>#define HASHSIZE 101
+static struct nlist *hashtab[HASHSIZE]; /* pointer table */
+
+/* hash: form hash value for string s */
+unsigned hash(char *s)
+{
+    unsigned hashval;
+
+    for (hashval = 0; *s != '\0'; s++)
+        hashval = *s + 31 * hashval;
+    return hashval % HASHSIZE;
+}
+</code></pre>
+<pre><code>/* lookup: look for s in hashtab */
+struct nlist *lookup(char *s)
+{
+    struct nlist *np;
+
+    for (np = hashtab[hash(s)]; np != NULL; np = np-&gt;next)
+        if (strcmp(s, np-&gt;name) == 0)
+            return np; /* found */
+    return NULL; /* not found */
+}
+</code></pre>
+<pre><code>struct nlist *lookup(char *);
+char *strdup(char *);
+
+/* install: put (name, defn) in hashtab */
+struct nlist *install(char *name, char *defn)
+{
+    struct nlist *np;
+    unsigned hashval;
+
+    if ((np = lookup(name)) == NULL) { /* not found */
+        np = (struct nlist *) malloc(sizeof(*np));
+        if (np == NULL || (np-&gt;name = strdup(name)) == NULL)
+            return NULL;
+        hashval = hash(name);
+        np-&gt;next = hashtab[hashval];
+        hashtab[hashval] = np;
+    } else /* already there */
+        free((void *) np-&gt;defn); /*free previous defn */
+    if ((np-&gt;defn = strdup(defn)) == NULL)
+        return NULL;
+    return np;
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E7%BB%93%E6%9E%84">结构</a></li>
+<li><a href="#sizeof">sizeof</a></li>
+<li><a href="#%E6%8C%87%E9%92%88">指针</a></li>
+<li><a href="#typedef">typedef</a></li>
+<li><a href="#%E8%81%94%E5%90%88">联合</a></li>
+<li><a href="#%E4%BD%8D%E5%AD%97%E6%AE%B5bit-field">位字段(bit-field)</a></li>
+<li><a href="#%E5%85%B6%E4%BB%96">其他</a></li>
+<li><a href="#%E4%BE%8B%E7%A8%8B">例程</a>
+<ul>
+<li><a href="#%E6%9E%84%E9%80%A0%E7%82%B9">构造点</a></li>
+<li><a href="#%E4%B8%A4%E4%B8%AA%E7%82%B9%E7%9B%B8%E5%8A%A0">两个点相加</a></li>
+<li><a href="#%E5%88%A4%E6%96%AD%E7%82%B9%E6%98%AF%E5%90%A6%E5%9C%A8%E7%9F%A9%E5%BD%A2%E4%B8%AD">判断点是否在矩形中</a></li>
+<li><a href="#%E7%9F%A9%E5%BD%A2%E5%9D%90%E6%A0%87%E8%A7%84%E8%8C%83%E5%8C%96">矩形坐标规范化</a></li>
+<li><a href="#%E4%B8%8D%E5%90%8C%E7%89%88%E6%9C%AC%E7%9A%84%E7%BB%9F%E8%AE%A1%E6%BA%90%E4%BB%A3%E7%A0%81%E4%B8%AD%E7%9A%84%E5%85%B3%E9%94%AE%E5%AD%97%E5%87%BA%E7%8E%B0%E6%AC%A1%E6%95%B0">不同版本的统计源代码中的关键字出现次数</a></li>
+<li><a href="#%E7%BB%9F%E8%AE%A1%E5%87%BA%E7%8E%B0%E7%9A%84%E5%8D%95%E8%AF%8D%E5%92%8C%E9%A2%91%E7%8E%87%E4%BA%8C%E5%8F%89%E6%A0%91%E5%AE%9E%E7%8E%B0">统计出现的单词和频率(二叉树实现)</a></li>
+<li><a href="#%E5%AE%8F%E6%9B%BF%E6%8D%A2hash%E5%AE%9E%E7%8E%B0">宏替换(Hash实现)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessthe-c-programming-language-2nd-editiongreatergreater-kandr-chapter-5-pointers-and-arrays-bi-ji/">
+              <h3 class="post-title">
+                《The C Programming Language, 2nd Edition》K&amp;R Chapter 5 - Pointers and Arrays 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

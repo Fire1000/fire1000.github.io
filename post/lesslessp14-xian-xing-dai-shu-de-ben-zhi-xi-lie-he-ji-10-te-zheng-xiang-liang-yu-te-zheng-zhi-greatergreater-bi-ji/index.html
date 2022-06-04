@@ -1,0 +1,221 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《P14 线性代数的本质 - 系列合集 10 - 特征向量与特征值》3Blue1Brown 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654342543105">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《P14 线性代数的本质 - 系列合集 10 - 特征向量与特征值》3Blue1Brown 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="一个线性变换，如果存在一个非零向量，变换后只进行了缩放，那么这个向量称为这个变换的特征向量，其中缩放的值就是特征值。
+
+特征向量与特征值计算公式推导：
+
+依据特征向量与特征值的定义，如下等式成立。
+向量乘以特征值λ等价于，向量乘以一个缩放变..." />
+    <meta name="keywords" content="线性代数的本质" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654342543105" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《P14 线性代数的本质 - 系列合集 10 - 特征向量与特征值》3Blue1Brown 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-01-30
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/o3ms38lcd/" class="post-tag">
+                  # 线性代数的本质
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>一个线性变换，如果存在一个非零向量，变换后只进行了缩放，那么这个向量称为这个变换的特征向量，其中缩放的值就是特征值。<br>
+<img src="https://fire1000.github.io/post-images/1643510564091.png" alt="" loading="lazy"></p>
+<p>特征向量与特征值计算公式推导：</p>
+<ol>
+<li>依据特征向量与特征值的定义，如下等式成立。<img src="https://fire1000.github.io/post-images/1643511179517.png" alt="" loading="lazy"></li>
+<li>向量乘以特征值λ等价于，向量乘以一个缩放变换<img src="https://fire1000.github.io/post-images/1643511666818.png" alt="" loading="lazy"></li>
+<li>将等式右边的部分移动到左边，得到一个变换矩阵，这个变换使特征向量变为零向量。<img src="https://fire1000.github.io/post-images/1643511916619.png" alt="" loading="lazy"></li>
+<li>因为特征向量是非零向量，因此这个变换减少了空间的维度，它的行列式为0，代入行列式计算公式就可以推导出特征值的计算公式。<img src="https://fire1000.github.io/post-images/1643512353242.png" alt="" loading="lazy"></li>
+<li>求出特征值，代入变换矩阵，矩阵的零空间就是特征向量。<img src="https://fire1000.github.io/post-images/1643512737356.png" alt="" loading="lazy"></li>
+</ol>
+<p>不同的线性变换，拥有特征向量、特征值的数量不同。</p>
+<ol>
+<li>二维旋转变换，没有特征向量、特征值。</li>
+<li>剪切变换，有无穷个特征向量(x轴)，只有一个特征值。</li>
+<li>缩放变换，有无穷个特征向量(整个空间)，只有一个特征值。<br>
+<img src="https://fire1000.github.io/post-images/1643515907298.png" alt="" loading="lazy"></li>
+</ol>
+<p>只有对角线不是0的方形矩阵算为对角矩阵。对角矩阵在应用多次变换时，计算尤为便利。<br>
+<img src="https://fire1000.github.io/post-images/1643520859052.png" alt="" loading="lazy"><br>
+如果一个变换，当前使用的基的基向量恰好都是特征向量，变换后基向量只进行缩放，缩放值为特征值，这个变换显然是一个对角矩阵。<br>
+一个变换，当前使用的基的基向量恰好都是特征向量的情况并不多见。但如果一个变换的特征向量足够多，能找到一组特征向量张成的空间与这个变换的列空间维度相同。这个变换等价于先将这个变换使用的基变换为以这组特征向量为基，变换的矩阵变为对角矩阵，应用变换，之后将使用的基变换回原来使用的基。这样一组特征向量组成的基，称为特征基。<br>
+<img src="https://fire1000.github.io/post-images/1643532145077.png" alt="" loading="lazy"></p>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessp13-xian-xing-dai-shu-de-ben-zhi-xi-lie-he-ji-09-ji-bian-huan-greatergreater-bi-ji/">
+              <h3 class="post-title">
+                《P13 线性代数的本质 - 系列合集 09 - 基变换》3Blue1Brown 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

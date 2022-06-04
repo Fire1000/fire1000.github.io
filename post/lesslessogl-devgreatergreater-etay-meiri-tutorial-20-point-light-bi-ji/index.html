@@ -1,0 +1,225 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《OGL dev》Etay Meiri Tutorial 20 - Point Light 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654342543105">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《OGL dev》Etay Meiri Tutorial 20 - Point Light 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="point light是有原点，强度随距离衰减的光源。directional light的光线方向是常量，而point light的光线方向是动态的。
+光的强度随距离衰减称为“attenuation(衰减)”。
+真实光的attenuatio..." />
+    <meta name="keywords" content="OGL dev" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654342543105" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《OGL dev》Etay Meiri Tutorial 20 - Point Light 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-04-05
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/YVy0O486v/" class="post-tag">
+                  # OGL dev
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>point light是有原点，强度随距离衰减的光源。directional light的光线方向是常量，而point light的光线方向是动态的。</p>
+<p>光的强度随距离衰减称为“attenuation(衰减)”。</p>
+<p>真实光的attenuation符合inverse-square law(反平方定律)，公式如下图：<br>
+<img src="https://fire1000.github.io/post-images/1649169052286.png" alt="" loading="lazy"></p>
+<p>但这个公式在3D图形中效果不好：</p>
+<ol>
+<li>距离很近时，光的强度接近无穷大。</li>
+<li>只能控制光的初始强度。</li>
+</ol>
+<p>因此，我们使用下图的公式：<br>
+<img src="https://fire1000.github.io/post-images/1649169164925.png" alt="" loading="lazy"></p>
+<ol>
+<li>当常量和线性因子为0，exponential(指数)因子为1时，为真实光的attenuation公式。</li>
+<li>当常量因子为1时，距离为0光的强度最大，距离增加时减少(分母大于1)。</li>
+<li>线性和exponential因子影响，光的强度随距离衰减的速度。</li>
+</ol>
+<p>point light计算步骤：</p>
+<ol>
+<li>计算ambient。</li>
+<li>计算每个像素的光线方向，用来计算diffuse和specular。</li>
+<li>计算每个像素距离光源的距离，用来计算attenuation。</li>
+<li>将采样的结果乘以(ambient + diffuse + specular)，除以attenuation得到像素颜色。</li>
+</ol>
+<p>向shader中的structure数组类型的uniform variable赋值有两种方法：</p>
+<ol>
+<li>与之前的教程一样，获取数组的每一个元素的每一个成员的位置，逐一赋值。</li>
+<li>获取数组的第一个元素的每一个成员的位置。使用GL函数，传递某个成员类型的数组，一次调用为数组的所有元素的同一成员赋值。(教程中没有示例)</li>
+</ol>
+<p>当光源增加时，迟早会遇到性能问题，deferred shading(延迟渲染)技术能缓解这个问题。(教程没有说明deferred shading的细节)</p>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-19-specular-lighting-bi-ji/">
+              <h3 class="post-title">
+                《OGL dev》Etay Meiri Tutorial 19 - Specular Lighting 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

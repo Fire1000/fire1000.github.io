@@ -1,0 +1,316 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《Programming in Lua, 4th Edition》Roberto Ierusalimschy Chapter 1. Getting Started 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654342543105">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《Programming in Lua, 4th Edition》Roberto Ierusalimschy Chapter 1. Getting Started 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="交互模式
+% lua进入交互模式。键入EOF退出。调用os.exit()也可以退出。
+从5.3版本开始，在交互模式键入表达时，能输出它的值。如&gt; a^2 ---&gt; 225
+旧的版本需要在表达式之前加等号，5.3兼容这种方式。如&..." />
+    <meta name="keywords" content="Programming in Lua" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654342543105" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《Programming in Lua, 4th Edition》Roberto Ierusalimschy Chapter 1. Getting Started 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-02-12
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/gB7ziaTW2/" class="post-tag">
+                  # Programming in Lua
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h1 id="交互模式">交互模式</h1>
+<p><code>% lua</code>进入交互模式。键入EOF退出。调用os.exit()也可以退出。</p>
+<p>从5.3版本开始，在交互模式键入表达时，能输出它的值。如<code>&gt; a^2 ---&gt; 225</code><br>
+旧的版本需要在表达式之前加等号，5.3兼容这种方式。如<code>&gt; = a^2 ---&gt; 225</code><br>
+因为交互模式下输入表达式会打印它的值，要执行这个表达式的话，可以在末尾加个分号，比如：</p>
+<pre><code>&gt; io.flush() --&gt; true
+&gt; io.flush();
+</code></pre>
+<p>交互模式将完整的行视为一个chunk，当一行不完整时，才会将多行视为一个chunk。<br>
+<code>% lua -i prog</code>，执行完prog之后，进入交互模式，方便调试。</p>
+<p><code>a = io.read(&quot;*n&quot;)</code>从输入接收一个数字，赋值给a。</p>
+<p>dofile能将一个文件作为一个chunk执行，如<code>dofile(&quot;lib1.lua&quot;)</code>。每次dofile都会执行最新的代码。</p>
+<h2 id="名字">名字</h2>
+<p>Lua名字大小写敏感。<br>
+保留字：</p>
+<pre><code>and break do else elseif
+end false for function goto
+if in local nil not
+or repeat return then true
+until while
+</code></pre>
+<p>以下划线开头后跟1个以上大写字母的名字，保留作特殊用途。如<code>_VERSION</code>值为解释器的lua版本。<br>
+_名字，通常作为虚拟变量。如<code>local _, x = string.find(s, p)</code>，之后只使用x。</p>
+<h2 id="注释">注释</h2>
+<p>长注释：</p>
+<pre><code>--[[A multi-line
+    long comment
+]]
+</code></pre>
+<p>技巧，以下为注释：</p>
+<pre><code>--[[
+print(10) -- no action (commented out)
+--]]
+</code></pre>
+<p>在第一行加一个-，重新激活代码：</p>
+<pre><code>---[[
+print(10) --&gt; 10
+--]]
+</code></pre>
+<h2 id="变量类型">变量&amp;类型</h2>
+<p>Lua全局变量不需要声明。<br>
+Lua中未初始化的变量，值为nil。<br>
+Lua不区分值为未初始化和赋值为nil的变量，Lua会回收这样的变量的内存。</p>
+<p>Lua不定义类型，但值携带自己的类型。<br>
+Lua中有八种基本类型：nil、布尔、数字、字符串、userdata、函数、线程和表。<br>
+type函数给出任何给定值的类型名称。</p>
+<pre><code>&gt; type(nil) --&gt; nil
+&gt; type(true) --&gt; boolean
+&gt; type(10.4 * 3) --&gt; number
+&gt; type(&quot;Hello world&quot;) --&gt; string
+&gt; type(io.stdin) --&gt; userdata
+&gt; type(print) --&gt; function
+&gt; type(type) --&gt; function
+&gt; type({}) --&gt; table
+&gt; type(type(X)) --&gt; string
+</code></pre>
+<p>userdata类型用于存储C数据，只预定义了赋值和相等测试，两种操作。</p>
+<p>Lua的变量没有类型，可以容纳任何类型的值：</p>
+<pre><code>&gt; type(a) --&gt; nil ('a' is not initialized)
+&gt; a = 10
+&gt; type(a) --&gt; number
+&gt; a = &quot;a string!!&quot;
+&gt; type(a) --&gt; string
+&gt; a = nil
+&gt; type(a) --&gt; nil
+</code></pre>
+<p>nil类型是只有nil值的类型，nil表示没有在使用，将变量赋值为nil，表示删除它。</p>
+<p>Lua中任何值都可以表示条件，布尔false和nil视为false，其他值视为true。</p>
+<p>Lua语句不需要分隔符，<code>a = 1 b = a * 2</code>是合法的。</p>
+<h2 id="逻辑运算符">逻辑运算符</h2>
+<p>and运算符的第一个操作数为false，结果为第一个操作数。否则结果是它的第二个操作数。<br>
+or运算符的第一个操作数不为false，结果为第一个操作数。否则结果是它的第二个操作数。</p>
+<pre><code>&gt; 4 and 5 --&gt; 5
+&gt; nil and 13 --&gt; nil
+&gt; false and 13 --&gt; false
+&gt; 0 or 5 --&gt; 0
+&gt; false or &quot;hi&quot; --&gt; &quot;hi&quot;
+&gt; nil or false --&gt; false
+</code></pre>
+<p>and和or都使用短路求值</p>
+<ol>
+<li><code>i ~= 0 and a/i &gt; b</code>不会发生错误。</li>
+<li><code>x = x or v</code>等价于<code>if not x then x = v end</code>，常用于设置默认值。</li>
+<li><code>a and b or c</code>，当b不为false时，相当于<code>a ? b : c</code>。</li>
+</ol>
+<h2 id="独立lua解释器">独立Lua解释器</h2>
+<p>独立Lua解释器加载文件时，如果第一行以#起始，会忽略掉这一行，如<code>#!/usr/local/bin/lua</code>或<code>#!/usr/bin/env lua</code>。<br>
+这个功能允许Lua作为POSIX系统的脚本解释器，比如Linux。Windows下不适用。</p>
+<p>原理是因为POSIX系统系统下，直接输入文件名，运行这个文件时：</p>
+<ol>
+<li>如果第一行为<code>#!/usr/local/bin/lua</code>，则使用<code>/usr/local/bin/</code>目录下的lua解释器，运行这个文件。</li>
+<li>如果第一行为<code>#!/usr/bin/env lua</code>，则从env设置中找lua的路径，再使用这个lua解释器，运行这个文件。</li>
+</ol>
+<p>-e选项允许我们直接在命令行输入代码，比如<code>% lua -e &quot;print(math.sin(12))&quot; --&gt; -0.53657291800043</code>。</p>
+<ul>
+<li>POSIX系统需要双引号来阻止解释括号。</li>
+</ul>
+<p>-l选项加载一个库。<code>% lua -i -llib -e &quot;x = 10&quot;</code>表示加载lib库。</p>
+<p>Lua解释器在运行它的参数之前，解释器查找名为LUA_INIT_5_3环境变量或其他，如果没有这样的变量，则查找LUA_INIT。如果有这些变量之一，并且它的内容是@filename，那么解释器执行给定的文件。如果LUA_INIT_5_3(或LUA_INIT)被定义，但它不以at符号起始，那么解释器假定它包含Lua代码，然后运行它。当配置独立解释器时，LUA_INIT给了我们很大的权力，因为我们在配置中拥有Lua的全部权力。我们可以预加载包，改变路径，定义我们自已的函数，重命名和删除函数等等。</p>
+<p>全局变量arg可以获取到命令行参数，脚本名为索引0，之前的为负索引，比如<code>% lua -e &quot;sin=math.sin&quot; script a b</code>的arg值如下：</p>
+<pre><code>arg[-3] = &quot;lua&quot;
+arg[-2] = &quot;-e&quot;
+arg[-1] = &quot;sin=math.sin&quot;
+arg[0] = &quot;script&quot;
+arg[1] = &quot;a&quot;
+arg[2] = &quot;b&quot;
+</code></pre>
+<p>表达式...同样可以获取到命令行参数，在“可变参数函数”一节中讨论。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E4%BA%A4%E4%BA%92%E6%A8%A1%E5%BC%8F">交互模式</a>
+<ul>
+<li><a href="#%E5%90%8D%E5%AD%97">名字</a></li>
+<li><a href="#%E6%B3%A8%E9%87%8A">注释</a></li>
+<li><a href="#%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B">变量&amp;类型</a></li>
+<li><a href="#%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97%E7%AC%A6">逻辑运算符</a></li>
+<li><a href="#%E7%8B%AC%E7%AB%8Blua%E8%A7%A3%E9%87%8A%E5%99%A8">独立Lua解释器</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-1-zhang-che-net-kuang-jia-bi-ji/">
+              <h3 class="post-title">
+                《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第1章 C#和.NET框架 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

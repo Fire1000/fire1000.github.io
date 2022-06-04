@@ -1,0 +1,280 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《OGL dev》Etay Meiri Tutorial 04 - Shaders 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654342543105">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《OGL dev》Etay Meiri Tutorial 04 - Shaders 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="OpenGL的可编程管线
+
+vertex processor对应vertex shader(顶点着色器)。
+
+顶点的数量取决于draw call的参数，即glDrawArrays(GL_TRIANGLES, 0, 3);的最后一个参数。
+不..." />
+    <meta name="keywords" content="OGL dev" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654342543105" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《OGL dev》Etay Meiri Tutorial 04 - Shaders 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-03-09
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/YVy0O486v/" class="post-tag">
+                  # OGL dev
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h2 id="opengl的可编程管线">OpenGL的可编程管线</h2>
+<figure data-type="image" tabindex="1"><img src="https://fire1000.github.io/post-images/1646794619168.png" alt="" loading="lazy"></figure>
+<p>vertex processor对应vertex shader(顶点着色器)。</p>
+<ol>
+<li>顶点的数量取决于draw call的参数，即<code>glDrawArrays(GL_TRIANGLES, 0, 3);</code>的最后一个参数。</li>
+<li>不知道图元的拓扑。</li>
+<li>无法丢弃顶点。</li>
+</ol>
+<p>geometry processor对应geometry shader(几何着色器)。</p>
+<ol>
+<li>接收图元的所有顶点和邻近的顶点。</li>
+<li>能够切换到非draw call选择的拓扑。</li>
+<li>一个顶点能够输出多个拓扑。(例如，广告牌：1个顶点生成2个三角形)</li>
+</ol>
+<p>clipper(裁剪)</p>
+<ol>
+<li>按近Z和远Z的平面进行裁剪，用户自定义裁剪平面。</li>
+<li>裁剪至normalized box。</li>
+</ol>
+<p>clipper留下的顶点，先进行屏幕映射，之后rasterizer(光栅化)依据它们的拓扑渲染到屏幕。<br>
+rasterizer会找出依据拓扑的所有顶点。</p>
+<p>fragment processor对应fragment shader(片段着色器)。</p>
+<ol>
+<li>每一个顶点，rasterizer都调用fragment processor。</li>
+<li>决定像素的颜色。</li>
+<li>可以丢弃像素。</li>
+<li>可以改变Z值，影响后续的Z测试。</li>
+</ol>
+<p>vertex、geometry和fragment processors是可选、可编程的。不绑定shader会执行默认的功能。<br>
+clipper是固定的。</p>
+<h2 id="调用shader">调用shader</h2>
+<ol>
+<li>创建shader对象：<code>GLuint ShaderObj = glCreateShader(ShaderType);</code>。ShaderType可选 GL_VERTEX_SHADER和GL_FRAGMENT_SHADER。</li>
+<li>为shader对象指定源代码：<code>glShaderSource(ShaderObj, 1, p, Lengths);</code>。OpenGL允许shader源代码分散在多个char *中。因此p是char * []，Lengths是GLint[]对应每个p的元素的长度(不包含'\0')，第二个参数1表示p的元素个数。</li>
+<li>编译shader：<code>glCompileShader(ShaderObj);</code>。</li>
+<li>检查编译错误并打印：<code>glGetShaderiv(ShaderObj, GL_COMPILE_STATUS, &amp;success); glGetShaderInfoLog(ShaderObj, sizeof(InfoLog), NULL, InfoLog);</code>。GL_COMPILE_STATUS表示编译，编译失败时success为0。InfoLog是char *用于存储错误信息。</li>
+<li>创建program对象：<code>GLuint ShaderProgram = glCreateProgram();</code>。program对象用于附加shader。</li>
+<li>将编译好的shader对象附加到program对象：<code>glAttachShader(ShaderProgram, ShaderObj);</code>。</li>
+<li>链接shader：<code>glLinkProgram(ShaderProgram);</code>。链接shader会对shader进行优化。例如：将输出法线的vertex shader和忽略法线的fragment shader配对，driver中的GLSL编译器会删除法线。因此，相同的shader链接后可能生成不同的shader。</li>
+<li>检查链接错误并打印：<code>glGetProgramiv(ShaderProgram, GL_LINK_STATUS, &amp;Success); glGetProgramInfoLog(ShaderProgram, sizeof(ErrorLog), NULL, ErrorLog);</code>。GL_LINK_STATUS表示链接，失败时success为0。ErrorLog是char *用于存储错误信息。</li>
+<li>验证program：<code>glValidateProgram(ShaderProgram);</code>。检查program是否能在当前状态下的管线中执行。</li>
+<li>检查验证错误并打印：与检查链接错误相同，仅将glGetProgramiv的第二个参数改为GL_VALIDATE_STATUS，表示验证。</li>
+<li>将propram设置到管线状态中：<code>glUseProgram(ShaderProgram);</code>。这个propram一直生效，直到glUseProgram调用另一个propram替代它。glUseProgram(NULL)表示使用固定功能管线。如果propram没有包含所有类型的shader，其余的都将使用固定功能。</li>
+</ol>
+<p>shader链接到program对象之后，依旧可以被删除。</p>
+<ol>
+<li>调用<code>void glDeleteShader(GLuint shader)</code>，
+<ol>
+<li>如果一个shader没有附加到任何program，它将被删除，与glCreateShader相反。</li>
+<li>如果shader已附加到program，将shader标记为删除。OpenGL使用引用计数管理shader，因此不会直接删除。</li>
+</ol>
+</li>
+<li>调用<code>void glDetachShader(GLuint program, GLuint shader);</code>，将shader从program中分离，与glAttachShader相反。如果一个shader被标记为删除，分离后没有附加到任何program，即引用计数归0，glDetachShader将删除这个shader。</li>
+</ol>
+<h2 id="编写shader">编写shader</h2>
+<p><code>#version 330</code>，表示GLSL版本为3.3，编译不支持则报错。</p>
+<p><code>layout (location = 0) in vec3 Position;</code></p>
+<ol>
+<li>声明了一个vertex specific attribute，名称为Position，它的值来自于buffer。</li>
+<li>vec3表示Position是一个3 float的向量。</li>
+<li><code>layout (location = 0)</code>将buffer中的attribute name与shader中的attribute绑定。0是glVertexAttributePointer的第一个参数，表示坐标。</li>
+</ol>
+<ul>
+<li>0是硬编码的值，复杂的程序会仅在shader中声明<code>in vec3 Position</code>，然后运行时调用glGetAttribLocation查询它的位置。但教程没有举例说明具体用法。</li>
+</ul>
+<p><code> void main()</code>是shader的入口，一个shader必须有且仅有一个。</p>
+<p><code>gl_Position = vec4(0.5 * Position.x, 0.5 * Position.y, Position.z, 1.0);</code>，gl_Position是一个内置变量，它包含齐次顶点坐标(X、Y、Z和W)。因为屏幕映射过程中会使用透视除法，将gl_Position的所有坐标都除以W，所以这里将W设为1。</p>
+<p><code>out vec4 FragColor;</code></p>
+<ol>
+<li>声明变量FragColor，FragColor的值将被光栅器接收写入到帧缓冲中。</li>
+<li>vec4表示4 float，分别表示R、G、B和A。</li>
+</ol>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#opengl%E7%9A%84%E5%8F%AF%E7%BC%96%E7%A8%8B%E7%AE%A1%E7%BA%BF">OpenGL的可编程管线</a></li>
+<li><a href="#%E8%B0%83%E7%94%A8shader">调用shader</a></li>
+<li><a href="#%E7%BC%96%E5%86%99shader">编写shader</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-03-first-triangle-bi-ji/">
+              <h3 class="post-title">
+                《OGL dev》Etay Meiri Tutorial 03 - First Triangle 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
