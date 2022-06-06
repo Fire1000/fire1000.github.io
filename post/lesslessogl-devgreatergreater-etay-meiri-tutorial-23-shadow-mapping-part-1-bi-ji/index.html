@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>《OGL dev》Etay Meiri Tutorial 23 - Shadow Mapping - Part 1 笔记 | Fly_Fire1000的博客</title>
-<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654342543105">
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654480302627">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="《OGL dev》Etay Meiri Tutorial 23 - Shadow Mapping - Part 1 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
@@ -22,7 +22,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://fire1000.github.io">
-  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654342543105" alt="">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654480302627" alt="">
   </a>
   <h1 class="site-title">
     Fly_Fire1000的博客
@@ -165,7 +165,7 @@
 <li>激活texture unit 0，并将shadow map绑定到它的2D纹理，以供fragment shader中读取。</li>
 <li>正常摄影机调用draw call。</li>
 </ol>
-<p>教程中的fragment shader代码<code>Depth = 1.0 - (1.0 - Depth) * 25.0; </code>是因为以光源为摄像机时，由于透视投影矩阵与物体的位置设定，shadow map的深度值接近于1，直接输出到color buffer颜色会非常淡，因为rgb为0为黑，为1为白。因此对从shadow map的深度值到1这段区域，向深度值为0的方向，进行了25倍缩放，以使得颜色更深。</p>
+<p>教程中的fragment shader代码<code>Depth = 1.0 - (1.0 - Depth) * 25.0;</code>是因为以光源为摄像机时，由于透视投影矩阵与物体的位置设定，shadow map的深度值接近于1，直接输出到color buffer颜色会非常淡，因为rgb为0为黑，为1为白。因此对从shadow map的深度值到1这段区域，向深度值为0的方向，进行了25倍缩放，以使得颜色更深。</p>
 
               </div>
               <div class="toc-container">

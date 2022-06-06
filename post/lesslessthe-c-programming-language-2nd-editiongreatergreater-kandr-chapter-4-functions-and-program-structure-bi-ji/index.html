@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>《The C Programming Language, 2nd Edition》K&amp;R Chapter 4 - Functions and Program Structure 笔记 | Fly_Fire1000的博客</title>
-<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654342543105">
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654480302627">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="《The C Programming Language, 2nd Edition》K&amp;R Chapter 4 - Functions and Program Structure 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
@@ -12,7 +12,7 @@
 
 
     <meta name="description" content="编译
-UNIX中cc命令cc main.c getline.o strindex.o将main.c重新编译，之后与getline.o、strindex.o一起加到到可执行文件a.out中。
+UNIX中cc命令cc main.c getline.o strindex.o将main.c重新编译，之后与getline.o、strindex.o一起添加到可执行文件a.out中。
 外部变量和函数
 C程序可以看作由一系列外部对象组成..." />
     <meta name="keywords" content="The C Programming Language" />
@@ -24,7 +24,7 @@ C程序可以看作由一系列外部对象组成..." />
       <div class="main-content">
         <div class="site-header">
   <a href="https://fire1000.github.io">
-  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654342543105" alt="">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654480302627" alt="">
   </a>
   <h1 class="site-title">
     Fly_Fire1000的博客
@@ -96,17 +96,17 @@ C程序可以看作由一系列外部对象组成..." />
             <div class="post-content-wrapper">
               <div class="post-content">
                 <h2 id="编译">编译</h2>
-<p>UNIX中cc命令<code>cc main.c getline.o strindex.o</code>将main.c重新编译，之后与getline.o、strindex.o一起加到到可执行文件a.out中。</p>
+<p>UNIX中cc命令<code>cc main.c getline.o strindex.o</code>将main.c重新编译，之后与getline.o、strindex.o一起添加到可执行文件a.out中。</p>
 <h2 id="外部变量和函数">外部变量和函数</h2>
 <p>C程序可以看作由一系列外部对象组成，外部对象可以是函数或变量。外部指函数外，内部指函数内。<br>
 因为C语言不允许在函数内定义函数，所以函数本身是外部的。</p>
-<p>没有声明原型的函数，在第一被调用时，隐式声明为返回int。</p>
-<p>同一个名字的所有外部变量(函数)的所有引用，都指向同一个对象，即外部链接。<br>
-外部变量和函数的作用域从声明开始到文件末尾。</p>
-<p>使用在其他源文件中的外部变量时，必须使用extern显式声明。<br>
+<p>没有声明原型的函数，在第一次被调用时，隐式声明为返回int。</p>
+<p>同一个名字的所有外部对象的所有引用，都指向同一个对象，即外部链接。<br>
+外部对象的作用域从声明开始到文件末尾。</p>
+<p>使用在其他源文件中的外部对象时，必须声明为extern。当声明时存储类别(Storage Class)缺省，外部对象隐式声明为extern。<br>
 extern声明不需要指明数组的长度。</p>
-<p>static可以将外部变量(函数)声明为静态，static声明的外部变量对其他源文件不可见，避免了名称冲突。<br>
-static声明的内部变量只能在函数中被访问(与自动变量相同)，之后一直占据存储空间不随函数退出消失(与自动变量不同)。</p>
+<p>static声明的外部对象为静态、内部链接，对其他源文件不可见，避免了名称冲突。<br>
+static声明的内部变量为静态、无链接，只能在函数中被访问(与自动变量相同)，之后一直占据存储空间不随函数退出消失(与自动变量不同)。</p>
 <h2 id="register">register</h2>
 <p>register声明表示该变量使用频率较高，建议编译器将变量放在寄存器中(程序更小，速度更快)，但编译器可以选择无视。<br>
 register声明只适用于自动变量和函数形参。<br>
@@ -115,8 +115,8 @@ register声明只适用于自动变量和函数形参。<br>
 <p>block内声明的自动变量，每次进入block时都初始化，离开block时消失。<br>
 block内声明的静态变量，第一次进入block时初始化。<br>
 block内声明block外存在的变量，会隐藏block外的变量，声明新的变量。</p>
-<p>不进行显式初始化的情况下，外部变量和静态变量都初始化为0，自动变量和寄存器变量是未定义的。<br>
-外部变量与静态变量的初始化表达式必须是常量表达式，且只初始化一次(在程序开始前)。<br>
+<p>不进行显式初始化的情况下，静态变量都初始化为0，自动变量和寄存器变量是未定义的。<br>
+静态变量的初始化表达式必须是常量表达式，且只初始化一次(在程序开始前，或第一次进入block时)。<br>
 自动变量与寄存器变量的初始化表达式任意，每次进入函数或block时都被初始化。</p>
 <p>数组声明时允许后跟一个初始化表达式列表进行初始化。当省略数组长度时，长度为列表中初始化表达式的个数。当初始化表达式的个数比数组长度小时，则初始化为0。如果初始化表达式的个数大于数组长度是错误的。<br>
 字符数组允许以一个字符串替代初始化表达式列表，数组元素包含字符串末尾的'\0'。</p>
@@ -129,8 +129,8 @@ block内声明block外存在的变量，会隐藏block外的变量，声明新�
 #define允许带参数，如<code>#define max(A, B) ((A) &gt; (B) ? (A) : (B))</code>。<br>
 将函数定义成宏，可以减少函数调用的开销。<br>
 #undef取消#define定义的名称。<br>
-「#」：<code>#define dprint(expr) printf(#expr &quot; = %g\n&quot;, expr)</code>，<code>dprint(x/y); </code>等价于<code>printf(&quot;x/y = %g\n&quot;, x/y);</code>。<br>
-「##」：<code>#define paste(front, back) front ## back</code>，<code>paste(front, back);</code>结果为name1。</p>
+「#」：<code>#define dprint(expr) printf(#expr &quot; = %g\n&quot;, expr)</code>，<code>dprint(x/y);</code>等价于<code>printf(&quot;x/y = %g\n&quot;, x/y);</code>。<br>
+「##」：<code>#define paste(front, back) front ## back</code>，<code>paste(name, 1);</code>等价于变量名name1。</p>
 <p>#elif类似于else if。<br>
 <code>#if define(名字)</code>，当名字定义时，值1，否则为0。等价于#ifdef。<code>#if !define(名字)</code>等价于#ifndef。</p>
 <h2 id="例程">例程</h2>
@@ -208,7 +208,7 @@ double atof(char s[])
     return sign * val / power;
 }
 </code></pre>
-<h3 id="atoi函数将字符数转换为整数">atoi函数(将字符数转换为整数)</h3>
+<h3 id="atoi函数将字符串转换为整数">atoi函数(将字符串转换为整数)</h3>
 <pre><code>/* atoi: convert string s to integer using atof */
 int atoi(char s[])
 {
@@ -412,7 +412,7 @@ void swap(int v[], int i, int j)
 <ul>
 <li><a href="#%E6%89%BE%E5%87%BA%E6%89%80%E6%9C%89%E5%8C%85%E5%90%AB%E6%8C%87%E5%AE%9A%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E8%A1%8C">找出所有包含指定字符串的行</a></li>
 <li><a href="#atof%E5%87%BD%E6%95%B0%E5%B0%86%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BD%AC%E6%8D%A2%E4%B8%BA%E6%B5%AE%E7%82%B9">atof函数(将字符串转换为浮点)</a></li>
-<li><a href="#atoi%E5%87%BD%E6%95%B0%E5%B0%86%E5%AD%97%E7%AC%A6%E6%95%B0%E8%BD%AC%E6%8D%A2%E4%B8%BA%E6%95%B4%E6%95%B0">atoi函数(将字符数转换为整数)</a></li>
+<li><a href="#atoi%E5%87%BD%E6%95%B0%E5%B0%86%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BD%AC%E6%8D%A2%E4%B8%BA%E6%95%B4%E6%95%B0">atoi函数(将字符串转换为整数)</a></li>
 <li><a href="#%E9%80%86%E6%B3%A2%E5%85%B0%E8%AE%A1%E7%AE%97%E5%99%A8">逆波兰计算器</a></li>
 <li><a href="#%E6%89%93%E5%8D%B0%E5%8D%81%E8%BF%9B%E5%88%B6%E6%95%B0">打印十进制数</a></li>
 <li><a href="#%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F">快速排序</a></li>

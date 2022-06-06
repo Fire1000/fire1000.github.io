@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>《OGL dev》Etay Meiri Tutorial 04 - Shaders 笔记 | Fly_Fire1000的博客</title>
-<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654342543105">
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654480302627">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="《OGL dev》Etay Meiri Tutorial 04 - Shaders 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
@@ -26,7 +26,7 @@ vertex processor对应vertex shader(顶点着色器)。
       <div class="main-content">
         <div class="site-header">
   <a href="https://fire1000.github.io">
-  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654342543105" alt="">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654480302627" alt="">
   </a>
   <h1 class="site-title">
     Fly_Fire1000的博客
@@ -162,7 +162,7 @@ clipper是固定的。</p>
 <ul>
 <li>0是硬编码的值，复杂的程序会仅在shader中声明<code>in vec3 Position</code>，然后运行时调用glGetAttribLocation查询它的位置。但教程没有举例说明具体用法。</li>
 </ul>
-<p><code> void main()</code>是shader的入口，一个shader必须有且仅有一个。</p>
+<p><code>void main()</code>是shader的入口，一个shader必须有且仅有一个。</p>
 <p><code>gl_Position = vec4(0.5 * Position.x, 0.5 * Position.y, Position.z, 1.0);</code>，gl_Position是一个内置变量，它包含齐次顶点坐标(X、Y、Z和W)。因为屏幕映射过程中会使用透视除法，将gl_Position的所有坐标都除以W，所以这里将W设为1。</p>
 <p><code>out vec4 FragColor;</code></p>
 <ol>

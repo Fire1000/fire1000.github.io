@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://fire1000.github.io</id>
     <title>Fly_Fire1000的博客</title>
-    <updated>2022-06-04T11:43:24.027Z</updated>
+    <updated>2022-06-06T01:51:47.790Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://fire1000.github.io"/>
     <link rel="self" href="https://fire1000.github.io/atom.xml"/>
@@ -404,7 +404,7 @@ glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 <li>激活texture unit 0，并将shadow map绑定到它的2D纹理，以供fragment shader中读取。</li>
 <li>正常摄影机调用draw call。</li>
 </ol>
-<p>教程中的fragment shader代码<code>Depth = 1.0 - (1.0 - Depth) * 25.0; </code>是因为以光源为摄像机时，由于透视投影矩阵与物体的位置设定，shadow map的深度值接近于1，直接输出到color buffer颜色会非常淡，因为rgb为0为黑，为1为白。因此对从shadow map的深度值到1这段区域，向深度值为0的方向，进行了25倍缩放，以使得颜色更深。</p>
+<p>教程中的fragment shader代码<code>Depth = 1.0 - (1.0 - Depth) * 25.0;</code>是因为以光源为摄像机时，由于透视投影矩阵与物体的位置设定，shadow map的深度值接近于1，直接输出到color buffer颜色会非常淡，因为rgb为0为黑，为1为白。因此对从shadow map的深度值到1这段区域，向深度值为0的方向，进行了25倍缩放，以使得颜色更深。</p>
 ]]></content>
     </entry>
     <entry>
