@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>《The C Programming Language, 2nd Edition》K&amp;R Chapter 5 - Pointers and Arrays 笔记 | Fly_Fire1000的博客</title>
-<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654603203619">
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654610367742">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="《The C Programming Language, 2nd Edition》K&amp;R Chapter 5 - Pointers and Arrays 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
@@ -25,7 +25,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://fire1000.github.io">
-  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654603203619" alt="">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654610367742" alt="">
   </a>
   <h1 class="site-title">
     Fly_Fire1000的博客
@@ -185,7 +185,7 @@ int getint(int *pn)
     sign = (c == '-') ? -1 : 1;
     if (c == '+' || c == '-')
         c = getch();
-    for (*pn = 0; isdigit(c), c = getch())
+    for (*pn = 0; isdigit(c); c = getch())
         *pn = 10 * *pn + (c - '0');
     *pn *= sign;
     if (c != EOF)
@@ -197,21 +197,21 @@ int getint(int *pn)
 <pre><code>/* strlen: return length of string s */
 int strlen(char *s)
 {
-int n;
+    int n;
 
-for (n = 0; *s != '\0', s++)
-    n++;
-return n;
+    for (n = 0; *s != '\0', s++)
+        n++;
+    return n;
 }
 </code></pre>
 <pre><code>/* strlen: return length of string s */
 int strlen(char *s)
 {
-char *p = s;
+    char *p = s;
 
-while (*p != '\0')
-    p++;
-return p - s;
+    while (*p != '\0')
+        p++;
+    return p - s;
 }
 </code></pre>
 <h3 id="不完善的内存分配程序后分配的必须先释放">不完善的内存分配程序(后分配的必须先释放)</h3>
