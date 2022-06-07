@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>《The C Programming Language, 2nd Edition》K&amp;R Chapter 5 - Pointers and Arrays 笔记 | Fly_Fire1000的博客</title>
-<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654575132025">
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654603203619">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="《The C Programming Language, 2nd Edition》K&amp;R Chapter 5 - Pointers and Arrays 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
@@ -12,10 +12,10 @@
 
 
     <meta name="description" content="指针
-指针是能存放一个地址的一组存储单元，通常是2或4字节。
+指针是足够存放一个地址的一组存储单元，通常是2或4字节。
 &amp;和*
 地址运算符&amp;只能应用于内存中的对象，不能用于表达式、常量或register变量。&amp;z[0]的值为z[0]的地址，即z的地址。
-*是间接寻址或间接引..." />
+*是间接寻址或间接..." />
     <meta name="keywords" content="The C Programming Language" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
@@ -25,7 +25,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://fire1000.github.io">
-  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654575132025" alt="">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654603203619" alt="">
   </a>
   <h1 class="site-title">
     Fly_Fire1000的博客
@@ -97,17 +97,16 @@
             <div class="post-content-wrapper">
               <div class="post-content">
                 <h2 id="指针">指针</h2>
-<p>指针是能存放一个地址的一组存储单元，通常是2或4字节。</p>
+<p>指针是足够存放一个地址的一组存储单元，通常是2或4字节。</p>
 <h2 id="和">&amp;和*</h2>
 <p>地址运算符&amp;只能应用于内存中的对象，不能用于表达式、常量或register变量。&amp;z[0]的值为z[0]的地址，即z的地址。<br>
 *是间接寻址或间接引用运算符。<code>int *ip;</code>表示*ip是int类型。<br>
 void*对象不能*(间接寻址)。</p>
 <h2 id="指针初始化">指针初始化</h2>
 <p><code>char *allocp = allocbuf;</code>等价于<code>char *allocp; allocp = allocbuf;</code><br>
-指针初始化的值只能是0，或表示地址的表达式，表达式所代表的地址必须是已义的有适当类型的数据的地址。<br>
 C语言保证0永远不是有效的地址。程序中常使用符号常量NULL代替0，NULL定义在&lt;stddef.h&gt;中。</p>
 <h2 id="指针与简单数组">指针与简单数组</h2>
-<p>数组名与指针的区别是，指针是变量，而数组名不是，比如a=pa和a++都是非法的(a为数组)。<br>
+<p>数组名与指针的区别是，指针是变量，而数组名不是。比如，当a为数组时，a=pa和a++都是非法的。<br>
 将数组名作为实参时，传递的是第一个元素的地址。<br>
 形参<code>char s[]</code>与<code>char *s</code>等价。</p>
 <pre><code>char amessage[] =&quot;now is the time&quot;;
@@ -117,16 +116,15 @@ char *pmessage =&quot;now is the time&quot;;
 pmessage是一个指针，指向一个字符串常量，它可以修改以指向其他的地址，但试图修改字符串的内容是未定义的。</p>
 <h2 id="指针运算">指针运算</h2>
 <p>ANSI C使用void*替代char*作为通用指针类型。<br>
-不同类型指针之间的赋值是非法的，例外，void*指针与任意类型指针之间的赋值是合法的。</p>
-<p>p++的含义是对p自增并指向下一个元素，p+=i的含义是对p进行加i运算，使指针p指向当前元素之后第i个元素。<br>
+除void*指针以外，不同类型指针之间的赋值是非法的。void*指针与任意类型指针之间的赋值是合法的。</p>
+<p>p++的含义是p自增并指向下一个元素，p+=i的含义是对p进行加i运算，使指针p指向当前元素之后第i个元素。<br>
 在计算p+n时，n将根据p指向的对象的长度按比例缩放，而p指向的对象的长度则取决于p的声明。例如，如果int占4个字节，int类型的计算中，对应的n将4的倍数计算。<br>
 a[i]等价于*(a+i)。&amp;a[i]与a+i也等价。</p>
 <p><code>(*p)++;</code>中()是必需的，因为一元运算符遵循从右向左结合。<br>
-(*++argv)[0]等价于**++argv，因为[]的结合优先级比*和++高。<br>
-*++argv[0]表示对指针argv[0]自增。</p>
+(*++argv)[0]等价于**++argv，其中()是必需的，因为[]的结合优先级比*和++高。</p>
 <p>指针的减法的意义是求两个操作数之间的元素个数。<br>
 &lt;stddef.h&gt;中定义的类型ptrdiff_t足以容纳两个指针之间的带符号差值。</p>
-<p>指针支持关系运算，但指向不同数组元素的指针之间的算术或关系运算是未定义的。例外，指针在算术运算中可使用指向数组的最后一个元素的下一个元素的地址。</p>
+<p>指针支持关系运算，但指向不同数组元素的指针之间的算术或关系运算是未定义的。例外，标准规定，指针在算术运算中可指向数组的最后一个元素的下一个元素的地址。</p>
 <h2 id="指针与复杂数组">指针与复杂数组</h2>
 <p>多维数组的支持以下初始化表达式列表：</p>
 <pre><code>static char daytab[2][13] = {
@@ -146,7 +144,7 @@ b只分配了10个指针内存。如果b的元素都为长度为20的int数组�
 <p>main接收两个实参</p>
 <ol>
 <li>第一个实参是整数，表示第二个实参的元素个数，通常命名为argc。</li>
-<li>第二个实参是字符串数组，从操作系统接收，通常命名为argv。</li>
+<li>第二个实参是字符串数组，从环境接收，通常命名为argv。</li>
 </ol>
 <p>从控制台执行程序，argv就是执行程序的那条命令，以空白符分隔，生成的字符串数组。<br>
 点击程序图标执行程序，argv只有一个元素，为程序的完整名称，包含路径和后辍。<br>
