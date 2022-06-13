@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>《The C Programming Language, 2nd Edition》K&amp;R Chapter 5 - Pointers and Arrays 笔记 | Fly_Fire1000的博客</title>
-<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1655086340055">
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1655094307232">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="《The C Programming Language, 2nd Edition》K&amp;R Chapter 5 - Pointers and Arrays 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
@@ -25,7 +25,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://fire1000.github.io">
-  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1655086340055" alt="">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1655094307232" alt="">
   </a>
   <h1 class="site-title">
     Fly_Fire1000的博客
@@ -555,7 +555,7 @@ int numcmp(char *s1, char *s2)
 <p>(只支简单数据类型，不支持限定符和函数)</p>
 <p>转换示例：</p>
 <pre><code>char **argv
-    argv: pointer to char
+    argv: pointer to pointer to char
 int (*daytab)[13]
     daytab: pointer to array[13] of int
 int *daytab[13]
@@ -571,12 +571,12 @@ char (*(*x[3])())[5]
 </code></pre>
 <p>声明语法：</p>
 <pre><code>dcl: 
-    optional *'s direct-dcl
+    前面带可选的*的 direct-dcl
 direct-dcl: 
     name
     (dcl)
     direct-dcl()
-    direct-dcl[optional size]
+    direct-dcl[可选的长度]
 </code></pre>
 <figure data-type="image" tabindex="1"><img src="https://fire1000.github.io/post-images/1643943314645.png" alt="" loading="lazy"></figure>
 <p>main.c：</p>
