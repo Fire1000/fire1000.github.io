@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>《The C Programming Language, 2nd Edition》K&amp;R Chapter 6 - Structures 笔记 | Fly_Fire1000的博客</title>
-<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1654610367742">
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1655086340055">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="《The C Programming Language, 2nd Edition》K&amp;R Chapter 6 - Structures 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
@@ -28,7 +28,7 @@ struct point {
       <div class="main-content">
         <div class="site-header">
   <a href="https://fire1000.github.io">
-  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1654610367742" alt="">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1655086340055" alt="">
   </a>
   <h1 class="site-title">
     Fly_Fire1000的博客
@@ -107,9 +107,10 @@ struct point {
 };
 </code></pre>
 <p>如果结构声明后跟变量表，会为变量分配内存，这是个定义，如<code>struct { ... } x, y, z;</code>。<br>
-如果结构声明带有标记，那么，可以使用这个标记定义变量，如<code>struct point pt;</code>。</p>
-<p>结构定义可以后跟初值表进行初始化，初值表中每个成员对应的初始必须为常量表达式，如<code>struct maxpt = { 320, 200 };</code>。<br>
-自动结构可以通过赋值初始化，也可以通过函数返回的结构初始化。</p>
+如果结构声明带有标记，那么可以使用这个标记定义变量，如<code>struct point pt;</code>。</p>
+<p>结构定义可以后跟初值表进行初始化，如<code>struct maxpt = { 320, 200 };</code>。<br>
+静态结构初值表中每个成员对应的初始值必须为常量表达式，自动结构无此限制。<br>
+自动结构还可以通过赋值初始化。</p>
 <p>结构支持赋值、取址、成员访问。不支持比较。<br>
 结构可以嵌套。</p>
 <p>结构传递时，指针复制的效率要比复制整个结构要高。<br>
@@ -165,10 +166,10 @@ sizeof支持结构和指针。<br>
 &amp;tab[-1]和&amp;tab[n]都超过了数组边界，但前者是非法的，后者是合法的，C语言保证数组末尾之后的第一个元素的指针运算合法，间接取址非法。</p>
 <h2 id="typedef">typedef</h2>
 <p>typedef语法：<code>typedef int Length;</code>，Length与int同义。<br>
-<code>typedef char *String;</code>，String与char<em>同义。<br>
+<code>typedef char *String;</code>，String与char*同义。<br>
 typedef不创建新的类义，也不增加新的语义。<br>
 typedef由编译器解释，功能超过预处理器的能力。<br>
-<code>typedef int (*PFI)(char *, char *)</code>，PFI是形参为两个char</em>，返回int的函数指针。<br>
+<code>typedef int (*PFI)(char *, char *)</code>，PFI是形参为两个char*，返回int的函数指针。<br>
 typedef为不同大小的整型定义类型名，提高可移植性。</p>
 <h2 id="联合">联合</h2>
 <p>联合语法：</p>
@@ -194,10 +195,13 @@ typedef为不同大小的整型定义类型名，提高可移植性。</p>
 <p>冒号后的数字表示字段的宽度，单位为bit。<br>
 与结构相同，字段可以像小整数一样，出现在算术表达式中。<br>
 字段是否能覆盖字边界取决于具体实现。<br>
-字段可以不命名(只有冒号和宽度，起填充作用。<br>
-宽度0表示强制在下一个字边界上对齐。<br>
+字段可以不命名(只有冒号和宽度），起填充作用。<br>
+宽度0的字段必须是不命名的，表示下一个成员强制在下一个字边界上对齐。<br>
 字段是从左向右分配，还是相反取决于机器。<br>
 字段没有地址，不能&amp;取地址。</p>
+<ul>
+<li>字边界的概念，经测试，我理解为字为CPU处理的最自然长度，通常为int。</li>
+</ul>
 <h2 id="其他">其他</h2>
 <p>malloc函数保证内存对整齐。</p>
 <h2 id="例程">例程</h2>
