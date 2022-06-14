@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>《The C Programming Language, 2nd Edition》K&amp;R Chapter 5 - Pointers and Arrays 笔记 | Fly_Fire1000的博客</title>
-<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1655094307232">
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1655209710207">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="《The C Programming Language, 2nd Edition》K&amp;R Chapter 5 - Pointers and Arrays 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
@@ -25,7 +25,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://fire1000.github.io">
-  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1655094307232" alt="">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1655209710207" alt="">
   </a>
   <h1 class="site-title">
     Fly_Fire1000的博客
@@ -85,7 +85,7 @@
                 2022-02-02
               </span>
               <span>
-                17 min read
+                19 min read
               </span>
               
                 <a href="https://fire1000.github.io/tag/p29rjtcKO/" class="post-tag">
@@ -569,16 +569,53 @@ char (*(*x())[])()
 char (*(*x[3])())[5]
     x: array[3] of pointer to function returning pointer to array[5] of char
 </code></pre>
-<p>声明语法：</p>
+<p>声明语法：(除去最左边的数据类型)</p>
 <pre><code>dcl: 
-    前面带可选的*的 direct-dcl
+    前面带0或1或多个*的 direct-dcl
 direct-dcl: 
     name
     (dcl)
     direct-dcl()
     direct-dcl[可选的长度]
 </code></pre>
-<figure data-type="image" tabindex="1"><img src="https://fire1000.github.io/post-images/1643943314645.png" alt="" loading="lazy"></figure>
+<p>声明分析逻辑：</p>
+<ol>
+<li>找到name，一个声明中name是唯一的，name是direct-dcl。</li>
+<li>direct-dcl向右边结合[]和()，结果依旧是direct-dcl。</li>
+<li>direct-dcl向左边结合任意个*(含0个)，结果是dcl。</li>
+<li>dcl向左边结合一个(，向右边结合一个)，结果是direct-dcl，跳回步骤二。如果左右不存在()，否则声明分析完毕。</li>
+</ol>
+<p>举例，(*pfa[])()的声明分析逻辑如下图：<br>
+<img src="https://fire1000.github.io/post-images/1643943314645.png" alt="" loading="lazy"></p>
+<p>例程是一个递归声明分析程序，从左到右，从外向内递归分析。</p>
+<ol>
+<li>核心函数gettoken()，跳过空格，读入1或多个字符，返回tokentype，并为外部变量tokentype、token赋值。tokentype有五种可能的值：
+<ol>
+<li>枚举值PARENS，并将&quot;()&quot;写入到token。</li>
+<li>'('。</li>
+<li>枚举值BRACKETS，并将'['、'['和']'之间的数字、']'组成的字符串写入到token。</li>
+<li>枚举值NAME，并将name字符串写入到token。</li>
+<li>其他字符或EOF。其他字符中有效的只有'*'、')'、'\n'。</li>
+</ol>
+</li>
+<li>dcl()，读入所有的'*'字符，并多调用一次gettoken()，再调用dirdcl()，之后依据读入'*'字符的个数，将相同个数的&quot; pointer to&quot;输出到out。</li>
+<li>dirdcl()，如果tokentype为 '('，调用dcl()，如果tokentype为NAME，则将token写入到name。在这之后调用一次gettoken()。如果tokentype为PAREN，则将&quot; function returning&quot;输出到out，并再次调用gettoken()。如果tokentype为BRACKETS，则将&quot; array&quot; + token + &quot; of&quot;输出到out，并再次调用gettoken()。</li>
+</ol>
+<p>举例，例程分析以下声明的逻辑：</p>
+<pre><code>char (*(*x[3])())[5]
+    x: array[3] of pointer to function returning pointer to array[5] of char
+</code></pre>
+<ol>
+<li>调用gettoken()，将&quot;char&quot;写入到datatype。</li>
+<li>调用dcl()。</li>
+<li>dcl()中：调用gettoken()返回'('，调用dirdcl()。</li>
+<li>dirdcl()中：因为tokentype为'('，调用dcl()，之后再调用gettoken()返回BRACKETS，将&quot; array[5] of &quot;输出到out。</li>
+<li>dcl()中：因为调用gettoken()返回'*'，再次调用gettoken()返回'('，调用dirdcl()，之后将&quot; pointer to&quot;输出到out。</li>
+<li>dirdcl()中：因为tokentype为'('，调用dcl()，之后再调用gettoken()返回PAREN，将&quot; function returning&quot;输出到out。</li>
+<li>dcl()中：因为调用gettoken()返回'*'，再次调用gettoken()返回NAME，调用dirdcl()，之后将&quot; pointer to&quot;输出到out。</li>
+<li>dirdcl()中：因为tokentype为NAME，将token(即&quot;x&quot;)写入到name，并后跟一个冒号。之后再调用gettoken()返回BRACKETS，将&quot; array[3] of &quot;输出到out。</li>
+<li>递归完毕，最后以name、冒号、out、datatype的顺序打印。</li>
+</ol>
 <p>main.c：</p>
 <pre><code>#include &lt;stdio.h&gt;
 #include &lt;string.h&gt;
@@ -678,7 +715,7 @@ void dirdcl(void)
 </code></pre>
 <h3 id="将描述转换为声明">将描述转换为声明</h3>
 <p>示例：x is a function<br>
-returning a pointer to an array of pointers to functions returning  char 表示为<code>x () * [] * () char</code>，应转换为<code>char (*(*x())[])()</code>。</p>
+returning a pointer to an array of pointers to functions returning  char 表示为<code>x () * [] * () char</code>，将它转换为<code>char (*(*x())[])()</code>。</p>
 <pre><code>/* undcl: convert word descriptions to declarations */
 main()
 {
