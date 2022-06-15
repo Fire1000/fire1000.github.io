@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>《The C Programming Language, 2nd Edition》K&amp;R Chapter 8 - The UNIX System Interface 笔记 | Fly_Fire1000的博客</title>
-<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1655214311362">
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1655297525896">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="《The C Programming Language, 2nd Edition》K&amp;R Chapter 8 - The UNIX System Interface 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
@@ -24,7 +24,7 @@ UNIX中所有外围设备(包括键盘和显示器)都被看作文件。因此�
       <div class="main-content">
         <div class="site-header">
   <a href="https://fire1000.github.io">
-  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1655214311362" alt="">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1655297525896" alt="">
   </a>
   <h1 class="site-title">
     Fly_Fire1000的博客
@@ -230,7 +230,7 @@ struct direct { /* directory entry */
 <img src="https://fire1000.github.io/post-images/1644035074867.png" alt="" loading="lazy">。</p>
 <p>malloc分配内存时有两种算法：</p>
 <ol>
-<li>扫描空闲块链表，找到最大的块为止。称为“首次适应”(first fit)。</li>
+<li>扫描空闲块链表，找到足够大的块为止。称为“首次适应”(first fit)。</li>
 <li>找到满足条件的最小的块。称为“最佳适应”(best fit)。</li>
 </ol>
 <p>malloc找到满足条件块之后，或找不到时：</p>
@@ -593,17 +593,17 @@ void *malloc(unsigned nbytes)
         if (p-&gt;s.size &gt;= nunits) { /* big enough */
             if (p-&gt;s.size == nunits) /* exactly */
                 prevp-&gt;s.ptr = p-&gt;s.ptr;
-        else { /* allocate tail end */
-            p-&gt;s.size -= nunits;
-            p += p-&gt;s.size;
-            p-&gt;s.size = nunits;
+            else { /* allocate tail end */
+                p-&gt;s.size -= nunits;
+                p += p-&gt;s.size;
+                p-&gt;s.size = nunits;
+            }
+            freep = prevp;
+            return (void *)(p+1);
         }
-        freep = prevp;
-        return (void *)(p+1);
-    }
-    if (p == freep) /* wrapped around free list */
-        if ((p = morecore(nunits)) == NULL)
-            return NULL; /* none left */
+        if (p == freep) /* wrapped around free list */
+            if ((p = morecore(nunits)) == NULL)
+                return NULL; /* none left */
     }
 }
 </code></pre>

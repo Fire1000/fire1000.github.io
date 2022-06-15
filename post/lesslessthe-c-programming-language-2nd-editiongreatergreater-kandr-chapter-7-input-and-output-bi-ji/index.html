@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>《The C Programming Language, 2nd Edition》K&amp;R Chapter 7 - Input and Output 笔记 | Fly_Fire1000的博客</title>
-<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1655214311362">
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1655297525896">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="《The C Programming Language, 2nd Edition》K&amp;R Chapter 7 - Input and Output 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
@@ -25,7 +25,7 @@ prog &lt;infile表示从infile文件输入。&lt;infile不会包含在m..." />
       <div class="main-content">
         <div class="site-header">
   <a href="https://fire1000.github.io">
-  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1655214311362" alt="">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1655297525896" alt="">
   </a>
   <h1 class="site-title">
     Fly_Fire1000的博客
@@ -252,26 +252,26 @@ void minprintf(char *fmt, ...)
     double dval;
 
     va_start(ap, fmt); /* make ap point to 1st unnamed arg */
-        for (p = fmt; *p; p++) {
-            if (*p != '%') {
-                putchar(*p);
-                continue;
-            }
-            switch (*++p) {
-            case 'd':
-                ival = va_arg(ap, int);
-                printf(&quot;%d&quot;, ival);
-                break;
-            case 'f':
-                dval = va_arg(ap, double);
-                printf(&quot;%f&quot;, dval);
-                break;
-            case 's':
-                for (sval = va_arg(ap, char *); *sval; sval++)
-                putchar(*sval);
-                break;
-            default:
-                putchar(*p);
+    for (p = fmt; *p; p++) {
+        if (*p != '%') {
+            putchar(*p);
+            continue;
+        }
+        switch (*++p) {
+        case 'd':
+            ival = va_arg(ap, int);
+            printf(&quot;%d&quot;, ival);
+            break;
+        case 'f':
+            dval = va_arg(ap, double);
+            printf(&quot;%f&quot;, dval);
+            break;
+        case 's':
+            for (sval = va_arg(ap, char *); *sval; sval++)
+            putchar(*sval);
+            break;
+        default:
+            putchar(*p);
             break;
         }
     }
@@ -279,6 +279,15 @@ void minprintf(char *fmt, ...)
 }
 </code></pre>
 <h3 id="cat函数连接多个文件">cat函数(连接多个文件)</h3>
+<pre><code>/* filecopy: copy file ifp to file ofp */
+void filecopy(FILE *ifp, FILE *ofp)
+{
+    int c;
+    
+    while ((c = getc(ifp)) != EOF)
+        putc(c, ofp);
+}
+</code></pre>
 <pre><code>#include &lt;stdio.h&gt;
 
 /* cat: concatenate files, version 2 */
@@ -308,7 +317,7 @@ main(int argc, char *argv[])
 }
 </code></pre>
 <h3 id="fgets和fputs函数">fgets和fputs函数</h3>
-<pre><code>/* fgets: get at most n chars from iop */
+<pre><code>/* fgets: get at most n - 1 chars from iop */
 char *fgets(char *s, int n, FILE *iop)
 {
     register int c;
