@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第1章 C#和.NET框架 笔记 | Fly_Fire1000的博客</title>
-<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1655297525896">
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1655380987450">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第1章 C#和.NET框架 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
@@ -23,7 +23,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://fire1000.github.io">
-  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1655297525896" alt="">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1655380987450" alt="">
   </a>
   <h1 class="site-title">
     Fly_Fire1000的博客
@@ -100,9 +100,9 @@
 <ol>
 <li>GC。</li>
 <li>.NET语言之间无缝交互。</li>
-<li>允许.NET代码调用非.NET代码，如C。。这个特性称为平台调用</li>
+<li>允许.NET代码调用非.NET代码，如C。这个特性称为平台调用。</li>
 <li>.NET Framework组件与COM组件之间无缝交互。</li>
-<li>程序运行不再需要向注册表注册。</li>
+<li>程序运行不再在注册表中注册。</li>
 <li>允许一个机器上存在同一个DLL的不同版本，解决了DLL HELL。这个特性称为并行执行。</li>
 <li>庞大的FCL。</li>
 </ol>
@@ -111,10 +111,10 @@
 <li>C#代码被编译器编译成程序集，程序集包含CIL(中间语言)，使用的类型信息，对其他程序集的引用信息。</li>
 <li>运行时，CLR先检查程序集的安全特性，之后分配内存，将CIL交给JIT编译器，编译成机器码执行。</li>
 </ol>
-<p>JIT编译器是CLR的组成部分，JIT编译过的机器码会缓存，遇到相同的CIL时不再编译。微软提供工具Ngen，将CIL先编译成机器码，省去JIT的编译时间。</p>
+<p>JIT编译器是CLR的组成部分，JIT编译过的机器码会缓存，遇到相同的CIL时不再编译。微软提供工具Ngen，可以将CIL先编译成机器码，省去JIT的编译时间。</p>
 <p>受CLR管理的代码称为托管代码，反之称为非托管代码，如C。</p>
 <p>CLR提供的功能包括GC、JIT、异常处理、反射等。</p>
-<p>公共语言基础结构CLI是一组标准，包括公共类型系统CTS(如内置类型，基类object等)和公共语言规范CLS(如类结构、参数传递等)。</p>
+<p>CLI(公共语言基础结构)是一组标准，包括CTS(公共类型系统，如内置类型，基类object等)和CLS(公共语言规范，如类结构、参数传递等)。</p>
 <p>C#版本：2.0加入泛型，3.0加入LINQ，4.0加入命名参数和可选参数，5.0加入异步。</p>
 
               </div>

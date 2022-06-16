@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://fire1000.github.io</id>
     <title>Fly_Fire1000的博客</title>
-    <updated>2022-06-15T12:52:19.350Z</updated>
+    <updated>2022-06-16T12:03:11.349Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://fire1000.github.io"/>
     <link rel="self" href="https://fire1000.github.io/atom.xml"/>
@@ -10,6 +10,120 @@
     <logo>https://fire1000.github.io/images/avatar.png</logo>
     <icon>https://fire1000.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Fly_Fire1000的博客</rights>
+    <entry>
+        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第5章 方法 笔记]]></title>
+        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-5-zhang-fang-fa-bi-ji/</id>
+        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-5-zhang-fang-fa-bi-ji/">
+        </link>
+        <updated>2022-06-16T09:16:17.000Z</updated>
+        <content type="html"><![CDATA[<p>var关键字：</p>
+<ol>
+<li>只能用于本地变量。</li>
+<li>只能用于包含initializer的变量声明，编译器依据initializer推断变量的类型。</li>
+<li>一旦编译器推断出变量的类型，它就是固定不变的。</li>
+</ol>
+<p>与C/C++不同，C#不能在一个名称的作用域内声明相同的名称，即使这个相同的名称在嵌套块内部。</p>
+<p>常量：</p>
+<ol>
+<li>通过const关键字声明。与C/C++不同，const不是修饰符，是核心声明的一部分，必须紧挨类型名，放在类型名之前。</li>
+<li>必须包含initializer。初始值必须在编译期确定，因此它不能是某个对象的引用，可以是null。</li>
+<li>声明后值不能改变。</li>
+</ol>
+<p>值参数：</p>
+<ol>
+<li>默认类型的参数。</li>
+<li>在栈上为形参分配内存。</li>
+<li>将实参的值拷贝给形参。实参可以是表达式。如果实参是变量，则必须已初始化。</li>
+</ol>
+<p>引用参数：</p>
+<ol>
+<li>形参与实参都使用ref修饰。</li>
+<li>实参必须是变量，并且必须已初始化。</li>
+<li>不为形参分配内存，形参是实参的别名。</li>
+</ol>
+<p>输出参数：</p>
+<ol>
+<li>形参与实参都使用out修饰。</li>
+<li>实参必须是变量，不需要初始化。</li>
+<li>不为形参分配内存，形参是实参的别名。</li>
+<li>形参在函数内部被读取之前，必须先赋值。</li>
+<li>形参在函数返回之前，必须赋值。</li>
+</ol>
+<p>参数数组：</p>
+<ol>
+<li>形参使用params修饰。</li>
+<li>形参的类型必须为一维数组。</li>
+<li>一个函数只允许有一个参数数组，并且必须作为最后一个形参。</li>
+<li>形参对应0或1或多个参数数组元素类型的实参，或一个参数数组类型的实参。</li>
+<li>在栈上为参数数组的引用部分分配内存，在堆上为参数数组的元素分配内存。</li>
+</ol>
+<p>值参数、引用参数、输出参数、参数数组简单对比：<br>
+<img src="https://fire1000.github.io/post-images/1655378112817.png" alt="" loading="lazy"></p>
+<p>一个类中可以拥有多个重名的方法，称为方法重载(method overload)。注意与方法覆写(method overload)区分。<br>
+方法重载的签名(signature)必须不同，签名包括名称、参数个数、参数的类型和顺序，参数修饰符，签名不包括返回值类型、参数名称。一个类拥有签名相同，返回值类型不同的方法会报错。</p>
+<p>位置参数：形参与实参位置一一对应。</p>
+<p>命名参数：实参以形参名、冒号、实参值的方式给出。形参与实参位置不需要对应。<br>
+<img src="https://fire1000.github.io/post-images/1655379920541.png" alt="" loading="lazy"><br>
+命名参数可以与位置参数一起使用，但位置参数必须写在命名参数之前。</p>
+<p>可选参数：指函数声明时，设定默认值的形参，这些形参在函数调用时可以省略对应的实参。</p>
+<ol>
+<li>可选参数只能是值参数。</li>
+<li>可选参数的默认值在编译期确定，因此引用类型只能为null。</li>
+<li>可选参数在形参列表中，必须位于必填参数之后，参数数组之前。(必填参数和参数数组可以不存在)</li>
+<li>函数调用时，使用位置参数，则可选参数对应的实参必须从后向前省略，使用命名参数无此限制。</li>
+</ol>
+<p>每个函数调用时，会创建一个栈帧并入栈，函数调用结束时弹栈。<br>
+栈帧包含返回地址(函数返回时，继续执行的地址)，为形参分配的内存，其他函数调用相关的管理数据项。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第4章 类的基本概念 笔记]]></title>
+        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-4-zhang-lei-de-ji-ben-gai-nian-bi-ji/</id>
+        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-4-zhang-lei-de-ji-ben-gai-nian-bi-ji/">
+        </link>
+        <updated>2022-06-16T08:53:34.000Z</updated>
+        <content type="html"><![CDATA[<p>C#类有9种成员类型：<br>
+<img src="https://fire1000.github.io/post-images/1655369733910.png" alt="" loading="lazy"></p>
+<p>与C/C++不同，C#不能在类型外部声明变量和函数。</p>
+<p>new关键字为引用类型的数据部分在堆上分配内存，返回地址。为值类型分配内存，返回拷贝。</p>
+<p>静态成员是与类相关，与实例无关的成员。</p>
+<p>类的成员的访问修饰符缺省时，隐式声明为private。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第3章 类型、存储和变量 笔记]]></title>
+        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-3-zhang-lei-xing-cun-chu-he-bian-liang-bi-ji/</id>
+        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-3-zhang-lei-xing-cun-chu-he-bian-liang-bi-ji/">
+        </link>
+        <updated>2022-06-16T06:30:11.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="数据类型">数据类型</h2>
+<p>C程序是一组函数和数据类型，C++程序是一组函数和类，C#程序是一组类型声明。<br>
+可执行的C#程序的类型声明中必须包含一个存在Main方法的类。命名空间是将类型声明分组的方法。</p>
+<p>C#提供16种预定义类型：<br>
+<img src="https://fire1000.github.io/post-images/1655362331322.png" alt="" loading="lazy"></p>
+<ul>
+<li>与C/C++不同，C#中数值类型不具有布尔意义。</li>
+<li>char为2 byte，容纳一个UCS-2字符。</li>
+<li>decimal是高精度小数类型，可以准确表示分数，常用于货币计算。</li>
+</ul>
+<p>C#中预定义类型是底层.NET类型的别名：<br>
+<img src="https://fire1000.github.io/post-images/1655363080438.png" alt="" loading="lazy"></p>
+<p>C#提供6种自定义类型：class、struct、array、enum、delegate、interface。</p>
+<h2 id="栈和堆值类型和引用类型">栈和堆，值类型和引用类型</h2>
+<p>CLR的GC(Garbage Collector，垃圾收集器)会自动清除堆中无主的对象。</p>
+<p>引用类型需要存储两部分内存：引用部分和数据部分。其中数据部分总位于堆中。</p>
+<p>C#的值类型与引用类型：<br>
+<img src="https://fire1000.github.io/post-images/1655364837215.png" alt="" loading="lazy"></p>
+<h2 id="变量">变量</h2>
+<p>C#提供4种变量：<br>
+<img src="https://fire1000.github.io/post-images/1655365201631.png" alt="" loading="lazy"></p>
+<p>变量的存储位置，声明时没有initializer是否自动初始化，如图：<br>
+<img src="https://fire1000.github.io/post-images/1655365674832.png" alt="" loading="lazy"></p>
+<h2 id="dynamic">dynamic</h2>
+<p>.NET语言中，IronPython、IronRuby等使用动态类型(运行时才被解释)。C#程序要访问这些语言编写的程序集中的变量，只能使用dynamic类型。</p>
+<p>C#编译器不对dynamic变量进行类型检查，它将变量与它相关的操作信息打包。在运行时，对这些信息进行检查，以确保操作与变量的实际类型一致。否则，将在运行时抛出异常。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[《OGL dev》Etay Meiri Tutorial 29 - 3D Picking 笔记]]></title>
         <id>https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-29-3d-picking-bi-ji/</id>
@@ -405,104 +519,6 @@ glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 <li>正常摄影机调用draw call。</li>
 </ol>
 <p>教程中的fragment shader代码<code>Depth = 1.0 - (1.0 - Depth) * 25.0;</code>是因为以光源为摄像机时，由于透视投影矩阵与物体的位置设定，shadow map的深度值接近于1，直接输出到color buffer颜色会非常淡，因为rgb为0为黑，为1为白。因此对从shadow map的深度值到1这段区域，向深度值为0的方向，进行了25倍缩放，以使得颜色更深。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[《OGL dev》Etay Meiri Tutorial 22 - Loading models using the Open Asset Import Library 笔记]]></title>
-        <id>https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-22-loading-models-using-the-open-asset-import-library-bi-ji/</id>
-        <link href="https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-22-loading-models-using-the-open-asset-import-library-bi-ji/">
-        </link>
-        <updated>2022-04-15T02:16:30.000Z</updated>
-        <content type="html"><![CDATA[<p>Open Asset Import Library，简称Assimp，地址：http://www.assimp.org/，是一个开源的C/C++模型加载库，支持的模型格式很多，包含大部分主流格式。并且Assimp是跨平台的。</p>
-<p>Assimp通过Assimp::Importer对象的ReadFile方法加载模型，返回一个aiScene对象，代表加载的模型。</p>
-<p>ReadFile方法提供多个可选参数，对加载的模型进行处理，支持多选：</p>
-<ol>
-<li>aiProcess_Triangulate，将非三角形的mesh，转换为三角形的mesh。例如一个quad可以转换为两个三角形。</li>
-<li>aiProcess_GenSmoothNormals，如果模型不包含法线，生成顶点法线。</li>
-<li>aiProcess_FlipUVsv，沿Y轴翻转纹理坐标。</li>
-<li>aiProcess_JoinIdenticalVertices - 为每个顶点创建一个副本，在需要时，从多个索引引用它。有助于节省内存。</li>
-</ol>
-<p>一个aiScene对象至少包含1个aiMesh对象，可以包含多个。mNumMeshes属性描述aiMesh对象的个数。一个aiMesh对象是一个mesh structure。</p>
-<p>aiMesh对象的属性如下：</p>
-<ol>
-<li>mMaterialIndex，材质索引，指aiScene对象包含的材质的索引，aiMesh对象可以共享同一材质。</li>
-<li>mNumVertices，顶点数。</li>
-<li>mVertices，顶点，aiVector3D类型的数组。</li>
-<li>mNormals，法线，aiVector3D类型的数组。</li>
-<li>mTextureCoords，纹理坐标，aiVector3D*类型的二维数组。一个顶点可以包含零或一或多组纹理坐标。使用纹理坐标之前，需要先使用HasTextureCoords()函数进行检查。虽然纹理坐标类型为aiVector3D，但只有x、y分量是有效的，z无效。</li>
-<li>mNumVertices，顶点索引数。</li>
-<li>mFaces，顶点索引，aiFace类型数组。每一个aiFace对象是一个unsigned int数组，数组的长度取决于多边形的顶点数。aiFace对象的mNumIndices属性，描述多边形的顶点数。</li>
-</ol>
-<p>一个aiScene可以包含多个aiMaterial对象，mNumMaterials属性描述aiMaterial对象的个数。一个aiMaterial对象是一个材质。</p>
-<p>aiMaterial对象除了包含纹理以外，还包含blend和strength函数，blend用于混合颜色，strength指定颜色的强度。但本节教程中不使用。</p>
-<p>一个aiMaterial对象可以包含多种类型的纹理，比如diffuse texture、height map、 normal map、displacement map等。之前教程中使用的都是diffuse texture。</p>
-<p>一个aiMaterial对象每种类型的纹理也可以包含多个，GetTextureCount()函数可以获取指定类型纹理的数量，如<code>GetTextureCount(aiTextureType_DIFFUSE)</code>获取diffuse texture的数量。</p>
-<p>aiMaterial对象的<code>GetTexture(aiTextureType_DIFFUSE, 0, &amp;Path, NULL, NULL, NULL, NULL, NULL)</code>函数，获取第一张diffuse texture的名称。</p>
-<ol>
-<li>第二个参数0表示纹理的索引为0，即第一张。</li>
-<li>第三个参数&amp;Path是aiString类型对象，用于接收纹理名称，Path.data是char数组。</li>
-<li>之后五个NULL参数，是blend因子、映射模式、纹理操作等，暂时不需要关心。</li>
-</ol>
-<p>代码中之所以在找不到纹理文件时，使用一张单个texel的纯白纹理，是为了解决当纹理文件不存在时，采样结果为黑色，导致看不到模型的问题。也存在其他的解决方法，比如在shader中特殊处理，或使用专用的shader。</p>
-<p>depth test，深度测试，也称为Z-test。OpenGL默认不开启深度测试。这种情况下，离摄影机远的三角形可能绘制在近的三角形之上，导致视觉异常。开启深度测试的方法如下：</p>
-<ol>
-<li><code>glEnable(GL_DEPTH_TEST);</code>，启用深度测试。</li>
-<li><code>glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH);</code>，启用depth buffer，或称为Z buffer。</li>
-<li><code>glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);</code>，清空depth buffer。每个渲染帧之前都必须清空depth buffer。
-<ul>
-<li>经测试，不清空depth buffer的结果是什么也看不到，推测depth buffer默认值为0。</li>
-</ul>
-</li>
-</ol>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[《OGL dev》Etay Meiri Tutorial 21 - Spot Light 笔记]]></title>
-        <id>https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-21-spot-light-bi-ji/</id>
-        <link href="https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-21-spot-light-bi-ji/">
-        </link>
-        <updated>2022-04-11T06:53:56.000Z</updated>
-        <content type="html"><![CDATA[<p>spot light即有point light的原点和随距离衰减属性，又有directional light的方向属性。</p>
-<p>spot light还存在一个角度属性，仅与spot light方向的夹角小于这个角度的区域被照亮。这个角度可以用一个余弦值表示，如Cutoff，那么仅与spot light方向的夹角的余弦值大于Cutoff的区域被照亮。</p>
-<p>spot light的光的强度，当光源到像素的射线与spot light方向的夹角相等时最大(为1)，夹角的余弦等于Cutoff时最小(为0)，中间平滑过渡，计算公式如下图：<br>
-<img src="https://fire1000.github.io/post-images/1649687539782.png" alt="" loading="lazy"></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[《OGL dev》Etay Meiri Tutorial 20 - Point Light 笔记]]></title>
-        <id>https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-20-point-light-bi-ji/</id>
-        <link href="https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-20-point-light-bi-ji/">
-        </link>
-        <updated>2022-04-05T14:23:32.000Z</updated>
-        <content type="html"><![CDATA[<p>point light是有原点，强度随距离衰减的光源。directional light的光线方向是常量，而point light的光线方向是动态的。</p>
-<p>光的强度随距离衰减称为“attenuation(衰减)”。</p>
-<p>真实光的attenuation符合inverse-square law(反平方定律)，公式如下图：<br>
-<img src="https://fire1000.github.io/post-images/1649169052286.png" alt="" loading="lazy"></p>
-<p>但这个公式在3D图形中效果不好：</p>
-<ol>
-<li>距离很近时，光的强度接近无穷大。</li>
-<li>只能控制光的初始强度。</li>
-</ol>
-<p>因此，我们使用下图的公式：<br>
-<img src="https://fire1000.github.io/post-images/1649169164925.png" alt="" loading="lazy"></p>
-<ol>
-<li>当常量和线性因子为0，exponential(指数)因子为1时，为真实光的attenuation公式。</li>
-<li>当常量因子为1时，距离为0光的强度最大，距离增加时减少(分母大于1)。</li>
-<li>线性和exponential因子影响，光的强度随距离衰减的速度。</li>
-</ol>
-<p>point light计算步骤：</p>
-<ol>
-<li>计算ambient。</li>
-<li>计算每个像素的光线方向，用来计算diffuse和specular。</li>
-<li>计算每个像素距离光源的距离，用来计算attenuation。</li>
-<li>将采样的结果乘以(ambient + diffuse + specular)，除以attenuation得到像素颜色。</li>
-</ol>
-<p>向shader中的structure数组类型的uniform variable赋值有两种方法：</p>
-<ol>
-<li>与之前的教程一样，获取数组的每一个元素的每一个成员的位置，逐一赋值。</li>
-<li>获取数组的第一个元素的每一个成员的位置。使用GL函数，传递某个成员类型的数组，一次调用为数组的所有元素的同一成员赋值。(教程中没有示例)</li>
-</ol>
-<p>当光源增加时，迟早会遇到性能问题，deferred shading(延迟渲染)技术能缓解这个问题。(教程没有说明deferred shading的细节)</p>
 ]]></content>
     </entry>
 </feed>

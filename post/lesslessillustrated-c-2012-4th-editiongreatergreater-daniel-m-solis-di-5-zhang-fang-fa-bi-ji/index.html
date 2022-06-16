@@ -1,0 +1,258 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第5章 方法 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1655380987450">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第5章 方法 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="var关键字：
+
+只能用于本地变量。
+只能用于包含initializer的变量声明，编译器依据initializer推断变量的类型。
+一旦编译器推断出变量的类型，它就是固定不变的。
+
+与C/C++不同，C#不能在一个名称的作用域内声明相同的..." />
+    <meta name="keywords" content="Illustrated C# 2012" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1655380987450" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第5章 方法 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-06-16
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/xtgDb0zlW/" class="post-tag">
+                  # Illustrated C# 2012
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>var关键字：</p>
+<ol>
+<li>只能用于本地变量。</li>
+<li>只能用于包含initializer的变量声明，编译器依据initializer推断变量的类型。</li>
+<li>一旦编译器推断出变量的类型，它就是固定不变的。</li>
+</ol>
+<p>与C/C++不同，C#不能在一个名称的作用域内声明相同的名称，即使这个相同的名称在嵌套块内部。</p>
+<p>常量：</p>
+<ol>
+<li>通过const关键字声明。与C/C++不同，const不是修饰符，是核心声明的一部分，必须紧挨类型名，放在类型名之前。</li>
+<li>必须包含initializer。初始值必须在编译期确定，因此它不能是某个对象的引用，可以是null。</li>
+<li>声明后值不能改变。</li>
+</ol>
+<p>值参数：</p>
+<ol>
+<li>默认类型的参数。</li>
+<li>在栈上为形参分配内存。</li>
+<li>将实参的值拷贝给形参。实参可以是表达式。如果实参是变量，则必须已初始化。</li>
+</ol>
+<p>引用参数：</p>
+<ol>
+<li>形参与实参都使用ref修饰。</li>
+<li>实参必须是变量，并且必须已初始化。</li>
+<li>不为形参分配内存，形参是实参的别名。</li>
+</ol>
+<p>输出参数：</p>
+<ol>
+<li>形参与实参都使用out修饰。</li>
+<li>实参必须是变量，不需要初始化。</li>
+<li>不为形参分配内存，形参是实参的别名。</li>
+<li>形参在函数内部被读取之前，必须先赋值。</li>
+<li>形参在函数返回之前，必须赋值。</li>
+</ol>
+<p>参数数组：</p>
+<ol>
+<li>形参使用params修饰。</li>
+<li>形参的类型必须为一维数组。</li>
+<li>一个函数只允许有一个参数数组，并且必须作为最后一个形参。</li>
+<li>形参对应0或1或多个参数数组元素类型的实参，或一个参数数组类型的实参。</li>
+<li>在栈上为参数数组的引用部分分配内存，在堆上为参数数组的元素分配内存。</li>
+</ol>
+<p>值参数、引用参数、输出参数、参数数组简单对比：<br>
+<img src="https://fire1000.github.io/post-images/1655378112817.png" alt="" loading="lazy"></p>
+<p>一个类中可以拥有多个重名的方法，称为方法重载(method overload)。注意与方法覆写(method overload)区分。<br>
+方法重载的签名(signature)必须不同，签名包括名称、参数个数、参数的类型和顺序，参数修饰符，签名不包括返回值类型、参数名称。一个类拥有签名相同，返回值类型不同的方法会报错。</p>
+<p>位置参数：形参与实参位置一一对应。</p>
+<p>命名参数：实参以形参名、冒号、实参值的方式给出。形参与实参位置不需要对应。<br>
+<img src="https://fire1000.github.io/post-images/1655379920541.png" alt="" loading="lazy"><br>
+命名参数可以与位置参数一起使用，但位置参数必须写在命名参数之前。</p>
+<p>可选参数：指函数声明时，设定默认值的形参，这些形参在函数调用时可以省略对应的实参。</p>
+<ol>
+<li>可选参数只能是值参数。</li>
+<li>可选参数的默认值在编译期确定，因此引用类型只能为null。</li>
+<li>可选参数在形参列表中，必须位于必填参数之后，参数数组之前。(必填参数和参数数组可以不存在)</li>
+<li>函数调用时，使用位置参数，则可选参数对应的实参必须从后向前省略，使用命名参数无此限制。</li>
+</ol>
+<p>每个函数调用时，会创建一个栈帧并入栈，函数调用结束时弹栈。<br>
+栈帧包含返回地址(函数返回时，继续执行的地址)，为形参分配的内存，其他函数调用相关的管理数据项。</p>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-4-zhang-lei-de-ji-ben-gai-nian-bi-ji/">
+              <h3 class="post-title">
+                《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第4章 类的基本概念 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

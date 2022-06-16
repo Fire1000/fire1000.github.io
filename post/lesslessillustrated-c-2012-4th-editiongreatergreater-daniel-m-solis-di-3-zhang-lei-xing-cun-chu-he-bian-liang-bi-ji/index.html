@@ -1,0 +1,236 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第3章 类型、存储和变量 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1655380987450">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第3章 类型、存储和变量 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="数据类型
+C程序是一组函数和数据类型，C++程序是一组函数和类，C#程序是一组类型声明。
+可执行的C#程序的类型声明中必须包含一个存在Main方法的类。命名空间是将类型声明分组的方法。
+C#提供16种预定义类型：
+
+
+与C/C++不同，C#..." />
+    <meta name="keywords" content="Illustrated C# 2012" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1655380987450" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第3章 类型、存储和变量 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-06-16
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/xtgDb0zlW/" class="post-tag">
+                  # Illustrated C# 2012
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h2 id="数据类型">数据类型</h2>
+<p>C程序是一组函数和数据类型，C++程序是一组函数和类，C#程序是一组类型声明。<br>
+可执行的C#程序的类型声明中必须包含一个存在Main方法的类。命名空间是将类型声明分组的方法。</p>
+<p>C#提供16种预定义类型：<br>
+<img src="https://fire1000.github.io/post-images/1655362331322.png" alt="" loading="lazy"></p>
+<ul>
+<li>与C/C++不同，C#中数值类型不具有布尔意义。</li>
+<li>char为2 byte，容纳一个UCS-2字符。</li>
+<li>decimal是高精度小数类型，可以准确表示分数，常用于货币计算。</li>
+</ul>
+<p>C#中预定义类型是底层.NET类型的别名：<br>
+<img src="https://fire1000.github.io/post-images/1655363080438.png" alt="" loading="lazy"></p>
+<p>C#提供6种自定义类型：class、struct、array、enum、delegate、interface。</p>
+<h2 id="栈和堆值类型和引用类型">栈和堆，值类型和引用类型</h2>
+<p>CLR的GC(Garbage Collector，垃圾收集器)会自动清除堆中无主的对象。</p>
+<p>引用类型需要存储两部分内存：引用部分和数据部分。其中数据部分总位于堆中。</p>
+<p>C#的值类型与引用类型：<br>
+<img src="https://fire1000.github.io/post-images/1655364837215.png" alt="" loading="lazy"></p>
+<h2 id="变量">变量</h2>
+<p>C#提供4种变量：<br>
+<img src="https://fire1000.github.io/post-images/1655365201631.png" alt="" loading="lazy"></p>
+<p>变量的存储位置，声明时没有initializer是否自动初始化，如图：<br>
+<img src="https://fire1000.github.io/post-images/1655365674832.png" alt="" loading="lazy"></p>
+<h2 id="dynamic">dynamic</h2>
+<p>.NET语言中，IronPython、IronRuby等使用动态类型(运行时才被解释)。C#程序要访问这些语言编写的程序集中的变量，只能使用dynamic类型。</p>
+<p>C#编译器不对dynamic变量进行类型检查，它将变量与它相关的操作信息打包。在运行时，对这些信息进行检查，以确保操作与变量的实际类型一致。否则，将在运行时抛出异常。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B">数据类型</a></li>
+<li><a href="#%E6%A0%88%E5%92%8C%E5%A0%86%E5%80%BC%E7%B1%BB%E5%9E%8B%E5%92%8C%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B">栈和堆，值类型和引用类型</a></li>
+<li><a href="#%E5%8F%98%E9%87%8F">变量</a></li>
+<li><a href="#dynamic">dynamic</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-29-3d-picking-bi-ji/">
+              <h3 class="post-title">
+                《OGL dev》Etay Meiri Tutorial 29 - 3D Picking 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
