@@ -2,20 +2,21 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第12章 数组 笔记 | Fly_Fire1000的博客</title>
+<title>《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第13章 委托 笔记 | Fly_Fire1000的博客</title>
 <link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1655819403948">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第12章 数组 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="alternate" type="application/atom+xml" title="《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第13章 委托 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="数组的维度称作秩(rank)。
-C#有两种多维数组：矩形数组(rectangular array)和交错数组(jagged array)。
-
-矩形数组：int x = mayArray2[4, 6, 1]
-交错数组：jagArray1[2]..." />
+    <meta name="description" content="委托
+需要先声明委托类型，再使用这个委托类型声明委托对象。
+委托类型使用delegate关键字声明。
+委托类型不需在类或结构体内声明。
+委托是持有0或1或多个方法的对象，执行委托时，委托执行它持有的方法。
+委托持有的方法必须与委托类型的函数..." />
     <meta name="keywords" content="Illustrated C# 2012" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
@@ -78,14 +79,14 @@ C#有两种多维数组：矩形数组(rectangular array)和交错数组(jagged 
         <div class="post-detail">
           <article class="post">
             <h2 class="post-title">
-              《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第12章 数组 笔记
+              《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第13章 委托 笔记
             </h2>
             <div class="post-info">
               <span>
                 2022-06-21
               </span>
               <span>
-                2 min read
+                3 min read
               </span>
               
                 <a href="https://fire1000.github.io/tag/xtgDb0zlW/" class="post-tag">
@@ -96,38 +97,73 @@ C#有两种多维数组：矩形数组(rectangular array)和交错数组(jagged 
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <p>数组的维度称作秩(rank)。<br>
-C#有两种多维数组：矩形数组(rectangular array)和交错数组(jagged array)。</p>
+                <h2 id="委托">委托</h2>
+<p>需要先声明委托类型，再使用这个委托类型声明委托对象。<br>
+委托类型使用delegate关键字声明。<br>
+委托类型不需在类或结构体内声明。</p>
+<p>委托是持有0或1或多个方法的对象，执行委托时，委托执行它持有的方法。<br>
+委托持有的方法必须与委托类型的函数签名，返回值类型都相同。<br>
+委托持有的方法可以是静态方法。</p>
+<p>委托对象可以使用new关键字初始化，也可以使用快捷语法：</p>
+<pre><code>delVar = new MyDel( myInstObj.MyM1 );
+dVar = new MyDel( SClass.OtherM2 );
+</code></pre>
+<pre><code>delVar = myInstObj.MyM1;
+dVar = SClass.OtherM2;
+</code></pre>
+<p>组合委托(combining delegate)：</p>
+<pre><code>MyDel delA = myInstObj.MyM1;
+MyDel delB = SClass.OtherM2;
+
+MyDel delC = delA + delB;
+</code></pre>
+<p>但委托对象在初始化之后就不再改变，改变的只是它持有的方法列表：<br>
+<img src="https://fire1000.github.io/post-images/1655815823415.png" alt="" loading="lazy"></p>
+<p>委托支持通过+=和-=运算符添加和删除持有的方法。<br>
+-=运算符从调用列表末尾开始搜索，删除第一个匹配的方法。如果不存在匹配的方法，没有效果。</p>
+<p>执行调用列表为空的委托会抛出异常。<br>
+委托可以通过与null比较，判断方法列表是否为空。</p>
+<p>当一个方法在调用列表中出现多次，执行委托时会执行多次。</p>
+<p>执行委托时传递的参数，会传递给每一个它持有的方法。</p>
+<p>执行带返回值的委托，返回调用列表中最后一个方法的返回值。<br>
+执行带引用参数的委托，调用时调用列表中下一个方法使用上一个方法调用结束时参数的值。</p>
+<h2 id="匿名方法anonymous-method">匿名方法(anonymous method)</h2>
+<p>声明委托对象作为初始化表达式，为委托对象赋值时在=和+=运算符的右边，可以使用匿名方法。</p>
+<p>匿名方法由delegate关键字、参数列表、方法体组成。<br>
+匿名方法不声明返回值类型，返回值类型对应委托的返回值类型。<br>
+匿名方法的参数列表必须与对应的委托相匹配。</p>
+<ol>
+<li>当委托的参数列表不包含out参数，同时匿名方法不使用任何参数时，参数列表可以只保留圆括号或完全省略。</li>
+<li>当委托的参数列表包含params参数，匿名方法中params关键字必须省略。</li>
+</ol>
+<p>在匿名方法中支持访问外部作用域的变量。</p>
+<ol>
+<li>匿名方法外的这个变量为外部变量(outer variable)</li>
+<li>匿名方法内的这个变量为被方法捕获(capured)。</li>
+</ol>
 <ul>
-<li>矩形数组：<code>int x = mayArray2[4, 6, 1]</code></li>
-<li>交错数组：<code>jagArray1[2][7][4]</code></li>
+<li>
+<p>被捕获的变量的生命周期被延长。</p>
+<h2 id="lambda表达式">Lambda表达式</h2>
+</li>
 </ul>
-<p>数组继承自System.Array。System.Array提供了很多属性和方法：<br>
-<img src="https://fire1000.github.io/post-images/1655811997129.png" alt="" loading="lazy"></p>
-<p>数组声明时，只确定数组的维度。<br>
-维度长度不是数组类型的一部分，维度长度在数组实例化时才确定。<br>
-与C/C++不同，方括号写在类型后，而不是变量名后。</p>
-<p>数组实例化时同样使用new关键字，但不使用圆括号。<br>
-数组实例化，元素被初始为元素类型的默认值。<br>
-数组支持使用初始化列表初始化，由编译器推断维度长度。</p>
-<pre><code>int[] intArr = new int[] {10, 20, 30, 40}; // int[4]
-int[, ] intArray2 = new int[, ] { {10, 1}, {20, 2}, {30, 3} };  // int[3, 2]
-</code></pre>
-<p>如果在声明时初始化数组，C#提供了快捷语法和隐式类型数组(由编译器推断元素类型)：<br>
-<img src="https://fire1000.github.io/post-images/1655810851145.png" alt="" loading="lazy"><br>
-<img src="https://fire1000.github.io/post-images/1655810955554.png" alt="" loading="lazy"></p>
-<p>交错数组初始化时，只能确定顶层维度长度：</p>
-<pre><code>int[][] jagArr = new int[3][];
-</code></pre>
-<p>在CIL中，一维数组特定的性能优化指令，因此使用一维数组的交错数组，有时性能比矩形数组性能更好。</p>
-<p>foreach语句中，迭代变量是只读的，可以使用var关键字声明。<br>
-foreach语句必须嵌套才能遍历交错数组。</p>
-<p>数组的协变：当数组元素为引用类型时，如果某个对象存在从自身类型到数组元素类型的隐式或显式转换，支持将这个元素赋值给数组元素。<br>
-<img src="https://fire1000.github.io/post-images/1655811934220.png" alt="" loading="lazy"></p>
+<p>C# 3.0进入Lambda表达式替代C# 2.0引入的匿名方法。<br>
+Lambda表达式不使用delegate关键字，使用Lambda运算符=&gt;，读作“goes to”。</p>
+<p>Lambda表达式允许在不包含ref或out参数时，省略形参的类型名。当只有一个形参时，并且省略了类型名，可以省略圆括号。当方法体只包含一条return语句时，支持使用return语句中的表达式替代方法体。<br>
+<img src="https://fire1000.github.io/post-images/1655819253293.png" alt="" loading="lazy"></p>
 
               </div>
               <div class="toc-container">
-                
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%A7%94%E6%89%98">委托</a></li>
+<li><a href="#%E5%8C%BF%E5%90%8D%E6%96%B9%E6%B3%95anonymous-method">匿名方法(anonymous method)</a></li>
+<li><a href="#lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F">Lambda表达式</a></li>
+</ul>
+</li>
+</ul>
+
               </div>
             </div>
           </article>
@@ -136,9 +172,9 @@ foreach语句必须嵌套才能遍历交错数组。</p>
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-11-zhang-mei-ju-bi-ji/">
+            <a href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-12-zhang-shu-zu-bi-ji/">
               <h3 class="post-title">
-                《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第11章 枚举 笔记
+                《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第12章 数组 笔记
               </h3>
             </a>
           </div>

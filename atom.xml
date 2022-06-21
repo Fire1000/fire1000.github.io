@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://fire1000.github.io</id>
     <title>Fly_Fire1000的博客</title>
-    <updated>2022-06-21T11:48:33.243Z</updated>
+    <updated>2022-06-21T13:51:09.824Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://fire1000.github.io"/>
     <link rel="self" href="https://fire1000.github.io/atom.xml"/>
@@ -10,6 +10,68 @@
     <logo>https://fire1000.github.io/images/avatar.png</logo>
     <icon>https://fire1000.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Fly_Fire1000的博客</rights>
+    <entry>
+        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第13章 委托 笔记]]></title>
+        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-13-zhang-wei-tuo-bi-ji/</id>
+        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-13-zhang-wei-tuo-bi-ji/">
+        </link>
+        <updated>2022-06-21T12:25:00.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="委托">委托</h2>
+<p>需要先声明委托类型，再使用这个委托类型声明委托对象。<br>
+委托类型使用delegate关键字声明。<br>
+委托类型不需在类或结构体内声明。</p>
+<p>委托是持有0或1或多个方法的对象，执行委托时，委托执行它持有的方法。<br>
+委托持有的方法必须与委托类型的函数签名，返回值类型都相同。<br>
+委托持有的方法可以是静态方法。</p>
+<p>委托对象可以使用new关键字初始化，也可以使用快捷语法：</p>
+<pre><code>delVar = new MyDel( myInstObj.MyM1 );
+dVar = new MyDel( SClass.OtherM2 );
+</code></pre>
+<pre><code>delVar = myInstObj.MyM1;
+dVar = SClass.OtherM2;
+</code></pre>
+<p>组合委托(combining delegate)：</p>
+<pre><code>MyDel delA = myInstObj.MyM1;
+MyDel delB = SClass.OtherM2;
+
+MyDel delC = delA + delB;
+</code></pre>
+<p>但委托对象在初始化之后就不再改变，改变的只是它持有的方法列表：<br>
+<img src="https://fire1000.github.io/post-images/1655815823415.png" alt="" loading="lazy"></p>
+<p>委托支持通过+=和-=运算符添加和删除持有的方法。<br>
+-=运算符从调用列表末尾开始搜索，删除第一个匹配的方法。如果不存在匹配的方法，没有效果。</p>
+<p>执行调用列表为空的委托会抛出异常。<br>
+委托可以通过与null比较，判断方法列表是否为空。</p>
+<p>当一个方法在调用列表中出现多次，执行委托时会执行多次。</p>
+<p>执行委托时传递的参数，会传递给每一个它持有的方法。</p>
+<p>执行带返回值的委托，返回调用列表中最后一个方法的返回值。<br>
+执行带引用参数的委托，调用时调用列表中下一个方法使用上一个方法调用结束时参数的值。</p>
+<h2 id="匿名方法anonymous-method">匿名方法(anonymous method)</h2>
+<p>声明委托对象作为初始化表达式，为委托对象赋值时在=和+=运算符的右边，可以使用匿名方法。</p>
+<p>匿名方法由delegate关键字、参数列表、方法体组成。<br>
+匿名方法不声明返回值类型，返回值类型对应委托的返回值类型。<br>
+匿名方法的参数列表必须与对应的委托相匹配。</p>
+<ol>
+<li>当委托的参数列表不包含out参数，同时匿名方法不使用任何参数时，参数列表可以只保留圆括号或完全省略。</li>
+<li>当委托的参数列表包含params参数，匿名方法中params关键字必须省略。</li>
+</ol>
+<p>在匿名方法中支持访问外部作用域的变量。</p>
+<ol>
+<li>匿名方法外的这个变量为外部变量(outer variable)</li>
+<li>匿名方法内的这个变量为被方法捕获(capured)。</li>
+</ol>
+<ul>
+<li>
+<p>被捕获的变量的生命周期被延长。</p>
+<h2 id="lambda表达式">Lambda表达式</h2>
+</li>
+</ul>
+<p>C# 3.0进入Lambda表达式替代C# 2.0引入的匿名方法。<br>
+Lambda表达式不使用delegate关键字，使用Lambda运算符=&gt;，读作“goes to”。</p>
+<p>Lambda表达式允许在不包含ref或out参数时，省略形参的类型名。当只有一个形参时，并且省略了类型名，可以省略圆括号。当方法体只包含一条return语句时，支持使用return语句中的表达式替代方法体。<br>
+<img src="https://fire1000.github.io/post-images/1655819253293.png" alt="" loading="lazy"></p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第12章 数组 笔记]]></title>
         <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-12-zhang-shu-zu-bi-ji/</id>
@@ -455,40 +517,6 @@ this常用于区分类的成员与本地变量或参数，和作为调用方法�
 <p>new关键字为引用类型的数据部分在堆上分配内存，返回地址。为值类型分配内存，返回拷贝。</p>
 <p>静态成员是与类相关，与实例无关的成员。</p>
 <p>类的成员的访问修饰符缺省时，隐式声明为private。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第3章 类型、存储和变量 笔记]]></title>
-        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-3-zhang-lei-xing-cun-chu-he-bian-liang-bi-ji/</id>
-        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-3-zhang-lei-xing-cun-chu-he-bian-liang-bi-ji/">
-        </link>
-        <updated>2022-06-16T06:30:11.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="数据类型">数据类型</h2>
-<p>C程序是一组函数和数据类型，C++程序是一组函数和类，C#程序是一组类型声明。<br>
-可执行的C#程序的类型声明中必须包含一个存在Main方法的类。命名空间是将类型声明分组的方法。</p>
-<p>C#提供16种预定义类型：<br>
-<img src="https://fire1000.github.io/post-images/1655362331322.png" alt="" loading="lazy"></p>
-<ul>
-<li>与C/C++不同，C#中数值类型不具有布尔意义。</li>
-<li>char为2 byte，容纳一个UCS-2字符。</li>
-<li>decimal是高精度小数类型，可以准确表示分数，常用于货币计算。</li>
-</ul>
-<p>C#中预定义类型是底层.NET类型的别名：<br>
-<img src="https://fire1000.github.io/post-images/1655363080438.png" alt="" loading="lazy"></p>
-<p>C#提供6种自定义类型：class、struct、array、enum、delegate、interface。</p>
-<h2 id="栈和堆值类型和引用类型">栈和堆，值类型和引用类型</h2>
-<p>CLR的GC(Garbage Collector，垃圾收集器)会自动清除堆中无主的对象。</p>
-<p>引用类型需要存储两部分内存：引用部分和数据部分。其中数据部分总位于堆中。</p>
-<p>C#的值类型与引用类型：<br>
-<img src="https://fire1000.github.io/post-images/1655364837215.png" alt="" loading="lazy"></p>
-<h2 id="变量">变量</h2>
-<p>C#提供4种变量：<br>
-<img src="https://fire1000.github.io/post-images/1655365201631.png" alt="" loading="lazy"></p>
-<p>变量的存储位置，声明时没有initializer是否自动初始化，如图：<br>
-<img src="https://fire1000.github.io/post-images/1655365674832.png" alt="" loading="lazy"></p>
-<h2 id="dynamic">dynamic</h2>
-<p>.NET语言中，IronPython、IronRuby等使用动态类型(运行时才被解释)。C#程序要访问这些语言编写的程序集中的变量，只能使用dynamic类型。</p>
-<p>C#编译器不对dynamic变量进行类型检查，它将变量与它相关的操作信息打包。在运行时，对这些信息进行检查，以确保操作与变量的实际类型一致。否则，将在运行时抛出异常。</p>
 ]]></content>
     </entry>
 </feed>
