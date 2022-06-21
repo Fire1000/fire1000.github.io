@@ -1,0 +1,277 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第7章 类和继承 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1655812091197">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第7章 类和继承 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="object
+object是唯一的非派生类(derived class)。除了object，所有的类都是派生类。
+类声明时，不显式派生自object，那么它隐式派生自object。
+隐藏
+派生类无法删除从基类(base class)继承的成..." />
+    <meta name="keywords" content="Illustrated C# 2012" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1655812091197" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第7章 类和继承 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-06-17
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/xtgDb0zlW/" class="post-tag">
+                  # Illustrated C# 2012
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h2 id="object">object</h2>
+<p>object是唯一的非派生类(derived class)。除了object，所有的类都是派生类。<br>
+类声明时，不显式派生自object，那么它隐式派生自object。</p>
+<h2 id="隐藏">隐藏</h2>
+<p>派生类无法删除从基类(base class)继承的成员，但可以隐藏它。</p>
+<ol>
+<li>声明相同名称的成员，可以隐藏字段、常量、属性。</li>
+<li>声明相同签名的成员，可以隐藏方法。签名不包含返回值类型。</li>
+</ol>
+<p>隐藏可以显式使用new关键字，也可以不使用。</p>
+<p>使用基类访问(base access)可以访问被隐藏的成员：base关键字+点+成员名称。<br>
+使用基类的引用访问派生类，也可以访问隐藏的成员。</p>
+<h2 id="覆写">覆写</h2>
+<p>在基类中使用virtual声明一个函数成员，在派生类中使用override声明相同签名、相同返回值类型、相同可访问性的函数成员，则基类的被覆写，无法再被访问。无论使用基类访问还是基类引用访问，访问的都是派生类的函数成员。<br>
+无法覆写静态成员。<br>
+支持覆写的函数成员类型有方法、属性、索引器、事件。<br>
+使用override声明的函数成员支持被覆写，调用时访问最高派生(most-derived)版本。</p>
+<h2 id="实例化顺序">实例化顺序</h2>
+<p>派生类对象实例化时，先初始化派生类的实例成员，再调用基类的实例构造函数，最后调用派生类的实例构造函数。<br>
+因此，在实例构造函数中调用virtual函数成员是极不推荐的，因为当被覆写时，它调用派生类对应的函数成员，而这时派生类的实例构造函数还没有被调用。</p>
+<h2 id="构造函数初始化语句">构造函数初始化语句</h2>
+<p>构造函数初始化语句有两种形式：<br>
+<img src="https://fire1000.github.io/post-images/1655514692603.png" alt="" loading="lazy"><br>
+<img src="https://fire1000.github.io/post-images/1655514699431.png" alt="" loading="lazy"><br>
+base形式允许派生类的实例构造函数，指定在它之前调用的基类实例构造函数。如果一个实例构造函数不带base形式的构造函数初始化语句，那么在它之前调用的基类无参实例构造函数，以下两种形式是等价的：<br>
+<img src="https://fire1000.github.io/post-images/1655515353320.png" alt="" loading="lazy"><br>
+this形式允许在一个实例构造函数调用之前，调用另一个实例构造函数。</p>
+<h2 id="访问修饰符">访问修饰符</h2>
+<p>类的访问修饰符只有两个级别：</p>
+<ol>
+<li>public：允许所有程序集访问。</li>
+<li>internal：只允许所属的程序集访问。</li>
+</ol>
+<ul>
+<li>当类的访问修饰符缺省时，隐式声明为internal。</li>
+</ul>
+<p>成员的访问修饰符有5个级别：public、private、protected、internal、protected internal。<br>
+<img src="https://fire1000.github.io/post-images/1655519237762.png" alt="" loading="lazy"><br>
+当成员访问修饰符缺省时，隐式声明为private。<br>
+成员不能比它所属的类或结构有更高的可访问性，可访问性级别如图：<br>
+<img src="https://fire1000.github.io/post-images/1655519285002.png" alt="" loading="lazy"></p>
+<h2 id="abstract">abstract</h2>
+<p>abstract声明的函数成员是抽象的，抽象成员只能在抽象类中声明。<br>
+抽象成员与虚成员的对比：<br>
+<img src="https://fire1000.github.io/post-images/1655519619825.png" alt="" loading="lazy"></p>
+<p>abstract声明的类是抽象类，抽象类不能实例化，只能作为基类。<br>
+抽象类的派生类可以是抽象类。<br>
+抽象类可以声明非抽象成员。</p>
+<h2 id="密封类">密封类</h2>
+<p>sealed声明的类是密封类，与抽象类相反，密封类不能作为基类。</p>
+<h2 id="静态类">静态类</h2>
+<p>static声明的类是静态类。</p>
+<ol>
+<li>静态类的成员必须是静态的。</li>
+<li>静态类是隐式sealed的，不能被继承。</li>
+</ol>
+<h2 id="扩展方法">扩展方法</h2>
+<p>扩展方法允许在类或结构外声明一个方法，调用时看起来像这个类或结构的成员。<br>
+<img src="https://fire1000.github.io/post-images/1655520389567.png" alt="" loading="lazy"></p>
+<h2 id="命名约定">命名约定</h2>
+<p><img src="https://fire1000.github.io/post-images/1655520543666.png" alt="" loading="lazy"><br>
+微软官方推荐将Camel大小写作为私有和受保护字段的名称。但作者认为前辍下划线更实用，并且微软在代码中也大量使用。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#object">object</a></li>
+<li><a href="#%E9%9A%90%E8%97%8F">隐藏</a></li>
+<li><a href="#%E8%A6%86%E5%86%99">覆写</a></li>
+<li><a href="#%E5%AE%9E%E4%BE%8B%E5%8C%96%E9%A1%BA%E5%BA%8F">实例化顺序</a></li>
+<li><a href="#%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%88%9D%E5%A7%8B%E5%8C%96%E8%AF%AD%E5%8F%A5">构造函数初始化语句</a></li>
+<li><a href="#%E8%AE%BF%E9%97%AE%E4%BF%AE%E9%A5%B0%E7%AC%A6">访问修饰符</a></li>
+<li><a href="#abstract">abstract</a></li>
+<li><a href="#%E5%AF%86%E5%B0%81%E7%B1%BB">密封类</a></li>
+<li><a href="#%E9%9D%99%E6%80%81%E7%B1%BB">静态类</a></li>
+<li><a href="#%E6%89%A9%E5%B1%95%E6%96%B9%E6%B3%95">扩展方法</a></li>
+<li><a href="#%E5%91%BD%E5%90%8D%E7%BA%A6%E5%AE%9A">命名约定</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-6-zhang-shen-ru-li-jie-lei-bi-ji/">
+              <h3 class="post-title">
+                《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第6章 深入理解类 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,226 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第12章 数组 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1655812091197">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第12章 数组 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="数组的维度称作秩(rank)。
+C#有两种多维数组：矩形数组(rectangular array)和交错数组(jagged array)。
+
+矩形数组：int x = mayArray2[4, 6, 1]
+交错数组：jagArray1[2]..." />
+    <meta name="keywords" content="Illustrated C# 2012" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1655812091197" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第12章 数组 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-06-21
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/xtgDb0zlW/" class="post-tag">
+                  # Illustrated C# 2012
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>数组的维度称作秩(rank)。<br>
+C#有两种多维数组：矩形数组(rectangular array)和交错数组(jagged array)。</p>
+<ul>
+<li>矩形数组：<code>int x = mayArray2[4, 6, 1]</code></li>
+<li>交错数组：<code>jagArray1[2][7][4]</code></li>
+</ul>
+<p>数组继承自System.Array。System.Array提供了很多属性和方法：<br>
+<img src="https://fire1000.github.io/post-images/1655811997129.png" alt="" loading="lazy"></p>
+<p>数组声明时，只确定数组的维度。<br>
+维度长度不是数组类型的一部分，维度长度在数组实例化时才确定。<br>
+与C/C++不同，方括号写在类型后，而不是变量名后。</p>
+<p>数组实例化时同样使用new关键字，但不使用圆括号。<br>
+数组实例化，元素被初始为元素类型的默认值。<br>
+数组支持使用初始化列表初始化，由编译器推断维度长度。</p>
+<pre><code>int[] intArr = new int[] {10, 20, 30, 40}; // int[4]
+int[, ] intArray2 = new int[, ] { {10, 1}, {20, 2}, {30, 3} };  // int[3, 2]
+</code></pre>
+<p>如果在声明时初始化数组，C#提供了快捷语法和隐式类型数组(由编译器推断元素类型)：<br>
+<img src="https://fire1000.github.io/post-images/1655810851145.png" alt="" loading="lazy"><br>
+<img src="https://fire1000.github.io/post-images/1655810955554.png" alt="" loading="lazy"></p>
+<p>交错数组初始化时，只能确定顶层维度长度：</p>
+<pre><code>int[][] jagArr = new int[3][];
+</code></pre>
+<p>在CIL中，一维数组特定的性能优化指令，因此使用一维数组的交错数组，有时性能比矩形数组性能更好。</p>
+<p>foreach语句中，迭代变量是只读的，可以使用var关键字声明。<br>
+foreach语句必须嵌套才能遍历交错数组。</p>
+<p>数组的协变：当数组元素为引用类型时，如果某个对象存在从自身类型到数组元素类型的隐式或显式转换，支持将这个元素赋值给数组元素。<br>
+<img src="https://fire1000.github.io/post-images/1655811934220.png" alt="" loading="lazy"></p>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-11-zhang-mei-ju-bi-ji/">
+              <h3 class="post-title">
+                《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第11章 枚举 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

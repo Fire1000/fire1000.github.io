@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://fire1000.github.io</id>
     <title>Fly_Fire1000的博客</title>
-    <updated>2022-06-16T12:03:11.349Z</updated>
+    <updated>2022-06-21T11:48:33.243Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://fire1000.github.io"/>
     <link rel="self" href="https://fire1000.github.io/atom.xml"/>
@@ -10,6 +10,373 @@
     <logo>https://fire1000.github.io/images/avatar.png</logo>
     <icon>https://fire1000.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Fly_Fire1000的博客</rights>
+    <entry>
+        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第12章 数组 笔记]]></title>
+        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-12-zhang-shu-zu-bi-ji/</id>
+        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-12-zhang-shu-zu-bi-ji/">
+        </link>
+        <updated>2022-06-21T10:14:54.000Z</updated>
+        <content type="html"><![CDATA[<p>数组的维度称作秩(rank)。<br>
+C#有两种多维数组：矩形数组(rectangular array)和交错数组(jagged array)。</p>
+<ul>
+<li>矩形数组：<code>int x = mayArray2[4, 6, 1]</code></li>
+<li>交错数组：<code>jagArray1[2][7][4]</code></li>
+</ul>
+<p>数组继承自System.Array。System.Array提供了很多属性和方法：<br>
+<img src="https://fire1000.github.io/post-images/1655811997129.png" alt="" loading="lazy"></p>
+<p>数组声明时，只确定数组的维度。<br>
+维度长度不是数组类型的一部分，维度长度在数组实例化时才确定。<br>
+与C/C++不同，方括号写在类型后，而不是变量名后。</p>
+<p>数组实例化时同样使用new关键字，但不使用圆括号。<br>
+数组实例化，元素被初始为元素类型的默认值。<br>
+数组支持使用初始化列表初始化，由编译器推断维度长度。</p>
+<pre><code>int[] intArr = new int[] {10, 20, 30, 40}; // int[4]
+int[, ] intArray2 = new int[, ] { {10, 1}, {20, 2}, {30, 3} };  // int[3, 2]
+</code></pre>
+<p>如果在声明时初始化数组，C#提供了快捷语法和隐式类型数组(由编译器推断元素类型)：<br>
+<img src="https://fire1000.github.io/post-images/1655810851145.png" alt="" loading="lazy"><br>
+<img src="https://fire1000.github.io/post-images/1655810955554.png" alt="" loading="lazy"></p>
+<p>交错数组初始化时，只能确定顶层维度长度：</p>
+<pre><code>int[][] jagArr = new int[3][];
+</code></pre>
+<p>在CIL中，一维数组特定的性能优化指令，因此使用一维数组的交错数组，有时性能比矩形数组性能更好。</p>
+<p>foreach语句中，迭代变量是只读的，可以使用var关键字声明。<br>
+foreach语句必须嵌套才能遍历交错数组。</p>
+<p>数组的协变：当数组元素为引用类型时，如果某个对象存在从自身类型到数组元素类型的隐式或显式转换，支持将这个元素赋值给数组元素。<br>
+<img src="https://fire1000.github.io/post-images/1655811934220.png" alt="" loading="lazy"></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第11章 枚举 笔记]]></title>
+        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-11-zhang-mei-ju-bi-ji/</id>
+        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-11-zhang-mei-ju-bi-ji/">
+        </link>
+        <updated>2022-06-21T08:02:18.000Z</updated>
+        <content type="html"><![CDATA[<p>枚举是值类型。<br>
+枚举的成员是命名的整数常量。</p>
+<p>枚举的成员的默认类型为int，可以声明为任意整数类型：</p>
+<pre><code>enum TrafficLight : ulong
+{
+    ...
+</code></pre>
+<p>枚举还常用作标志位。<br>
+枚举的HasFlag方法和&amp;运算符，都可以检测一个枚举是否包含某个标志位。</p>
+<pre><code>bool useFancyNumbers = ops.HasFlag(CardDeckSetttings.FancyNumbers);
+</code></pre>
+<ul>
+<li>其中CardDeckSetttings是枚举类型，ops是CardDeckSetttings的实例。</li>
+<li>HasFlag的实参可以是多个枚举|运算的结果。</li>
+</ul>
+<p>用作标志位的枚举常使用Flags特性修饰。<br>
+Flags特性会重载枚举的ToString()方法，打印枚举对象时，会打印它包含的各个标志位对应的枚举成员名称，而不是输出一个数字。</p>
+<p><img src="https://fire1000.github.io/post-images/1655801975966.png" alt="" loading="lazy"><br>
+以上代码，当为CardDeckSetttings添加Flags特性，输出变为：</p>
+<pre><code>FancyNumbers
+FancyNumbers, Animation
+</code></pre>
+<p>相同类型的枚举成员之间可以使用比较运算符，但不同类型的枚举不行。</p>
+<p>枚举对应.NET的Enum类型，提供以下方法：</p>
+<ol>
+<li>GetName()方法接收一个枚举类型对象和一个整数，返回一个枚举成员名称。</li>
+<li>GetNames()方法接收一个枚举类型对象，返回这个枚举的所有成员名称。</li>
+</ol>
+<p>GetName()和GetNames()方法示例：<br>
+<img src="https://fire1000.github.io/post-images/1655802503144.png" alt="" loading="lazy"></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第10章 结构 笔记]]></title>
+        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-10-zhang-jie-gou-bi-ji/</id>
+        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-10-zhang-jie-gou-bi-ji/">
+        </link>
+        <updated>2022-06-21T07:27:42.000Z</updated>
+        <content type="html"><![CDATA[<p>与类不同，结构是值类型。</p>
+<p>结构不允许有析构函数。<br>
+C#为每个结构隐式提供一个无参实例构造函数，它将每个成员设置为类型的默认值。<br>
+无法为结构显式声明无参实例构造函数。</p>
+<p>结构同样可以使用new运算符创建实例，但这与是否从堆中分配内存无关。<br>
+当结构不使用new运算符创建实例时，数据成员显式赋值后才可以访问，函数成员在所有数据成员显式赋值之后才可以调用。<br>
+<img src="https://fire1000.github.io/post-images/1655796922134.png" alt="" loading="lazy"></p>
+<p>在结构中字段初始化语句是不允许的。</p>
+<p>结构是隐式密封的，不能被继承。因此，不能使用protected、internal、abstract、virtual修饰结构的成员。<br>
+结构派生自System.ValueType，System.ValueType派生自object。因此，可以使用new、override修饰符，隐藏和覆写System.ValueType的成员。</p>
+<p>预定义简单类型(int等)在.NET中都由结构实现。</p>
+<p>结构可以实现接口。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第9章 语句 笔记]]></title>
+        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-9-zhang-yu-ju-bi-ji/</id>
+        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-9-zhang-yu-ju-bi-ji/">
+        </link>
+        <updated>2022-06-21T02:37:24.000Z</updated>
+        <content type="html"><![CDATA[<p>与C/C++不同，条件语句和循环语句中测试表达式必须返回bool值，不能是数字。</p>
+<p>跳转语句包括return、break、continue、goto、throw。</p>
+<p>与C/C++不同，switch语句的每个分支(case或default)通常都必须使用跳转语句结尾，仅当不包含任何语句时例外。<br>
+<img src="https://fire1000.github.io/post-images/1655792065007.png" alt="" loading="lazy"></p>
+<p>break语句仅能在switch、while、do、for、foreach语句中使用，跳出最内层的封装语句(innermost enclosing statement)。<br>
+continue语句仅能在while、do、for、foreach语句中使用，跳转到最内层的封装语句的起始处。</p>
+<p>标签语句定义一个标签，标签的作用域为作处的块内。</p>
+<pre><code>Indentifier: Statement
+</code></pre>
+<p>goto语句可以跳转到一个标签。</p>
+<pre><code>goto Identifier;
+</code></pre>
+<p>goto语句还可以跳转到switch语句中的case和default标签。</p>
+<pre><code>goto cae ConstantExpression;
+goto default;
+</code></pre>
+<p>using语句是语法糖，用于确保在资源使用完毕之后，调用Dispose()方法。<br>
+资源指实际了System.IDisposable接口的类型。<br>
+System.IDisposable接口只有一个方法，就是Dispose()。<br>
+using语句有两种形式：<br>
+<img src="https://fire1000.github.io/post-images/1655795356426.png" alt="" loading="lazy"></p>
+<ul>
+<li>using语句可以用于多个同类型的资源，以逗号分隔。<br>
+<img src="https://fire1000.github.io/post-images/1655795401127.png" alt="" loading="lazy"></li>
+<li>第二种形式资源使用之前可能已经被释放，不推荐。</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第8章 表达式和运算符 笔记]]></title>
+        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-8-zhang-biao-da-shi-he-yun-suan-fu-bi-ji/</id>
+        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-8-zhang-biao-da-shi-he-yun-suan-fu-bi-ji/">
+        </link>
+        <updated>2022-06-18T03:35:03.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="表达式">表达式</h2>
+<p>表达式除了返回一个值以外的功能，称为副作用，比如分配内存，又比如赋值表达式设置左边操作数的值是它的副作用。</p>
+<h2 id="字面值">字面值</h2>
+<p>整数字面值后辍：<br>
+<img src="https://fire1000.github.io/post-images/1655523693428.png" alt="" loading="lazy"><br>
+整数字面值的类型是，后辍对应的类型中，能容纳这个值的最小的类型。</p>
+<p>浮点数字面值后辍：<br>
+<img src="https://fire1000.github.io/post-images/1655633313375.png" alt="" loading="lazy"></p>
+<p>字符字面值有四种：<br>
+<img src="https://fire1000.github.io/post-images/1655634956854.png" alt="" loading="lazy"><br>
+\x和\u都后跟4位十六进制数。</p>
+<ul>
+<li>经测试\x和\u完全没有区别，编码为UCS-2 BE。'\x4E2D'和'\u4E2D'都输出<code>中</code>，测试环境为Intel CPU。</li>
+</ul>
+<p>转义序列：<br>
+<img src="https://fire1000.github.io/post-images/1655635304774.png" alt="" loading="lazy"></p>
+<p>@前辍的字符串是逐字字符串：</p>
+<ol>
+<li>转义序列不被求值。</li>
+<li>支持换行符。</li>
+<li>连续的两个引号解释为一个引号。</li>
+</ol>
+<p>除了rst3和vst3，以下逐字字符串与普通字符串有完全相同的输出：<br>
+<img src="https://fire1000.github.io/post-images/1655710704418.png" alt="" loading="lazy"></p>
+<p>C#编译器使得相同的字符串字面值占堆中同一块内存。</p>
+<h2 id="运算符">运算符</h2>
+<p>运算符优先级：<br>
+<img src="https://fire1000.github.io/post-images/1655710924275.png" alt="" loading="lazy"></p>
+<p>运算符结合性：<br>
+<img src="https://fire1000.github.io/post-images/1655710956571.png" alt="" loading="lazy"></p>
+<p>C#求余运算符%支持浮点数。</p>
+<p>与C/C++不同，C#中数字不具有布尔意义。<br>
+相等运算符比较引用类型时，除了比较string和委托使用深比较，其他都使用浅比较。</p>
+<ul>
+<li>浅比较只比较引用的地址。</li>
+<li>深比较只比较引用指向的内存中的数据。</li>
+</ul>
+<p>C#中&amp;&amp;和||是短路运算符，当左边的表达式足以确定返回值时，右边的表达式不求值。</p>
+<p>C#中右移运算符，对于有符号整数符号位填充，对于无符号整数0填充。</p>
+<p>if...else语句执行两个行为其中一个，条件运算符返回两个值其中一个。</p>
+<h2 id="自定义类型转换">自定义类型转换</h2>
+<p>C#支持自定义类型转换，隐式转换由编译器依据上下文自行调用，显式转换在使用强制转换运算符时调用。<br>
+自定义类型转换的语法：<br>
+<img src="https://fire1000.github.io/post-images/1655720026416.png" alt="" loading="lazy"></p>
+<ul>
+<li>显式转换使用explicit关键字，隐式转换使用implicit关键字。</li>
+<li>无论是显式转换还是隐式转换，public和static修饰符都是必需的。</li>
+<li>源类型与目标类型不能相同。</li>
+</ul>
+<h2 id="运算符重载">运算符重载</h2>
+<p>运算符重载的参数至少要有一个是所属的类或结构类型，语法如下：<br>
+<img src="https://fire1000.github.io/post-images/1655720993031.png" alt="" loading="lazy"></p>
+<ul>
+<li>public和static修饰符是必需的。</li>
+</ul>
+<p>可重载的运算符：<br>
+<img src="https://fire1000.github.io/post-images/1655721044770.png" alt="" loading="lazy"></p>
+<ul>
+<li>强制转换计入自定义类型转换，不计入运算符重载。</li>
+</ul>
+<h2 id="typeof运算符">typeof运算符</h2>
+<p>typeof运算符与实例的GetType()方法相同，返回System.Type对象，直接打印这个对象会输出类型名。通过GetFields()和GetMethods()方法，还可以获得字段成员和方法成员信息：<br>
+<img src="https://fire1000.github.io/post-images/1655722585884.png" alt="" loading="lazy"></p>
+<ul>
+<li>FieldInfo和MethodInfo在System.Reflection命名空间中定义。</li>
+</ul>
+<figure data-type="image" tabindex="1"><img src="https://fire1000.github.io/post-images/1655722663460.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第7章 类和继承 笔记]]></title>
+        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-7-zhang-lei-he-ji-cheng-bi-ji/</id>
+        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-7-zhang-lei-he-ji-cheng-bi-ji/">
+        </link>
+        <updated>2022-06-17T10:37:35.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="object">object</h2>
+<p>object是唯一的非派生类(derived class)。除了object，所有的类都是派生类。<br>
+类声明时，不显式派生自object，那么它隐式派生自object。</p>
+<h2 id="隐藏">隐藏</h2>
+<p>派生类无法删除从基类(base class)继承的成员，但可以隐藏它。</p>
+<ol>
+<li>声明相同名称的成员，可以隐藏字段、常量、属性。</li>
+<li>声明相同签名的成员，可以隐藏方法。签名不包含返回值类型。</li>
+</ol>
+<p>隐藏可以显式使用new关键字，也可以不使用。</p>
+<p>使用基类访问(base access)可以访问被隐藏的成员：base关键字+点+成员名称。<br>
+使用基类的引用访问派生类，也可以访问隐藏的成员。</p>
+<h2 id="覆写">覆写</h2>
+<p>在基类中使用virtual声明一个函数成员，在派生类中使用override声明相同签名、相同返回值类型、相同可访问性的函数成员，则基类的被覆写，无法再被访问。无论使用基类访问还是基类引用访问，访问的都是派生类的函数成员。<br>
+无法覆写静态成员。<br>
+支持覆写的函数成员类型有方法、属性、索引器、事件。<br>
+使用override声明的函数成员支持被覆写，调用时访问最高派生(most-derived)版本。</p>
+<h2 id="实例化顺序">实例化顺序</h2>
+<p>派生类对象实例化时，先初始化派生类的实例成员，再调用基类的实例构造函数，最后调用派生类的实例构造函数。<br>
+因此，在实例构造函数中调用virtual函数成员是极不推荐的，因为当被覆写时，它调用派生类对应的函数成员，而这时派生类的实例构造函数还没有被调用。</p>
+<h2 id="构造函数初始化语句">构造函数初始化语句</h2>
+<p>构造函数初始化语句有两种形式：<br>
+<img src="https://fire1000.github.io/post-images/1655514692603.png" alt="" loading="lazy"><br>
+<img src="https://fire1000.github.io/post-images/1655514699431.png" alt="" loading="lazy"><br>
+base形式允许派生类的实例构造函数，指定在它之前调用的基类实例构造函数。如果一个实例构造函数不带base形式的构造函数初始化语句，那么在它之前调用的基类无参实例构造函数，以下两种形式是等价的：<br>
+<img src="https://fire1000.github.io/post-images/1655515353320.png" alt="" loading="lazy"><br>
+this形式允许在一个实例构造函数调用之前，调用另一个实例构造函数。</p>
+<h2 id="访问修饰符">访问修饰符</h2>
+<p>类的访问修饰符只有两个级别：</p>
+<ol>
+<li>public：允许所有程序集访问。</li>
+<li>internal：只允许所属的程序集访问。</li>
+</ol>
+<ul>
+<li>当类的访问修饰符缺省时，隐式声明为internal。</li>
+</ul>
+<p>成员的访问修饰符有5个级别：public、private、protected、internal、protected internal。<br>
+<img src="https://fire1000.github.io/post-images/1655519237762.png" alt="" loading="lazy"><br>
+当成员访问修饰符缺省时，隐式声明为private。<br>
+成员不能比它所属的类或结构有更高的可访问性，可访问性级别如图：<br>
+<img src="https://fire1000.github.io/post-images/1655519285002.png" alt="" loading="lazy"></p>
+<h2 id="abstract">abstract</h2>
+<p>abstract声明的函数成员是抽象的，抽象成员只能在抽象类中声明。<br>
+抽象成员与虚成员的对比：<br>
+<img src="https://fire1000.github.io/post-images/1655519619825.png" alt="" loading="lazy"></p>
+<p>abstract声明的类是抽象类，抽象类不能实例化，只能作为基类。<br>
+抽象类的派生类可以是抽象类。<br>
+抽象类可以声明非抽象成员。</p>
+<h2 id="密封类">密封类</h2>
+<p>sealed声明的类是密封类，与抽象类相反，密封类不能作为基类。</p>
+<h2 id="静态类">静态类</h2>
+<p>static声明的类是静态类。</p>
+<ol>
+<li>静态类的成员必须是静态的。</li>
+<li>静态类是隐式sealed的，不能被继承。</li>
+</ol>
+<h2 id="扩展方法">扩展方法</h2>
+<p>扩展方法允许在类或结构外声明一个方法，调用时看起来像这个类或结构的成员。<br>
+<img src="https://fire1000.github.io/post-images/1655520389567.png" alt="" loading="lazy"></p>
+<h2 id="命名约定">命名约定</h2>
+<p><img src="https://fire1000.github.io/post-images/1655520543666.png" alt="" loading="lazy"><br>
+微软官方推荐将Camel大小写作为私有和受保护字段的名称。但作者认为前辍下划线更实用，并且微软在代码中也大量使用。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第6章 深入理解类 笔记]]></title>
+        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-6-zhang-shen-ru-li-jie-lei-bi-ji/</id>
+        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-6-zhang-shen-ru-li-jie-lei-bi-ji/">
+        </link>
+        <updated>2022-06-17T02:13:59.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="成员声明">成员声明</h2>
+<p>类成员声明必须按特性(attribute)、修饰符、核心声明的顺序排列。</p>
+<h2 id="静态成员">静态成员</h2>
+<p>static声明的成员是静态的。<br>
+在类和结构外部，必须使用类名和结构名才能访问静态成员。<br>
+静态字段在堆上分配内存，占所属的类和结构的内存，与它们的实例的内存分开。<br>
+静态字段在访问所属类和结构的任意静态字段时初始化。<br>
+静态函数只能访问所属类和结构的静态成员，不能访问实例成员。<br>
+类成员中，只有以下勾选的类型可以声明为静态：<br>
+<img src="https://fire1000.github.io/post-images/1655447741107.png" alt="" loading="lazy"></p>
+<h2 id="常量">常量</h2>
+<p>与C/C++不同，C#没有全局常量。<br>
+C#中常量不分配内存，在编译时替换为它的值，类似于C/C++中的宏#define。<br>
+常量成员，在类和结构外部，必须使用类名和结构名才能访问，与静态成员一样。<br>
+常量成员不能声明为static。</p>
+<h2 id="属性">属性</h2>
+<p>属性是函数成员，不分配内存，有两个访问器set和get。</p>
+<ol>
+<li>set访问器有一个隐式的属性类型的值参数value，返回void。</li>
+<li>get访问器没有参数，返回属性类型。</li>
+<li>set与get访问器至少定义一个，只定义set访问器是只写的，只定义get访问器是只读的。</li>
+</ol>
+<p>一个public属性关联一个private字段，这个字段被称为后备字段。属性与后备字段有两种常见的命名约定：<br>
+<img src="https://fire1000.github.io/post-images/1655448662449.png" alt="" loading="lazy"></p>
+<p>与public字段相比，属性更为推荐，提供更多的功能，更便于修改。</p>
+<p>C#提供自动实现属性(automatically implemented property)：当声明属性时，set与get访问器同时存在，并且方法体为分号时，编译器为属性创建隐藏的后备字段，这个字段只能通过这个属性访问。</p>
+<h2 id="构造函数">构造函数</h2>
+<p>构造函数(constructor)与类名相同，没有返回值类型。<br>
+实例构造函数支持重载。<br>
+当一个类没有显式声明实例构造函数时，编译器为这个类定义默认构造函数。默认构造函数没有参数，方法体为空，被public修饰。<br>
+new关键字调用实例构造函数。<br>
+static声明的构造函数是静态的，一个类只有一个静态构造函数。静态构造函数不能有参数，不能有访问修饰符。<br>
+静态构造函数无法显式调用，当类被实例化时，或访问类的静态成员时，在这些操作被执行之前被调用。</p>
+<h2 id="对象初始化语句">对象初始化语句</h2>
+<p>对象初始化语句有两种形式：<br>
+<img src="https://fire1000.github.io/post-images/1655454987492.png" alt="" loading="lazy"><br>
+对象初始化语句在构造函数之后调用。</p>
+<h2 id="析构函数">析构函数</h2>
+<p>析构函数(destructor)用于在实例被销毁之前清理和释放非托管资源。因此，如果只使用.NET类，则不需要编写析构函数。</p>
+<h2 id="readonly">readonly</h2>
+<p>readonly只能修饰字段，可以是实例字段，也可以是静态字段。<br>
+readonly声明的字段，在初始化后，便不能再修改。可以通过initializer初始化，也可以在构造函数中初始化。初始值可以是运行时确定的值。<br>
+与const不同，readonly分配内存。</p>
+<h2 id="this">this</h2>
+<p>this关键字，在类中使用是对当前实例的引用。只能在以下成员中使用：</p>
+<ol>
+<li>实例构造函数</li>
+<li>实例方法。</li>
+<li>属性和索引器的实例访问器。<br>
+this常用于区分类的成员与本地变量或参数，和作为调用方法的实参。</li>
+</ol>
+<h2 id="索引器">索引器</h2>
+<p>索引器与属性相似，但表示多个数据成员。<br>
+索引器只能实例成员，不能声明为static。<br>
+索引器没有后备字段的概念，因此也不支持自动实现属性。</p>
+<p>索引器与属性的声明差异：<br>
+<img src="https://fire1000.github.io/post-images/1655458393707.png" alt="" loading="lazy"><br>
+索引器的参数，至少存在一个，支持存在多个。</p>
+<p>索引器通过类名和结构名后跟方括号，并在方括号中传递实参访问。<br>
+索引器支持重载。</p>
+<h2 id="访问器的访问修饰符">访问器的访问修饰符</h2>
+<p>访问器支持访问修饰符，但存在限制：</p>
+<ol>
+<li>仅当属性或索引器同时存在set和get访问器时，才能其中之一有访问修饰符。</li>
+<li>访问器的访问修饰符必须比所属成员的的访问级别有更严格的限制性。</li>
+</ol>
+<p>访问修饰符的限制性：<br>
+<img src="https://fire1000.github.io/post-images/1655458929900.png" alt="" loading="lazy"></p>
+<h2 id="分部类">分部类</h2>
+<p>partial class声明的类是分部类，分部类支持将一个类的声明分割成多个部分，这些部分可以不在一个文件内。</p>
+<h2 id="分部方法">分部方法</h2>
+<p>分部方法指将一个方法的声明拆分成两个部分，这些部分可以在分部类的不同部分中声明。</p>
+<ol>
+<li>定义部分：包含签名和返回值类型，方法体为分号。</li>
+<li>实现部分：包含签名和返回值类型，方法体与普通方法相同。</li>
+</ol>
+<p>分部方法存在以下限制：</p>
+<ol>
+<li>定义部分与实现部分的签名和返回值类型必须相同。</li>
+<li>返回值类型必须为void。</li>
+<li>void之前必须为partial。</li>
+<li>不能包含访问修饰符，分部方法是隐式private的。</li>
+<li>不能包含out参数。</li>
+</ol>
+<p>允许只存在定义部分，这样编译器将这个方法的声明和调用全部移除。<br>
+不允许只存在实现部分。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第5章 方法 笔记]]></title>
         <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-5-zhang-fang-fa-bi-ji/</id>
@@ -122,403 +489,6 @@
 <h2 id="dynamic">dynamic</h2>
 <p>.NET语言中，IronPython、IronRuby等使用动态类型(运行时才被解释)。C#程序要访问这些语言编写的程序集中的变量，只能使用dynamic类型。</p>
 <p>C#编译器不对dynamic变量进行类型检查，它将变量与它相关的操作信息打包。在运行时，对这些信息进行检查，以确保操作与变量的实际类型一致。否则，将在运行时抛出异常。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[《OGL dev》Etay Meiri Tutorial 29 - 3D Picking 笔记]]></title>
-        <id>https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-29-3d-picking-bi-ji/</id>
-        <link href="https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-29-3d-picking-bi-ji/">
-        </link>
-        <updated>2022-05-11T06:22:51.000Z</updated>
-        <content type="html"><![CDATA[<p>3D拾取指获取屏幕上点击的像素对应的图元的技术。</p>
-<p>3D拾取的原理是在正常渲染pass之前，插入一个将图元信息渲染到picking texture的各个通道中的pass。之后，点击屏幕时，从picking texture中读取到点击的像素对应的图元信息。</p>
-<p>渲染到picking texture时，必须启用深度测试，当像素重叠时丢弃离摄影机较远的像素。以保证鼠标点击，读取picking texture时，获取的是离屏幕(摄影机)最近的图元。</p>
-<p>场景中对象的索引，绘制一个对象内部调用draw call的索引，draw call内部图元的索引，三者唯一确定一个图元。</p>
-<p>GS和FS的内置变量gl_PrimitiveID存储draw call内部图元的索引。如果存在GS，在GS中可以直接使用gl_PrimitiveID，在FS只能接收从GS输出的全局变量以获取gl_PrimitiveID的值。如果不存在GS，在FS中可以直接使用gl_PrimitiveID。gl_PrimitiveID中图元索引，从0开始编号。</p>
-<pre><code>glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, WindowWidth, WindowHeight, 0, GL_RGB, GL_FLOAT, NULL);
-</code></pre>
-<ul>
-<li>GL_RGB32F是纹理内部格式，表示每个texel有三个浮点通道，对应的数据源格式为GL_RGB和GL_FLOAT。虽然数据源为NULL，但纹理要被写入，数据源格式是必须正确填写的。</li>
-</ul>
-<pre><code>PickingTexture::PixelInfo PickingTexture::ReadPixel(unsigned int x, unsigned int y)
-{
-    glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fbo);
-    glReadBuffer(GL_COLOR_ATTACHMENT0);
-
-    PixelInfo Pixel;
-    glReadPixels(x, y, 1, 1, GL_RGB, GL_FLOAT, &amp;Pixel);
-
-    glReadBuffer(GL_NONE);
-    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-
-    return Pixel;
-}
-</code></pre>
-<ul>
-<li><code>glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fbo);</code>，将framebuffer m_fbo绑定到读取。<code>glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);</code>，将framebuffer重置为默认framebuffer。</li>
-<li><code>glReadBuffer(GL_COLOR_ATTACHMENT0);</code>，表示从索引为0的color buffer读取，因为framebuffer支持包含多个color buffer，一次draw call，FS可以同时渲染到多个color buffer。虽然可以一次渲染到多个color buffer，但一次只能从一个color buffer读取。<code>glReadBuffer(GL_NONE);</code>，禁用从framebuffer读取。</li>
-<li><code>glReadPixels(x, y, 1, 1, GL_RGB, GL_FLOAT, &amp;Pixel);</code>，从buffer中读取一个矩形区域的像素信息，返回到最后一个参数Pixel的地址中。Pixel的类型是由倒数第二和第三个参数确定的，这里使用GL_RGB和GL_FLOAT获取原始数据，如果使用其他参数，函数会在输出时转换到参数确定的类型。第一和第二个参数确定矩阵区域的左下角，之后两个参数是长宽，这里使用1和1表示只获取一个像素。</li>
-</ul>
-<pre><code>static void MouseCB(int Button, int State, int x, int y)
-{
-    s_pCallbacks-&gt;MouseCB(Button, State, x, y);
-}
-
-
-static void InitCallbacks()
-{
-    ...
-    glutMouseFunc(MouseCB);
-}
-</code></pre>
-<ul>
-<li>glutMouseFunc()获取鼠标点击事件。</li>
-<li>MouseCB()的第一参数Button为GLUT_LEFT_BUTTON、 GLUT_MIDDLE_BUTTON和GLUT_RIGHT_BUTTON其中之一，表示哪个按键被按下。第二个参数State为GLUT_DOWN或GLUT_UP，表示按下或抬起。</li>
-</ul>
-<p>虽然OpenGL默认是禁用混合的，但在某些没有明确禁用混合的平台上，需要调用<code>glDisable(GL_BLEND);</code>显式禁用混合。</p>
-<p>glutReshapeFunc()获取窗口大小变化。当窗口大小变化时需要重新设定picking texture的宽高，才能保证3D拾取正确。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[《OGL dev》Etay Meiri Tutorial 28 - Particle System using Transform Feedback 笔记]]></title>
-        <id>https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-28-particle-system-using-transform-feedback-bi-ji/</id>
-        <link href="https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-28-particle-system-using-transform-feedback-bi-ji/">
-        </link>
-        <updated>2022-05-01T11:33:34.000Z</updated>
-        <content type="html"><![CDATA[<p>粒子系统是模拟由大量粒子构成的现象的技术，粒子以某种规律一起运动。</p>
-<p>粒子系统每一帧执行两个步骤：</p>
-<ol>
-<li>更新每个粒子的属性。</li>
-<li>渲染粒子。</li>
-</ol>
-<p>更新粒子属性的步骤，在DirectX10引入Stream Output之前在CPU完成，引入之后在GPU完成。</p>
-<ul>
-<li>OpenGL在3.0版本引入相同的功能，命名为Transform Feedback。</li>
-</ul>
-<p>在CPU更新粒子属性存在两点劣势：</p>
-<ol>
-<li>CPU每帧都需要更新vertex buffer，写入到GPU内存(即显存)。而粒子的数量通常非常多，1万以上很常见。如果1秒60帧，那么每秒在CPU与GPU之间拷贝的数据量将非常大。</li>
-<li>单核CPU，需要逐个更新粒子属性。多核CPU需要额外的编码，才能并行执行。而并行执行是GPU最擅长的，不需要额外编码。</li>
-</ol>
-<p>渲染粒子的步骤，在GPU完成。一个粒子渲染结果，通常为一个像素或一个billboard的quad。</p>
-<p>Transform Feedback提供在GPU更新粒子属性的支持：</p>
-<ol>
-<li>提供一个Transform Feedback Buffer位于GS之后，裁剪之前，接收GS的结果，如果GS不存在，则为VS的结果。</li>
-<li>Transform Feedback Buffer可以作为draw call的vertex buffer。</li>
-<li>由于GS输出的顶点数是未知的，提供一个不接收顶点数的draw call，glDrawTransformFeedback()。它接收一个Transform Feedback Buffer。系统为每个Transform Feedback Buffer维护顶点数，由系统跟踪GS进行更新。Transform Feedback Buffer的顶点数支持手动重置。</li>
-<li>当管线到达Transform Feedback Buffer时，可以选择，图元以常规路线进入光栅器，或丢弃图元。</li>
-</ol>
-<p>OpenGL规定，draw call的输入输出，不能使用相同的buffer。因此，实际需要两个transform feedback buffer，每帧互相交换。</p>
-<p><code>glGenTransformFeedbacks(2, m_transformFeedback);</code>，创建两个transform feedback对象。其中m_transformFeedback，是GLuint类型的数组，用于接收创建的对象的handle。</p>
-<p><code>glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, m_transformFeedback[i]);</code>，将transform feedback对象m_transformFeedback[i]，绑定到GL_TRANSFORM_FEEDBACK，后续对transform feedback的操作都应用于m_transformFeedback[i]。</p>
-<ul>
-<li>每次调用glBindTransformFeedback，作为参数的transform feedback对象的顶点数被置0。</li>
-</ul>
-<p><code>glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, m_particleBuffer[i]);</code>，将vertex buffer对象m_particleBuffer[i]绑定到GL_TRANSFORM_FEEDBACK_BUFFER，使得m_particleBuffer[i]成为当前transform feedback对象的transform feedback buffer。</p>
-<ul>
-<li>其中第二个参数0，表示m_particleBuffer[i]成为当前transform feedback对象的索引为0的transform feedback buffer。之所以存在索引，是因为GS输出的顶点属性，其中哪些属性输出到哪个buffer是可以通过glTransformFeedbackVaryings()函数设置的。索引最大值，即buffer上限，为GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS。</li>
-</ul>
-<pre><code>const GLchar* Varyings[4];
-Varyings[0] = &quot;Type1&quot;;
-Varyings[1] = &quot;Position1&quot;;
-Varyings[2] = &quot;Velocity1&quot;;
-Varyings[3] = &quot;Age1&quot;;
-
-glTransformFeedbackVaryings(m_shaderProg, 4, Varyings, GL_INTERLEAVED_ATTRIBS);
-</code></pre>
-<p>glTransformFeedbackVaryings必须在shader链接之前调用。</p>
-<ol>
-<li>第一个参数为shader程序。</li>
-<li>第三个参数为输出到transform feedback buffer的属性名数组。</li>
-<li>第二个参数为属性名数组的元数个数。</li>
-<li>最后一个参数GL_INTERLEAVED_ATTRIBS表示，将属性名数组中的所有属性作为一个structure写入到transform feedback buffer中。这个参数还可以使用GL_SEPARATE_ATTRIBS，表示属性名数组中每一个属性写入到一个transform feedback buffer中。其中属性在属性名数组中的索引，对应glBindBufferBase的第二个参数。</li>
-</ol>
-<pre><code>glBeginTransformFeedback(GL_POINTS);
-
-if (m_isFirst) {
-    glDrawArrays(GL_POINTS, 0, 1);
-
-    m_isFirst = false;
-}
-else {
-    glDrawTransformFeedback(GL_POINTS, m_transformFeedback[m_currVB]);
-}            
-
-glEndTransformFeedback();
-</code></pre>
-<p>glBeginTransformFeedback()与glEndTransformFeedback()之间调用的draw call，输出被重定向到transform feedback buffer。</p>
-<ul>
-<li>glBeginTransformFeedback()与glEndTransformFeedback()必须成对出现，否则导致崩溃。</li>
-<li>不论draw call的拓扑类型如何，输出到transform feedback buffer的拓扑类型一定是点列表。比如参数为triangle strip的draw call绘制4个顶点，和参数为三角形列表的draw call绘制6个顶点，输出到transform feedback buffer的都是6个顶点(两个三角形)。</li>
-</ul>
-<p>glBeginTransformFeedback()接收一个拓扑类型作为参数，它限制draw call的拓扑类型。</p>
-<ul>
-<li>GL_POINTS，draw call的拓扑必须是GL_POINTS。</li>
-<li>GL_LINES，draw call的拓扑必须是GL_LINES、GL_LINE_LOOP或GL_LINE_STRIP。</li>
-<li>GL_TRIANGLES，draw call的拓扑必须GL_TRIANGLES、GL_TRIANGLE_STRIP或GL_TRIANGLE_FAN。</li>
-</ul>
-<p><code>glDrawTransformFeedback(GL_POINTS, m_transformFeedback[m_currVB]);</code>，glDrawTransformFeedback是不需要在顶点数的draw call。它的第一个参数为拓扑类型，它的顶点数从transform feedback对象参数m_transformFeedback[m_currVB]中获得。因为transform feedback对象的初始顶点数为0，所以第一次draw call这里使用<code>glDrawArrays(GL_POINTS, 0, 1);</code>提供1个顶点。</p>
-<p><code>glDisable(GL_RASTERIZER_DISCARD);</code>，禁用光栅化，transform feedback buffer之后的图元被丢弃。因为光栅化被禁用，所以不需要FS。</p>
-<pre><code>bool RandomTexture::InitRandomTexture(unsigned int Size)
-{
-    Vector3f* pRandomData = new Vector3f[Size];
-
-    for (unsigned int i = 0 ; i &lt; Size ; i++) {
-        pRandomData[i].x = RandomFloat();
-        pRandomData[i].y = RandomFloat();
-        pRandomData[i].z = RandomFloat();
-    }
-
-    glGenTextures(1, &amp;m_textureObj);
-    glBindTexture(GL_TEXTURE_1D, m_textureObj);
-    glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB, Size, 0.0f, GL_RGB, GL_FLOAT, pRandomData);
-    glTexParameterf(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-
-    delete [] pRandomData;
-
-    return GLCheckError();
-}
-</code></pre>
-<p>随机纹理，用于在shader内提供随机数。随机纹理是一个1D纹理。</p>
-<ul>
-<li>使用GL_RGB参数调用glTexImage1D，生成三个通道的1D纹理。</li>
-<li>使用GL_TEXTURE_WRAP_S和GL_REPEAT调用glTexParameterf，使得纹理采样以循环的方式支持超过[0, 1]区间的纹理坐标。</li>
-<li>在shader中通过<code>texture(gRandomTexture, gTime/1000.0).xyz</code>的方式获取随机数，其中gRandomTexture是随机纹理，gTime是接收应用传递的全局时间的uniform variable。</li>
-</ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[《OGL dev》Etay Meiri Tutorial 27 - Billboarding and the Geometry Shader 笔记]]></title>
-        <id>https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-27-billboarding-and-the-geometry-shader-bi-ji/</id>
-        <link href="https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-27-billboarding-and-the-geometry-shader-bi-ji/">
-        </link>
-        <updated>2022-04-27T01:51:32.000Z</updated>
-        <content type="html"><![CDATA[<p>Geometry Shader，几何渲染器，简称GS，是DirectX10引入的shader，OpenGL 3.2开始支持。<br>
-geometry shader位于vertex shader之后，裁剪之前。geometry shader是可选的。<br>
-每次draw call调用，geometry shader接收一个由draw call参数决定的拓扑类型的图元，输出0个、1个或多个图元，图元的拓扑类型可以是顶点列表、line strip和triangle strip其中之一。</p>
-<ul>
-<li>其中，输出0个、1个或多个图元的能力称为growing geometry(几何增长)。</li>
-</ul>
-<p>Triangle strips类型的图元，前3个顶点构成一个三角形，之后每一个新增的顶点与之前两个顶点构成一个三角形。对顶点进行编号，构成三角形的顶点顺序为[0,1,2]、[1,3,2]、[2,3,4]、[3,5,4]...，如下图所示：<br>
-<img src="https://fire1000.github.io/post-images/1651109614319.jpg" alt="" loading="lazy"></p>
-<p>geometry shader常用于实现billboarding(广告牌)技术。billboard是一个quad，由2个三角形，4个顶点组成，它的法线总是指向摄影机，并随摄影机转动。因为billboard总是朝向摄影机，玩家会误以为它是完整的模型。billboard常用于创建森林。</p>
-<pre><code>layout (points) in;
-layout (triangle_strip) out;
-layout (max_vertices = 4) out;
-</code></pre>
-<p>声明GS的输入拓扑为点列表，输出拓扑为triangle strip，emit的最大顶点数为4。</p>
-<ul>
-<li>emit的最大顶点数指，一次GS调用输出的最大顶点数。这为图形驱动提供优化GS的机会。</li>
-</ul>
-<p>每次GS调用，在GS中通过内置变量'gl_in[0]'访问输入图元的第一个顶点，同理'gl_in[1]'和'gl_in[2]'访问图元的第二和第三个顶点，前提是输入的图元存在那么多顶点可以访问。</p>
-<p>在GS中，每次调用<code>EmitVertex();</code>输出图元的一个顶点，当所有顶点都输出完毕之后，必须调用<code>EndPrimitive();</code>表示图元输出完毕。</p>
-<p>在fragment shader中，调用<code>discard;</code>可以丢弃当前的片元。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[《OGL dev》Etay Meiri Tutorial 26 - Normal Mapping 笔记]]></title>
-        <id>https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-26-normal-mapping-bi-ji/</id>
-        <link href="https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-26-normal-mapping-bi-ji/">
-        </link>
-        <updated>2022-04-25T01:14:43.000Z</updated>
-        <content type="html"><![CDATA[<p>三角形表面的顶点法线插值使得表面光滑。Normal Mapping，又称为Bump Mapping是一种技术，使用从特殊的纹理中采样得到的法线替代顶点法线插值，实现三角形表面的凹凸感。这称特殊的纹理称为normal map。</p>
-<p>因为一张normal map支持对应多个朝向不同方向的表面，所以它无法存储局部空间的法线。因此，OpenGL使用tangent space(切线空间)，切线空间是定义在表面上的空间，会随表面的朝向改变空间的朝向。</p>
-<p>切线空间定义有四种：</p>
-<p>第一种切线空间，定义为以三角形表面法线为z轴，纹理空间的u、v轴分别为x和y轴的空间，其中x、y、z轴的单位向称分别称为tangent(切线)、bitangent(副切线)、normal(法线)。<br>
-使用纹理空间的u、v轴分别为x和y轴，可以这样理解：虽然随着纹理在一个模型上展开，u、v轴在局部空间中可能是一条曲线或折线，但在组成模型的任意一个三角形中，u、v轴必然是直线，虽然它们之间可能不再垂直。<br>
-三角形三个顶点在局部空间中的坐标是已知的，假设为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>E</mi><mn>0</mn></msub><mi mathvariant="normal">、</mi><msub><mi>E</mi><mn>1</mn></msub><mi mathvariant="normal">、</mi><msub><mi>E</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">E_0、E_1、E_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord cjk_fallback">、</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord cjk_fallback">、</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>。顶点在纹理空间中的坐标是已知的假设为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>U</mi><mn>0</mn></msub><mi mathvariant="normal">、</mi><msub><mi>U</mi><mn>1</mn></msub><mi mathvariant="normal">、</mi><msub><mi>U</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">U_0、U_1、U_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord cjk_fallback">、</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord cjk_fallback">、</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>。假设局部空间中的tangent和bitangent为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>T</mi></mrow><annotation encoding="application/x-tex">T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span></span></span></span>，因为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>T</mi></mrow><annotation encoding="application/x-tex">T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span></span></span></span>分别为u、v轴上的单位向量，可得：</p>
-<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>E</mi><mn>1</mn></msub><mo>−</mo><msub><mi>E</mi><mn>0</mn></msub><mo>=</mo><mo>(</mo><msub><mi>U</mi><mn>1</mn></msub><mo>−</mo><msub><mi>U</mi><mn>0</mn></msub><mo>)</mo><mi>T</mi><mo>+</mo><mo>(</mo><msub><mi>V</mi><mn>1</mn></msub><mo>−</mo><msub><mi>V</mi><mn>0</mn></msub><mo>)</mo><mi>B</mi><mspace linebreak="newline"></mspace><msub><mi>E</mi><mn>2</mn></msub><mo>−</mo><msub><mi>E</mi><mn>0</mn></msub><mo>=</mo><mo>(</mo><msub><mi>U</mi><mn>2</mn></msub><mo>−</mo><msub><mi>U</mi><mn>0</mn></msub><mo>)</mo><mi>T</mi><mo>+</mo><mo>(</mo><msub><mi>V</mi><mn>2</mn></msub><mo>−</mo><msub><mi>V</mi><mn>0</mn></msub><mo>)</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">E_1 - E_0 = (U_1 - U_0) T + (V_1 - V_0) B \\
-E_2 - E_0 = (U_2 - U_0) T + (V_2 - V_0) B
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span></span><span class="mspace newline"></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span></span></span></span></span></p>
-<p>假设：</p>
-<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">△</mi><msub><mi>E</mi><mn>1</mn></msub><mo>=</mo><msub><mi>E</mi><mn>1</mn></msub><mo>−</mo><msub><mi>E</mi><mn>0</mn></msub><mspace width="1em"/><mi mathvariant="normal">△</mi><msub><mi>E</mi><mn>2</mn></msub><mo>=</mo><msub><mi>E</mi><mn>2</mn></msub><mo>−</mo><msub><mi>E</mi><mn>0</mn></msub><mspace linebreak="newline"></mspace><mi mathvariant="normal">△</mi><msub><mi>U</mi><mn>1</mn></msub><mo>=</mo><msub><mi>U</mi><mn>1</mn></msub><mo>−</mo><msub><mi>U</mi><mn>0</mn></msub><mspace width="1em"/><mi mathvariant="normal">△</mi><msub><mi>U</mi><mn>2</mn></msub><mo>=</mo><msub><mi>U</mi><mn>2</mn></msub><mo>−</mo><msub><mi>U</mi><mn>0</mn></msub><mspace linebreak="newline"></mspace><mi mathvariant="normal">△</mi><msub><mi>V</mi><mn>1</mn></msub><mo>=</mo><msub><mi>V</mi><mn>1</mn></msub><mo>−</mo><msub><mi>V</mi><mn>0</mn></msub><mspace width="1em"/><mi mathvariant="normal">△</mi><msub><mi>V</mi><mn>2</mn></msub><mo>=</mo><msub><mi>V</mi><mn>2</mn></msub><mo>−</mo><msub><mi>V</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">\triangle E_1 = E_1 - E_0  \quad  \triangle E_2 = E_2 - E_0 \\
-\triangle U_1 = U_1 - U_0 \quad \triangle U_2 = U_2 - U_0 \\
-\triangle V_1 = V_1 - V_0  \quad \triangle V_2 = V_2 - V_0
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:1em;"></span><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span><span class="mspace newline"></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:1em;"></span><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span><span class="mspace newline"></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:1em;"></span><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></p>
-<p>代入上式可得：</p>
-<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">△</mi><msub><mi>E</mi><mn>1</mn></msub><mo>=</mo><mi mathvariant="normal">△</mi><msub><mi>U</mi><mn>1</mn></msub><mi>T</mi><mo>+</mo><mi mathvariant="normal">△</mi><msub><mi>V</mi><mn>1</mn></msub><mi>B</mi><mspace linebreak="newline"></mspace><mi mathvariant="normal">△</mi><msub><mi>E</mi><mn>2</mn></msub><mo>=</mo><mi mathvariant="normal">△</mi><msub><mi>U</mi><mn>2</mn></msub><mi>T</mi><mo>+</mo><mi mathvariant="normal">△</mi><msub><mi>V</mi><mn>2</mn></msub><mi>B</mi></mrow><annotation encoding="application/x-tex">\triangle E_1= \triangle U_1 T + \triangle V_1 B \\
-\triangle E_2 = \triangle U_2 T + \triangle V_2 B
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span></span><span class="mspace newline"></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span></span></span></span></span></p>
-<p>上式可以转换为矩阵形式：</p>
-<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mo fence="true">[</mo><mtable><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>E</mi><mn>1</mn></msub></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>E</mi><mn>2</mn></msub></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow><mo>=</mo><mrow><mo fence="true">[</mo><mtable><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi mathvariant="normal">△</mi><msub><mi>U</mi><mn>1</mn></msub></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi mathvariant="normal">△</mi><msub><mi>V</mi><mn>1</mn></msub></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi mathvariant="normal">△</mi><msub><mi>U</mi><mn>2</mn></msub></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi mathvariant="normal">△</mi><msub><mi>V</mi><mn>2</mn></msub></mrow></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow><mrow><mo fence="true">[</mo><mtable><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>T</mi></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>B</mi></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow></mrow><annotation encoding="application/x-tex">\begin{bmatrix} E_1 \\ E_2 \end{bmatrix}
-= \begin{bmatrix}  
-    \triangle U_1 &amp;  \triangle V_1 \\  
-    \triangle U_2 &amp;  \triangle V_2 
-\end{bmatrix}
-\begin{bmatrix} T \\ B \end{bmatrix}
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.40003em;vertical-align:-0.95003em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">[</span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.4099999999999997em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9500000000000004em;"><span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">]</span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.40003em;vertical-align:-0.95003em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">[</span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.4099999999999997em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9500000000000004em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.4099999999999997em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9500000000000004em;"><span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">]</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">[</span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span><span style="top:-2.4099999999999997em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05017em;">B</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9500000000000004em;"><span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">]</span></span></span></span></span></span></span></p>
-<p>将两边都左乘<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mrow><mo fence="true">[</mo><mtable><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi mathvariant="normal">△</mi><msub><mi>U</mi><mn>1</mn></msub></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi mathvariant="normal">△</mi><msub><mi>V</mi><mn>1</mn></msub></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi mathvariant="normal">△</mi><msub><mi>U</mi><mn>2</mn></msub></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi mathvariant="normal">△</mi><msub><mi>V</mi><mn>2</mn></msub></mrow></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow><mrow><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">\begin{bmatrix}  \triangle U_1 &amp;  \triangle V_1 \\  \triangle U_2 &amp;  \triangle V_2 \end{bmatrix}^{-1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.604038em;vertical-align:-0.95003em;"></span><span class="minner"><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">[</span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.4099999999999997em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9500000000000004em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.4099999999999997em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9500000000000004em;"><span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">]</span></span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:1.6540080000000001em;"><span style="top:-3.9029000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span></span></span></span>，并交换位置可得：</p>
-<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mo fence="true">[</mo><mtable><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>T</mi></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>B</mi></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow><mo>=</mo><msup><mrow><mo fence="true">[</mo><mtable><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi mathvariant="normal">△</mi><msub><mi>U</mi><mn>1</mn></msub></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi mathvariant="normal">△</mi><msub><mi>V</mi><mn>1</mn></msub></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi mathvariant="normal">△</mi><msub><mi>U</mi><mn>2</mn></msub></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi mathvariant="normal">△</mi><msub><mi>V</mi><mn>2</mn></msub></mrow></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow><mrow><mo>−</mo><mn>1</mn></mrow></msup><mrow><mo fence="true">[</mo><mtable><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>E</mi><mn>1</mn></msub></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>E</mi><mn>2</mn></msub></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow></mrow><annotation encoding="application/x-tex">\begin{bmatrix} T \\ B \end{bmatrix}
-= \begin{bmatrix} 
-    \triangle U_1 &amp; \triangle V_1 \\ 
-    \triangle U_2 &amp;   \triangle V_2
-\end{bmatrix}^{-1}
-\begin{bmatrix} E_1 \\ E_2 \end{bmatrix}
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.40003em;vertical-align:-0.95003em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">[</span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span><span style="top:-2.4099999999999997em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05017em;">B</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9500000000000004em;"><span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">]</span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.604038em;vertical-align:-0.95003em;"></span><span class="minner"><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">[</span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.4099999999999997em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9500000000000004em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.4099999999999997em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9500000000000004em;"><span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">]</span></span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:1.6540080000000001em;"><span style="top:-3.9029000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">[</span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.4099999999999997em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9500000000000004em;"><span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">]</span></span></span></span></span></span></span></p>
-<p>矩阵的逆如果存在，可以通过伴随矩阵求得，所以：</p>
-<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mo fence="true">[</mo><mtable><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>T</mi></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>B</mi></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow><mo>=</mo><mfrac><mn>1</mn><mrow><mi mathvariant="normal">△</mi><msub><mi>U</mi><mn>1</mn></msub><mi mathvariant="normal">△</mi><msub><mi>V</mi><mn>2</mn></msub><mo>−</mo><mi mathvariant="normal">△</mi><msub><mi>U</mi><mn>2</mn></msub><mi mathvariant="normal">△</mi><msub><mi>V</mi><mn>1</mn></msub></mrow></mfrac><mrow><mo fence="true">[</mo><mtable><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi mathvariant="normal">△</mi><msub><mi>V</mi><mn>2</mn></msub></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mi mathvariant="normal">△</mi><msub><mi>V</mi><mn>1</mn></msub></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mi mathvariant="normal">△</mi><msub><mi>U</mi><mn>2</mn></msub></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi mathvariant="normal">△</mi><msub><mi>U</mi><mn>1</mn></msub></mrow></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow><mrow><mo fence="true">[</mo><mtable><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>E</mi><mn>1</mn></msub></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>E</mi><mn>2</mn></msub></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow></mrow><annotation encoding="application/x-tex">\begin{bmatrix} T \\ B \end{bmatrix}
-= \frac{1}{\triangle U_1  \triangle V_2 -  \triangle U_2  \triangle V_1}
-\begin{bmatrix} 
-    \triangle V_2 &amp; - \triangle V_1 \\ 
-    - \triangle U_2 &amp; \triangle U_1
-\end{bmatrix}
-\begin{bmatrix} E_1 \\ E_2 \end{bmatrix}
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.40003em;vertical-align:-0.95003em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">[</span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span><span style="top:-2.4099999999999997em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05017em;">B</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9500000000000004em;"><span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">]</span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.40003em;vertical-align:-0.95003em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.32144em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.8804400000000001em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">[</span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.4099999999999997em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">−</span><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9500000000000004em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">−</span><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.4099999999999997em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">△</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9500000000000004em;"><span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">]</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">[</span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.4099999999999997em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9500000000000004em;"><span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">]</span></span></span></span></span></span></span></p>
-<p>在介绍第二种切换空间之间，先介绍gram-schmidt process(施密特正交化)：假设一个N维的坐标系，基向量分别为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>N</mi><mn>1</mn></msub><mi mathvariant="normal">、</mi><msub><mi>N</mi><mn>2</mn></msub><mi mathvariant="normal">、</mi><msub><mi>N</mi><mn>3</mn></msub><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi></mrow><annotation encoding="application/x-tex">N_1、N_2、N_3...</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord cjk_fallback">、</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord cjk_fallback">、</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span></span></span></span>。</p>
-<ol>
-<li>将<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>N</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">N_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>归一化。</li>
-<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>(</mo><msub><mi>N</mi><mn>1</mn></msub><msub><mover accent="true"><mi>N</mi><mo>˙</mo></mover><mn>2</mn></msub><mo>)</mo><msub><mi>N</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">(N_1 \dot N_2) N_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.17019em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9201900000000001em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span><span style="top:-3.25233em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.055550000000000016em;">˙</span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>得到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>N</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">N_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>N</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">N_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>上投影，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>N</mi><mn>2</mn></msub><mo>−</mo><mo>(</mo><msub><mi>N</mi><mn>1</mn></msub><msub><mover accent="true"><mi>N</mi><mo>˙</mo></mover><mn>2</mn></msub><mo>)</mo><msub><mi>N</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">N_2 - (N_1 \dot N_2) N_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.17019em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9201900000000001em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span><span style="top:-3.25233em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.055550000000000016em;">˙</span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>得到垂直<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>N</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">N_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>的向量替换原来的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>N</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">N_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，将<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>N</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">N_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>归一化。</li>
-<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>N</mi><mn>3</mn></msub></mrow><annotation encoding="application/x-tex">N_3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>再分别与<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>N</mi><mn>1</mn></msub><mi mathvariant="normal">、</mi><msub><mi>N</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">N_1、N_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord cjk_fallback">、</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>点乘得到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>N</mi><mn>3</mn></msub></mrow><annotation encoding="application/x-tex">N_3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>在这两个向量上的投影，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>N</mi><mn>3</mn></msub></mrow><annotation encoding="application/x-tex">N_3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>再减去这两个投影得到垂直于<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>N</mi><mn>1</mn></msub><mi mathvariant="normal">、</mi><msub><mi>N</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">N_1、N_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord cjk_fallback">、</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>的向量替换<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>N</mi><mn>3</mn></msub></mrow><annotation encoding="application/x-tex">N_3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，将<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>N</mi><mn>3</mn></msub></mrow><annotation encoding="application/x-tex">N_3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>归一化。</li>
-<li>以此类推，对更新每一个基向量，最终得到一组标准正交基。</li>
-</ol>
-<p>第二种切线空间，是第一种切线空间通过施密特正交化得到的空间。其中基向量计算的顺序是固定的：</p>
-<ol>
-<li>首先，如果表面法线<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span></span>未归一化，将<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span></span>归一化。</li>
-<li>然后，tangent向量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>T</mi></mrow><annotation encoding="application/x-tex">T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span></span>向<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span></span>作投影，并从<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span></span>中减去，归一化，用于更新<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>T</mi></mrow><annotation encoding="application/x-tex">T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span></span>。</li>
-<li>最后，因为是三维空间，bitangent向量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>B</mi><mo>=</mo><mi>N</mi><mo>×</mo><mi>T</mi></mrow><annotation encoding="application/x-tex">B = N \times T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span></span>。</li>
-</ol>
-<p>第三种切线空间的z轴为顶点法线，tangent向量为共享这个顶点的所有三角形的tangent向量的平均值。bitangent向量通常不被需要，如果存在的话，与tangent向量类似。三角形内非顶点的像素，对应的此空间都是插值的结果。这个切线空间的作用是使得三角形之间过渡平滑。</p>
-<p>第四种切线空间是第三种切线空间通过施密特正交化得到的空间。normal map中采样得到正是这个空间的法线，这个空间的基向量组成将法线变换到局部空间的TBN矩阵。</p>
-<p>因为法线的xyz分量的取值区间为[-1, 1]，而normal map中的通道的取值区间为[0, 1]，两者之间转换需要进行映射。<br>
-因为大多数法线通常都不会偏离切线空间的Z轴太远，所以xy分量通常在0附近，z分量通常在1附近，映射到normal map中对应颜色在(0.5，0.5，1)附近，所以法线贴图看起来都偏蓝。<br>
-如果一张法线贴图的颜色全为(0.5，0.5，1)，那意味着它的法线与切线空间的Z轴重合，它的效果等同于不使用法线贴图。</p>
-<p>Assimp库，通过Importer.ReadFile加载模型时，使用aiProcess_CalcTangentSpace标记，可以为我们计算tangent向量，保存在aiMesh对象的mTangents数组中。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[《OGL dev》Etay Meiri Tutorial 25 - SkyBox 笔记]]></title>
-        <id>https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-25-skybox-bi-ji/</id>
-        <link href="https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-25-skybox-bi-ji/">
-        </link>
-        <updated>2022-04-21T23:03:56.000Z</updated>
-        <content type="html"><![CDATA[<p>天空盒(SkyBox)的思路是创建一个立方体或球体，将摄像机放置在它的中心，它跟随摄像机移动。</p>
-<p>天空盒的纹理由6张图片组成，是一个立方体的6个面，相邻的面之间的画面是连续的，称为cubemap。如下图所示：<br>
-<img src="https://fire1000.github.io/post-images/1650582841787.jpg" alt="" loading="lazy"></p>
-<p>cubemap为3d纹理，texture target为GL_TEXTURE_CUBE_MAP。</p>
-<p>cubemap需要调用6次glTexImage2D才能设置数据源，其中glTexImage2D的第一个参数接收一个枚举对应cubemap立方体的一个面，对应关系如下：</p>
-<pre><code>GL_TEXTURE_CUBE_MAP_POSITIVE_X  -&gt;  right
-GL_TEXTURE_CUBE_MAP_NEGATIVE_X  -&gt;  left
-GL_TEXTURE_CUBE_MAP_POSITIVE_Y  -&gt;  top
-GL_TEXTURE_CUBE_MAP_NEGATIVE_Y  -&gt;  bottom
-GL_TEXTURE_CUBE_MAP_POSITIVE_Z  -&gt;  front
-GL_TEXTURE_CUBE_MAP_NEGATIVE_Z  -&gt;  back
-</code></pre>
-<pre><code>glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-</code></pre>
-<p>其中GL_TEXTURE_WRAP_S、GL_TEXTURE_WRAP_T、GL_TEXTURE_WRAP_R分别对应纹理坐标的第一个维度、第二个维度、第三个维度的坐标。</p>
-<p>无论模型是立方体还是球体，天空盒的纹理都是cubemap。cubemap的采样方式与2D纹理不同，采样的结果为从原点出发的射线与立方体表面的交点的texel。因此，如果局部空间(local space)中原点在模型中心的话，局部空间的坐标就是纹理坐标。</p>
-<p>与2D纹理不同，cubemap对应的sampler uniform variable类型为samplerCube。采样函数都使用texture()。(2D纹理还可以使用texture2D())</p>
-<p>因为天空盒需要绘制的是内表面，而不是像通常那样绘制外表面，所以需要设置为剔除正面：<code>glCullFace(GL_FRONT);</code>。</p>
-<p>因为天空盒必须渲染在其他mesh的后方，所以需要进行以下操作：</p>
-<ol>
-<li>最后渲染天空盒，这样depth buffer中已经保存了其他mesh的深度值。</li>
-<li>在vertex shader，将经历WVP变换的天空盒的顶点的z值替换为w值，这样透视除法之后z值为1，确保在深度测试中总是失败。</li>
-<li>depth buffer的默认值为1，因为要将z值为1的天空盒顶点写入depth bufer，必须将深度测试的设定从默认的“小于”改为“小于等于”：<code>glDepthFunc(GL_LEQUAL);</code>。</li>
-</ol>
-<p>OpenGL渲染时经常需要切换渲染状态，因此OpenGL提供了Get*函数，可以获取当前的渲染状态，用于在切换渲染状态之后还原。依据渲染状态的类型，Get*函数分为glGetIntegerv()、glGetBooleanv()、glGetInteger64v()、glGetFloatv()和glGetDoublev()。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[《OGL dev》Etay Meiri Tutorial 24 - Shadow Mapping - Part 2 笔记]]></title>
-        <id>https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-23-shadow-mapping-part-2-bi-ji/</id>
-        <link href="https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-23-shadow-mapping-part-2-bi-ji/">
-        </link>
-        <updated>2022-04-20T02:26:52.000Z</updated>
-        <content type="html"><![CDATA[<p>本节教程的shadow mapping，只适用于spot light。</p>
-<p>在shadow mapping的第二个pass中：</p>
-<ol>
-<li>因为NDC空间的x、y坐标为[-1, 1]，而uv的区间为[0, 1]，需要先映射才能在shadow map中采样：<code>u = 0.5 * x + 0.5</code>，<code>v = 0.5 * y + 0.5</code>。</li>
-<li>因为NDC空间的z坐标为[-1, 1]，而shadow map的记录的深度值为[0, 1]，需要先进行映射才能进行比较：<code>depth = 0.5 * z + 0.5</code>。</li>
-<li>因为fragment shader需要同时在diffuse texture和shadow map中采样，所以需要使用两个texture unit。</li>
-<li>实际深度比较时，因为考虑到浮点数的精度问题，为映射后的z值加上一个很小的小数，再与shadow map采样的深度值进行比较，如果大于深度值则设置阴影。</li>
-</ol>
-<p>uniform variable的位置在shader程序链接后确定，除非再次链接否则不改变。这允许应用在不同的shader程序之间切换。</p>
-<p>因为地面不会投射阴影，所以我们不需要将地面渲染到shadow map。这是shadow mapping的一种优化。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[《OGL dev》Etay Meiri Tutorial 23 - Shadow Mapping - Part 1 笔记]]></title>
-        <id>https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-23-shadow-mapping-part-1-bi-ji/</id>
-        <link href="https://fire1000.github.io/post/lesslessogl-devgreatergreater-etay-meiri-tutorial-23-shadow-mapping-part-1-bi-ji/">
-        </link>
-        <updated>2022-04-18T01:29:37.000Z</updated>
-        <content type="html"><![CDATA[<p>生成阴影的技术有很多种，Shadow Mapping是其中比较简单基础的一种。</p>
-<p>一次深度测试能在depth buffer中得到与屏幕上每个像素对应的每个离摄像机最近的片元的z值。shadow mapping利用这个原理， 通过两次draw call调用，实现一个光源的阴影。其中每一次draw call调用称为一个pass。</p>
-<ol>
-<li>第一个pass，将摄影机置于光源，得到depth buffer。这个pass不渲染到color buffer，不显示到屏幕上。而是将depth buffer的内容写入到一张纹理，称为shadow map。向这样将一次渲染的结果写入到纹理的技术称为“render to texture(渲染到纹理)”，简称RTT。</li>
-<li>第二个pass，将摄影机放置回它本来的位置，正常渲染。在fragment shader中将shadow map作为纹理读入，将每一个片元变换到以光源为摄影机的NDC空间中，再将它的深度值与shadow map对应像素的深度值进行比较。如果片元的深度值与shadow map对应深度值不同，说明它不是离光源最近的片元，需要绘制阴影。如果相同，则不需绘制阴影。</li>
-</ol>
-<p>Part1教程只学习第一个pass，因此第二个pass改为将shadow map渲染到屏幕上。具体OpenGL的API调用如下。</p>
-<p>第一个pass：</p>
-<p>首先需要创建一个纹理对象和framebuffer对象。</p>
-<ol>
-<li>纹理对象用于保存shadow map。纹理对象，通过<code>glGenTextures(1, &amp;m_shadowMap);</code>创建，<code>glDeleteTextures(1, &amp;m_shadowMap);</code>销毁，其中m_shadowMap是GLuint类型的handle。</li>
-<li>而framebuffer对象则是因为，默认情况下，OpenGL渲染到默认的framebuffer的color buffer，从而显示到屏幕上。将OpenGL渲染的到的framebuffer改为用户创建的framebuffer对象，可以通过配置这个framebuffer，使OpenGL渲染到纹理对象，并阻止它显示在屏幕上。framebuffer对象，通过<code>glGenFramebuffers(1, &amp;m_fbo);</code>创建，<code>glDeleteFramebuffers(1, &amp;m_fbo);</code>销毁，其中m_fbo是GLuint类型的handle。</li>
-</ol>
-<p>然后初始化纹理对象和framebuffer对象。</p>
-<ol>
-<li>初始化纹理对象。
-<ol>
-<li>绑定texture target：<code>glBindTexture(GL_TEXTURE_2D, m_shadowMap);</code>将m_shadowMap绑定到当前texture unit的GL_TEXTURE_2D。(默认texture unit为texture unit 0)。</li>
-<li>初始化纹理数据：<code>glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, WindowWidth, WindowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);</code>
-<ul>
-<li>第一个参数为要操作的texture target。</li>
-<li>第二个为mipmap level参数，0表示最高分辨率。</li>
-<li>第三个表示OpenGL中存储纹理数据的格式，GL_DEPTH_COMPONENT表示归一化单浮点深度。</li>
-<li>WindowWidth和WindowHeight表示纹理的宽高。</li>
-<li>之后的0是border(边界)参数，目前不使用。</li>
-<li>之后的GL_DEPTH_COMPONENT表示内存中纹理数据的格式。</li>
-<li>之后的GL_FLOAT，表示每个通道为单精度浮点。</li>
-<li>最后是NULL是内存中的数据源，因为shadow map是从渲染写入的，赋值初始数据源没有意义。</li>
-</ul>
-</li>
-<li>设定filter，不设置的话是无法对浮点纹理坐标进行采样的。<code>glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);</code>将放大和缩小都设定为线性过滤(即双线性过滤)。</li>
-<li>设定纹理坐标超过[0, 1]区间的情况如何采样。这是可选的，默认值为GL_REPEAT，表示重复。GL_CLAMP_TO_EDGE表示超出部分使用边界颜色。<code>glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);</code>分别设置u和v坐标。</li>
-</ol>
-</li>
-<li>初始化framebuffer对象。
-<ol>
-<li>绑定：<code>glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);</code>，将m_fbo绑定到GL_FRAMEBUFFER，后续对GL_FRAMEBUFFER的操作，应用于m_fbo。
-<ul>
-<li>glBindFramebuffer的第一个参数可选GL_FRAMEBUFFER、GL_DRAW_FRAMEBUFFER或GL_READ_FRAMEBUFFER。其中GL_FRAMEBUFFER表示读写，GL_DRAW_FRAMEBUFFER表示写入，GL_READ_FRAMEBUFFER表示读取。GL_FRAMEBUFFER是初始化framebuffer对象时推荐的方式。渲染时会使用GL_DRAW_FRAMEBUFFER。使用glReadPixels函数时，会用到GL_READ_FRAMEBUFFER(教程目前不使用)。</li>
-<li><code>glBindFramebuffer(GL_FRAMEBUFFER, 0);</code>绑定到默认的framebuffer。</li>
-</ul>
-</li>
-<li>将纹理对象附加到framebuffer对象：<code>glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_shadowMap, 0);</code>，GL_DEPTH_ATTACHMENT表示附加到depth attachment point，纹理对象将用于接收深度测试的结果，即depth buffer。attachment point还支持以下选项：
-<ul>
-<li>COLOR_ATTACHMENTi，纹理对象将接收fragment shader的颜色，即color buffer。i为整数后辍，因为fragment shader可以同时渲染到多个color buffer。</li>
-<li>STENCIL_ATTACHMENT，纹理对象将接收模版测试的结果，即stencil buffer。</li>
-<li>DEPTH_STENCIL_ATTACHMENT，纹理对象将接收depth buffer和stencil buffer的组合，因两者常一起使用。</li>
-</ul>
-</li>
-<li>可选 ，<code>glDrawBuffer(GL_NONE);</code>，参数可选COLOR_ATTACHMENTi，默认color buffer附加到GL_COLOR_ATTACHMENT0。GL_NONE表示不写入到color buffer，同时禁用fragment shader。
-<ul>
-<li>默认的framebuffer的选项只能是GL_NONE、GL_FRONT_LEFT、GL_FRONT_RIGHT、GL_BACK_LEFT和GL_BACK_RIGHT其中之一，FRONT和BACK分别对应front和back buffer，LEFT和RIGHT是因为每个buffer都有left和right buffer。</li>
-</ul>
-</li>
-<li>可选，<code>glReadBuffer(GL_NONE);</code>禁用framebuffer读取，这是为了避免仅支持OpenGL 3.x而不支持4.x的GPU出问题。</li>
-<li>错误检查：<code>GLenum Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);</code>，Status != GL_FRAMEBUFFER_COMPLETE表示发生错误。</li>
-</ol>
-</li>
-</ol>
-<p>最后渲染：</p>
-<ol>
-<li>绑定：<code>glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo);</code></li>
-<li>清空depth buffer：<code>glClear(GL_DEPTH_BUFFER_BIT);</code></li>
-<li>以光源作为摄影机调用draw call。</li>
-<li>绑定到默认framebuffer：<code>glBindFramebuffer(GL_FRAMEBUFFER, 0);</code>，因为第二个pass要渲染到color buffer。</li>
-</ol>
-<p>第二个Pass：</p>
-<ol>
-<li>清空color buffer和depth buffer：<code>glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);</code></li>
-<li>激活texture unit 0，并将shadow map绑定到它的2D纹理，以供fragment shader中读取。</li>
-<li>正常摄影机调用draw call。</li>
-</ol>
-<p>教程中的fragment shader代码<code>Depth = 1.0 - (1.0 - Depth) * 25.0;</code>是因为以光源为摄像机时，由于透视投影矩阵与物体的位置设定，shadow map的深度值接近于1，直接输出到color buffer颜色会非常淡，因为rgb为0为黑，为1为白。因此对从shadow map的深度值到1这段区域，向深度值为0的方向，进行了25倍缩放，以使得颜色更深。</p>
 ]]></content>
     </entry>
 </feed>
