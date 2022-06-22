@@ -1,0 +1,223 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第17章 泛型 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1655885980589">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第17章 泛型 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="泛型(generic)允许我们声明类型参数化(type-parameterized)的代码。
+泛型不是类型，是类型的模板。
+C#提供5种泛型：类、结构、接口、委托、方法。
+泛型声明中的T是占位符，在编译时替换为实际类型，其中T称为类型参数(..." />
+    <meta name="keywords" content="Illustrated C# 2012" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1655885980589" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第17章 泛型 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-06-22
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/xtgDb0zlW/" class="post-tag">
+                  # Illustrated C# 2012
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>泛型(generic)允许我们声明类型参数化(type-parameterized)的代码。<br>
+泛型不是类型，是类型的模板。<br>
+C#提供5种泛型：类、结构、接口、委托、方法。</p>
+<p>泛型声明中的T是占位符，在编译时替换为实际类型，其中T称为类型参数(type parameter)，实际类型称为类型实参(type argument)。</p>
+<p>将泛型类型中的占位符替换为实际类型后，得到的类型称为构造类型(constructed type)。</p>
+<p>类型参数可以受约束(constrain)，符合约束的类型参数称为未绑定的类型参数(unbounded type parameter)。<br>
+泛型中，约束通过where子句给出：</p>
+<pre><code>where TypeParam : constraint, constraint, ....
+</code></pre>
+<p>约束有5种类型：<br>
+<img src="https://fire1000.github.io/post-images/1655882211039.png" alt="" loading="lazy"><br>
+如果同时存在多种约束，必须按以下形式给出：<br>
+<img src="https://fire1000.github.io/post-images/1655882322015.png" alt="" loading="lazy"></p>
+<p>泛型方法可以在泛型或非泛型的类型中声明。<br>
+泛型方法调用时，编译器可以推断实际类型，因此在调用时，可以省略类型参数和尖括号。<br>
+扩展方法支持泛型。</p>
+<p>非泛型类型可以实现泛型接口。<br>
+一个类型可以重复实现相同的泛型接口，但泛型接口的类型实参必须不存在相同类型的可能性。</p>
+<p>泛型可以与非泛型重名。</p>
+<p>可变性(variance)分为三种：协变(convariance)、逆变(contravariance)和不变(invariance)。<br>
+当泛型委托的类型形参使用out修饰，表示这个类型形参只作为返回值类型，则这个泛型委托支持协变，即支持将类型实参为派生类的委托对象赋值给类型实参为基类的委托对象。<br>
+当泛型委托的类型形参使用in修饰，表示这个类型形参只作为形参类型，则这个泛型委托支持逆变，即支持将类型实参为基类的委托对象赋值给类型实参为派生类的委托对象。<br>
+与泛型委托相同，泛型接口也通过out和in修饰符支持协变和逆变。<br>
+不使用out和in修饰的类型参数称为不变，不支持协变和逆变。</p>
+<p>当赋值运算符左操作数为泛型委托，右操作数为函数时，不需要out和in修饰符，只要类型形参满足协变和逆变的条件(协变：只作为返回值类型。逆变：只作为形参类型。)，就支持协变和逆变：<br>
+<img src="https://fire1000.github.io/post-images/1655885505456.png" alt="" loading="lazy"></p>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-16-zhang-zhuan-huan-bi-ji/">
+              <h3 class="post-title">
+                《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第16章 转换 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

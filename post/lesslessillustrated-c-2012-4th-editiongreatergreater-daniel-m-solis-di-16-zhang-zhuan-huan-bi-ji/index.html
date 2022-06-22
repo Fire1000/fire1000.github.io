@@ -1,0 +1,255 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第16章 转换 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1655885980589">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第16章 转换 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="隐式转换指编译器依据上下文自动进行的转换。
+C#中无符号整数类型使用零扩展(zero extension)，有符号整数类型使用符号扩展(sign extension)。
+所有类型都可以隐式转换为object类型。
+所有值类型都可以隐式转换为..." />
+    <meta name="keywords" content="Illustrated C# 2012" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1655885980589" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第16章 转换 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-06-22
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/xtgDb0zlW/" class="post-tag">
+                  # Illustrated C# 2012
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>隐式转换指编译器依据上下文自动进行的转换。<br>
+C#中无符号整数类型使用零扩展(zero extension)，有符号整数类型使用符号扩展(sign extension)。<br>
+所有类型都可以隐式转换为object类型。<br>
+所有值类型都可以隐式转换为System.ValueType类型。</p>
+<p>数字类型之间的转换：<br>
+<img src="https://fire1000.github.io/post-images/1655873308577.png" alt="" loading="lazy"><br>
+数字类型之间的隐式转换：<br>
+<img src="https://fire1000.github.io/post-images/1655873440475.png" alt="" loading="lazy"></p>
+<p>checked运算符和checked语句可以检查类型转换时是否发生溢出，当溢出时抛出OverflowException异常。C#默认不做溢出检测。<br>
+checked和unchecked运算符用于表达式，checked和unchecked语句用于块。<br>
+checked检测溢出，unchecked不检测溢出：<br>
+<img src="https://fire1000.github.io/post-images/1655873805046.png" alt="" loading="lazy"><br>
+<img src="https://fire1000.github.io/post-images/1655873931343.png" alt="" loading="lazy"><br>
+checked和unchecked语句之间可以嵌套。</p>
+<p>数字类型之间的显式转换：<br>
+<img src="https://fire1000.github.io/post-images/1655876435259.png" alt="" loading="lazy"><br>
+<img src="https://fire1000.github.io/post-images/1655876439453.png" alt="" loading="lazy"><br>
+<img src="https://fire1000.github.io/post-images/1655876443171.png" alt="" loading="lazy"><br>
+<img src="https://fire1000.github.io/post-images/1655876447648.png" alt="" loading="lazy"><br>
+<img src="https://fire1000.github.io/post-images/1655876451648.png" alt="" loading="lazy"><br>
+<img src="https://fire1000.github.io/post-images/1655876454975.png" alt="" loading="lazy"></p>
+<p>引用转换改变对象内存中数据的可见性。<br>
+引用类型之间的隐式转换：<br>
+<img src="https://fire1000.github.io/post-images/1655876800160.png" alt="" loading="lazy"><br>
+<img src="https://fire1000.github.io/post-images/1655876805007.png" alt="" loading="lazy"></p>
+<p>引用类型之间的显式转换：</p>
+<ol>
+<li>存在从object到任何引用类型的显式转换。</li>
+<li>存在从基类到它的派生类的显式转换。<br>
+引用类型之间的显式转换不一定都是有效的，无效的引用转换会抛出InvalidCastException异常，但不会导致编译错误。<br>
+值为null的引用的显式转换总是有效的。</li>
+</ol>
+<p>装箱(boxing)是一种隐式转换。它在堆上创建值类型的副本，然后返回这个副本的引用。<br>
+<img src="https://fire1000.github.io/post-images/1655879186162.png" alt="" loading="lazy"><br>
+拆箱(unboxing)是一种显式转换。它返回装箱在堆上创建的副本的原始类型的值。尝试将一个值拆箱为非原始类型，抛出InvalidCastException异常。<br>
+<img src="https://fire1000.github.io/post-images/1655879463752.png" alt="" loading="lazy"></p>
+<p>用户可以通过implicit和explicit关键字和public static修饰符自定义转换。但存在以下约束：</p>
+<ol>
+<li>只以为类和结定自定义转换</li>
+<li>不能重定义标准隐式或显式转换。</li>
+<li>对于源类型S和目标类型T：
+<ol>
+<li>S和T必须是不同类型。</li>
+<li>S和T不能有继承关系。</li>
+<li>S和T不能是接口或object类型。</li>
+<li>转换运算符必须是S或T的成员。</li>
+</ol>
+</li>
+</ol>
+<p>一次完整的转换最多三个步骤：<br>
+<img src="https://fire1000.github.io/post-images/1655879943707.png" alt="" loading="lazy"></p>
+<ul>
+<li>自定义转换至多出现一次。</li>
+</ul>
+<p>is运算符可以检测一次转换是否会成功，会成功返回true，否则返回false。<br>
+is运算符只能用于标准引用转换、装箱和拆箱，不能用于自定义转换。</p>
+<p>as运算符同样可以检测一次转换是否会成功，成功时返回目标类型的引用，否则返回null。<br>
+因为as运算符的目标类型限定为引用类型，所以只用于标准引用转换和装箱，不能用于到值类型的转换，也不能用于自定义转换。</p>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-15-zhang-jie-kou-bi-ji/">
+              <h3 class="post-title">
+                《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第15章 接口 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://fire1000.github.io</id>
     <title>Fly_Fire1000的博客</title>
-    <updated>2022-06-21T13:51:09.824Z</updated>
+    <updated>2022-06-22T08:19:47.714Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://fire1000.github.io"/>
     <link rel="self" href="https://fire1000.github.io/atom.xml"/>
@@ -10,6 +10,217 @@
     <logo>https://fire1000.github.io/images/avatar.png</logo>
     <icon>https://fire1000.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Fly_Fire1000的博客</rights>
+    <entry>
+        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第17章 泛型 笔记]]></title>
+        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-17-zhang-fan-xing-bi-ji/</id>
+        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-17-zhang-fan-xing-bi-ji/">
+        </link>
+        <updated>2022-06-22T06:55:36.000Z</updated>
+        <content type="html"><![CDATA[<p>泛型(generic)允许我们声明类型参数化(type-parameterized)的代码。<br>
+泛型不是类型，是类型的模板。<br>
+C#提供5种泛型：类、结构、接口、委托、方法。</p>
+<p>泛型声明中的T是占位符，在编译时替换为实际类型，其中T称为类型参数(type parameter)，实际类型称为类型实参(type argument)。</p>
+<p>将泛型类型中的占位符替换为实际类型后，得到的类型称为构造类型(constructed type)。</p>
+<p>类型参数可以受约束(constrain)，符合约束的类型参数称为未绑定的类型参数(unbounded type parameter)。<br>
+泛型中，约束通过where子句给出：</p>
+<pre><code>where TypeParam : constraint, constraint, ....
+</code></pre>
+<p>约束有5种类型：<br>
+<img src="https://fire1000.github.io/post-images/1655882211039.png" alt="" loading="lazy"><br>
+如果同时存在多种约束，必须按以下形式给出：<br>
+<img src="https://fire1000.github.io/post-images/1655882322015.png" alt="" loading="lazy"></p>
+<p>泛型方法可以在泛型或非泛型的类型中声明。<br>
+泛型方法调用时，编译器可以推断实际类型，因此在调用时，可以省略类型参数和尖括号。<br>
+扩展方法支持泛型。</p>
+<p>非泛型类型可以实现泛型接口。<br>
+一个类型可以重复实现相同的泛型接口，但泛型接口的类型实参必须不存在相同类型的可能性。</p>
+<p>泛型可以与非泛型重名。</p>
+<p>可变性(variance)分为三种：协变(convariance)、逆变(contravariance)和不变(invariance)。<br>
+当泛型委托的类型形参使用out修饰，表示这个类型形参只作为返回值类型，则这个泛型委托支持协变，即支持将类型实参为派生类的委托对象赋值给类型实参为基类的委托对象。<br>
+当泛型委托的类型形参使用in修饰，表示这个类型形参只作为形参类型，则这个泛型委托支持逆变，即支持将类型实参为基类的委托对象赋值给类型实参为派生类的委托对象。<br>
+与泛型委托相同，泛型接口也通过out和in修饰符支持协变和逆变。<br>
+不使用out和in修饰的类型参数称为不变，不支持协变和逆变。</p>
+<p>当赋值运算符左操作数为泛型委托，右操作数为函数时，不需要out和in修饰符，只要类型形参满足协变和逆变的条件(协变：只作为返回值类型。逆变：只作为形参类型。)，就支持协变和逆变：<br>
+<img src="https://fire1000.github.io/post-images/1655885505456.png" alt="" loading="lazy"></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第16章 转换 笔记]]></title>
+        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-16-zhang-zhuan-huan-bi-ji/</id>
+        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-16-zhang-zhuan-huan-bi-ji/">
+        </link>
+        <updated>2022-06-22T04:39:39.000Z</updated>
+        <content type="html"><![CDATA[<p>隐式转换指编译器依据上下文自动进行的转换。<br>
+C#中无符号整数类型使用零扩展(zero extension)，有符号整数类型使用符号扩展(sign extension)。<br>
+所有类型都可以隐式转换为object类型。<br>
+所有值类型都可以隐式转换为System.ValueType类型。</p>
+<p>数字类型之间的转换：<br>
+<img src="https://fire1000.github.io/post-images/1655873308577.png" alt="" loading="lazy"><br>
+数字类型之间的隐式转换：<br>
+<img src="https://fire1000.github.io/post-images/1655873440475.png" alt="" loading="lazy"></p>
+<p>checked运算符和checked语句可以检查类型转换时是否发生溢出，当溢出时抛出OverflowException异常。C#默认不做溢出检测。<br>
+checked和unchecked运算符用于表达式，checked和unchecked语句用于块。<br>
+checked检测溢出，unchecked不检测溢出：<br>
+<img src="https://fire1000.github.io/post-images/1655873805046.png" alt="" loading="lazy"><br>
+<img src="https://fire1000.github.io/post-images/1655873931343.png" alt="" loading="lazy"><br>
+checked和unchecked语句之间可以嵌套。</p>
+<p>数字类型之间的显式转换：<br>
+<img src="https://fire1000.github.io/post-images/1655876435259.png" alt="" loading="lazy"><br>
+<img src="https://fire1000.github.io/post-images/1655876439453.png" alt="" loading="lazy"><br>
+<img src="https://fire1000.github.io/post-images/1655876443171.png" alt="" loading="lazy"><br>
+<img src="https://fire1000.github.io/post-images/1655876447648.png" alt="" loading="lazy"><br>
+<img src="https://fire1000.github.io/post-images/1655876451648.png" alt="" loading="lazy"><br>
+<img src="https://fire1000.github.io/post-images/1655876454975.png" alt="" loading="lazy"></p>
+<p>引用转换改变对象内存中数据的可见性。<br>
+引用类型之间的隐式转换：<br>
+<img src="https://fire1000.github.io/post-images/1655876800160.png" alt="" loading="lazy"><br>
+<img src="https://fire1000.github.io/post-images/1655876805007.png" alt="" loading="lazy"></p>
+<p>引用类型之间的显式转换：</p>
+<ol>
+<li>存在从object到任何引用类型的显式转换。</li>
+<li>存在从基类到它的派生类的显式转换。<br>
+引用类型之间的显式转换不一定都是有效的，无效的引用转换会抛出InvalidCastException异常，但不会导致编译错误。<br>
+值为null的引用的显式转换总是有效的。</li>
+</ol>
+<p>装箱(boxing)是一种隐式转换。它在堆上创建值类型的副本，然后返回这个副本的引用。<br>
+<img src="https://fire1000.github.io/post-images/1655879186162.png" alt="" loading="lazy"><br>
+拆箱(unboxing)是一种显式转换。它返回装箱在堆上创建的副本的原始类型的值。尝试将一个值拆箱为非原始类型，抛出InvalidCastException异常。<br>
+<img src="https://fire1000.github.io/post-images/1655879463752.png" alt="" loading="lazy"></p>
+<p>用户可以通过implicit和explicit关键字和public static修饰符自定义转换。但存在以下约束：</p>
+<ol>
+<li>只以为类和结定自定义转换</li>
+<li>不能重定义标准隐式或显式转换。</li>
+<li>对于源类型S和目标类型T：
+<ol>
+<li>S和T必须是不同类型。</li>
+<li>S和T不能有继承关系。</li>
+<li>S和T不能是接口或object类型。</li>
+<li>转换运算符必须是S或T的成员。</li>
+</ol>
+</li>
+</ol>
+<p>一次完整的转换最多三个步骤：<br>
+<img src="https://fire1000.github.io/post-images/1655879943707.png" alt="" loading="lazy"></p>
+<ul>
+<li>自定义转换至多出现一次。</li>
+</ul>
+<p>is运算符可以检测一次转换是否会成功，会成功返回true，否则返回false。<br>
+is运算符只能用于标准引用转换、装箱和拆箱，不能用于自定义转换。</p>
+<p>as运算符同样可以检测一次转换是否会成功，成功时返回目标类型的引用，否则返回null。<br>
+因为as运算符的目标类型限定为引用类型，所以只用于标准引用转换和装箱，不能用于到值类型的转换，也不能用于自定义转换。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第15章 接口 笔记]]></title>
+        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-15-zhang-jie-kou-bi-ji/</id>
+        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-15-zhang-jie-kou-bi-ji/">
+        </link>
+        <updated>2022-06-22T03:38:20.000Z</updated>
+        <content type="html"><![CDATA[<p>BCL声明了名为IComparable的接口：</p>
+<pre><code>public interface IComparable
+{
+    int CompareTo(object obj);
+}
+</code></pre>
+<ul>
+<li>当this小于obj时返回负值，当this等于obj时返回0，当this大于obj时返回正值。</li>
+</ul>
+<p>Array.Sort()依赖IComparable接口进行排序，如果元素类型没有实现IComparable接口，将抛出异常。</p>
+<p>接口不能包含数据成员和静态成员。<br>
+接口可以包含非静态的方法、属性、事件、索引器。<br>
+接口的函数成员声明的函数体必须为分号。<br>
+接口的命名惯例是以大写I起始。<br>
+接口支持分部接口声明。<br>
+接口支持所有访问修饰符，但它的成员不支持访问修饰符，它的成员是隐式public的。</p>
+<p>只有类和结构能实现接口。<br>
+实现接口必须实现它的所有成员。<br>
+当一个类从基类继承并实现了接口，在它的声明中，基类必须写在最左边。</p>
+<pre><code>class Derived: MyBaseClass, IIfc1, IEnumerable, IComparable
+{
+    ...
+}
+</code></pre>
+<p>接口是引用类型。</p>
+<p>使用as运算符，将类对象转换为一个接口对象。</p>
+<ol>
+<li>如果类实现了这个接口，返回接口引用。</li>
+<li>如果类没有实现这个接口，返回null，不抛出异常。</li>
+</ol>
+<p>当一个类实现的两个接口，有完全相同的成员，即签名与返回值类型都相同。那么两个接口可以共享同一个实现：</p>
+<pre><code>interface IIfc1
+{
+    void PrintOut(sring s);
+}
+interface IIfc2
+{
+    void PrintOut(sring s);
+}
+class MyClass : IIfc1, IIfc2
+{
+    public void PrintOunt(sring s) // 两个接口的单一实现
+    {
+        Console.WriteLine(&quot;Calling through: {0}&quot;, s);
+    }
+}
+</code></pre>
+<p>实现接口的类可以从它的父类继承实现代码：</p>
+<pre><code>interface IIfc1
+{
+    void PrintOut(sring s);
+}
+class MyBaseClass
+{
+    public void PrintOunt(sring s)
+    {
+        Console.WriteLine(&quot;Calling through: {0}&quot;, s);
+    }
+}
+class Derived : MyBaseClass, IIfc1
+{
+}
+</code></pre>
+<p>当一个类实现多个接口时，显式接口成员实现支持每个接口的成员都有各自的实现，即使它们的成员完全相同(签名和返回值类型)。</p>
+<pre><code>class MyClass : IIfc1, IIfc2
+{
+    void IIfc1.PrintOut (sring s)
+    { ... }
+    void IIfc2..PrintOut (sring s)
+    { ... }
+}
+</code></pre>
+<p>显式接口成员实现，只能通过接口引用访问。</p>
+<p>接口支持继承接口。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第14章 事件 笔记]]></title>
+        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-14-zhang-shi-jian-bi-ji/</id>
+        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-14-zhang-shi-jian-bi-ji/">
+        </link>
+        <updated>2022-06-22T02:11:32.000Z</updated>
+        <content type="html"><![CDATA[<p>事件是为发布者/订阅者模式(publisher/subscriber pattern)设计的。</p>
+<p>不包含事件访问器的事件与自动实现属性类似，封装了一个委托，外部无法直接访问这个委托。执行事件，就是执行它封装的委托。<br>
+包含事件访问器的事件与属性类似，add访问器对应+=运算符，remove访问器对应-=运算符。两个访问器都包含一个名为value的隐式值参数，对应+=和-=运算符的右操作数，都不能包含return语句。</p>
+<p>事件使用event关键字声明。<br>
+事件只能作为类或结构的成员，不能作为本地变量。<br>
+不包含事件访问器的事件，如果声明时不显式初始化，则隐式初始化为null，即委托的调用列表为空。</p>
+<p>事件不能转换为对应的委托，因此不能出现在赋值运算符的右边。<br>
+事件在所属的类或结构外部，只支持作为+=和-=运算符的左操作数。<br>
+不包含事件访问器的事件，在所属的类或结构内部，还支持作为=运算符的左操作数。</p>
+<p>BCL在System命名空间中声明了EventHandler委托类型，使用这个委托类型声明的事件，称为标准事件。</p>
+<pre><code>public delegate void EventHandler(object send, EventArgs e);
+</code></pre>
+<ul>
+<li>sender用于保存触发事件的引用。</li>
+<li>e用于传递参数，但EventArgs本身并不能传递参数，因此需要自定义EventArgs的派生类用于传递参数。</li>
+</ul>
+<pre><code>public delegate void EventHandler&lt;TEventArgs&gt;(object sender, TEventArgs e);
+</code></pre>
+<ul>
+<li>当需要传递参数时，通常使用EventHandler的泛型版本，TEventArgs通常是EventArgs的派生类。</li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第13章 委托 笔记]]></title>
         <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-13-zhang-wei-tuo-bi-ji/</id>
@@ -273,250 +484,6 @@ using语句有两种形式：<br>
 <li>FieldInfo和MethodInfo在System.Reflection命名空间中定义。</li>
 </ul>
 <figure data-type="image" tabindex="1"><img src="https://fire1000.github.io/post-images/1655722663460.png" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第7章 类和继承 笔记]]></title>
-        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-7-zhang-lei-he-ji-cheng-bi-ji/</id>
-        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-7-zhang-lei-he-ji-cheng-bi-ji/">
-        </link>
-        <updated>2022-06-17T10:37:35.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="object">object</h2>
-<p>object是唯一的非派生类(derived class)。除了object，所有的类都是派生类。<br>
-类声明时，不显式派生自object，那么它隐式派生自object。</p>
-<h2 id="隐藏">隐藏</h2>
-<p>派生类无法删除从基类(base class)继承的成员，但可以隐藏它。</p>
-<ol>
-<li>声明相同名称的成员，可以隐藏字段、常量、属性。</li>
-<li>声明相同签名的成员，可以隐藏方法。签名不包含返回值类型。</li>
-</ol>
-<p>隐藏可以显式使用new关键字，也可以不使用。</p>
-<p>使用基类访问(base access)可以访问被隐藏的成员：base关键字+点+成员名称。<br>
-使用基类的引用访问派生类，也可以访问隐藏的成员。</p>
-<h2 id="覆写">覆写</h2>
-<p>在基类中使用virtual声明一个函数成员，在派生类中使用override声明相同签名、相同返回值类型、相同可访问性的函数成员，则基类的被覆写，无法再被访问。无论使用基类访问还是基类引用访问，访问的都是派生类的函数成员。<br>
-无法覆写静态成员。<br>
-支持覆写的函数成员类型有方法、属性、索引器、事件。<br>
-使用override声明的函数成员支持被覆写，调用时访问最高派生(most-derived)版本。</p>
-<h2 id="实例化顺序">实例化顺序</h2>
-<p>派生类对象实例化时，先初始化派生类的实例成员，再调用基类的实例构造函数，最后调用派生类的实例构造函数。<br>
-因此，在实例构造函数中调用virtual函数成员是极不推荐的，因为当被覆写时，它调用派生类对应的函数成员，而这时派生类的实例构造函数还没有被调用。</p>
-<h2 id="构造函数初始化语句">构造函数初始化语句</h2>
-<p>构造函数初始化语句有两种形式：<br>
-<img src="https://fire1000.github.io/post-images/1655514692603.png" alt="" loading="lazy"><br>
-<img src="https://fire1000.github.io/post-images/1655514699431.png" alt="" loading="lazy"><br>
-base形式允许派生类的实例构造函数，指定在它之前调用的基类实例构造函数。如果一个实例构造函数不带base形式的构造函数初始化语句，那么在它之前调用的基类无参实例构造函数，以下两种形式是等价的：<br>
-<img src="https://fire1000.github.io/post-images/1655515353320.png" alt="" loading="lazy"><br>
-this形式允许在一个实例构造函数调用之前，调用另一个实例构造函数。</p>
-<h2 id="访问修饰符">访问修饰符</h2>
-<p>类的访问修饰符只有两个级别：</p>
-<ol>
-<li>public：允许所有程序集访问。</li>
-<li>internal：只允许所属的程序集访问。</li>
-</ol>
-<ul>
-<li>当类的访问修饰符缺省时，隐式声明为internal。</li>
-</ul>
-<p>成员的访问修饰符有5个级别：public、private、protected、internal、protected internal。<br>
-<img src="https://fire1000.github.io/post-images/1655519237762.png" alt="" loading="lazy"><br>
-当成员访问修饰符缺省时，隐式声明为private。<br>
-成员不能比它所属的类或结构有更高的可访问性，可访问性级别如图：<br>
-<img src="https://fire1000.github.io/post-images/1655519285002.png" alt="" loading="lazy"></p>
-<h2 id="abstract">abstract</h2>
-<p>abstract声明的函数成员是抽象的，抽象成员只能在抽象类中声明。<br>
-抽象成员与虚成员的对比：<br>
-<img src="https://fire1000.github.io/post-images/1655519619825.png" alt="" loading="lazy"></p>
-<p>abstract声明的类是抽象类，抽象类不能实例化，只能作为基类。<br>
-抽象类的派生类可以是抽象类。<br>
-抽象类可以声明非抽象成员。</p>
-<h2 id="密封类">密封类</h2>
-<p>sealed声明的类是密封类，与抽象类相反，密封类不能作为基类。</p>
-<h2 id="静态类">静态类</h2>
-<p>static声明的类是静态类。</p>
-<ol>
-<li>静态类的成员必须是静态的。</li>
-<li>静态类是隐式sealed的，不能被继承。</li>
-</ol>
-<h2 id="扩展方法">扩展方法</h2>
-<p>扩展方法允许在类或结构外声明一个方法，调用时看起来像这个类或结构的成员。<br>
-<img src="https://fire1000.github.io/post-images/1655520389567.png" alt="" loading="lazy"></p>
-<h2 id="命名约定">命名约定</h2>
-<p><img src="https://fire1000.github.io/post-images/1655520543666.png" alt="" loading="lazy"><br>
-微软官方推荐将Camel大小写作为私有和受保护字段的名称。但作者认为前辍下划线更实用，并且微软在代码中也大量使用。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第6章 深入理解类 笔记]]></title>
-        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-6-zhang-shen-ru-li-jie-lei-bi-ji/</id>
-        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-6-zhang-shen-ru-li-jie-lei-bi-ji/">
-        </link>
-        <updated>2022-06-17T02:13:59.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="成员声明">成员声明</h2>
-<p>类成员声明必须按特性(attribute)、修饰符、核心声明的顺序排列。</p>
-<h2 id="静态成员">静态成员</h2>
-<p>static声明的成员是静态的。<br>
-在类和结构外部，必须使用类名和结构名才能访问静态成员。<br>
-静态字段在堆上分配内存，占所属的类和结构的内存，与它们的实例的内存分开。<br>
-静态字段在访问所属类和结构的任意静态字段时初始化。<br>
-静态函数只能访问所属类和结构的静态成员，不能访问实例成员。<br>
-类成员中，只有以下勾选的类型可以声明为静态：<br>
-<img src="https://fire1000.github.io/post-images/1655447741107.png" alt="" loading="lazy"></p>
-<h2 id="常量">常量</h2>
-<p>与C/C++不同，C#没有全局常量。<br>
-C#中常量不分配内存，在编译时替换为它的值，类似于C/C++中的宏#define。<br>
-常量成员，在类和结构外部，必须使用类名和结构名才能访问，与静态成员一样。<br>
-常量成员不能声明为static。</p>
-<h2 id="属性">属性</h2>
-<p>属性是函数成员，不分配内存，有两个访问器set和get。</p>
-<ol>
-<li>set访问器有一个隐式的属性类型的值参数value，返回void。</li>
-<li>get访问器没有参数，返回属性类型。</li>
-<li>set与get访问器至少定义一个，只定义set访问器是只写的，只定义get访问器是只读的。</li>
-</ol>
-<p>一个public属性关联一个private字段，这个字段被称为后备字段。属性与后备字段有两种常见的命名约定：<br>
-<img src="https://fire1000.github.io/post-images/1655448662449.png" alt="" loading="lazy"></p>
-<p>与public字段相比，属性更为推荐，提供更多的功能，更便于修改。</p>
-<p>C#提供自动实现属性(automatically implemented property)：当声明属性时，set与get访问器同时存在，并且方法体为分号时，编译器为属性创建隐藏的后备字段，这个字段只能通过这个属性访问。</p>
-<h2 id="构造函数">构造函数</h2>
-<p>构造函数(constructor)与类名相同，没有返回值类型。<br>
-实例构造函数支持重载。<br>
-当一个类没有显式声明实例构造函数时，编译器为这个类定义默认构造函数。默认构造函数没有参数，方法体为空，被public修饰。<br>
-new关键字调用实例构造函数。<br>
-static声明的构造函数是静态的，一个类只有一个静态构造函数。静态构造函数不能有参数，不能有访问修饰符。<br>
-静态构造函数无法显式调用，当类被实例化时，或访问类的静态成员时，在这些操作被执行之前被调用。</p>
-<h2 id="对象初始化语句">对象初始化语句</h2>
-<p>对象初始化语句有两种形式：<br>
-<img src="https://fire1000.github.io/post-images/1655454987492.png" alt="" loading="lazy"><br>
-对象初始化语句在构造函数之后调用。</p>
-<h2 id="析构函数">析构函数</h2>
-<p>析构函数(destructor)用于在实例被销毁之前清理和释放非托管资源。因此，如果只使用.NET类，则不需要编写析构函数。</p>
-<h2 id="readonly">readonly</h2>
-<p>readonly只能修饰字段，可以是实例字段，也可以是静态字段。<br>
-readonly声明的字段，在初始化后，便不能再修改。可以通过initializer初始化，也可以在构造函数中初始化。初始值可以是运行时确定的值。<br>
-与const不同，readonly分配内存。</p>
-<h2 id="this">this</h2>
-<p>this关键字，在类中使用是对当前实例的引用。只能在以下成员中使用：</p>
-<ol>
-<li>实例构造函数</li>
-<li>实例方法。</li>
-<li>属性和索引器的实例访问器。<br>
-this常用于区分类的成员与本地变量或参数，和作为调用方法的实参。</li>
-</ol>
-<h2 id="索引器">索引器</h2>
-<p>索引器与属性相似，但表示多个数据成员。<br>
-索引器只能实例成员，不能声明为static。<br>
-索引器没有后备字段的概念，因此也不支持自动实现属性。</p>
-<p>索引器与属性的声明差异：<br>
-<img src="https://fire1000.github.io/post-images/1655458393707.png" alt="" loading="lazy"><br>
-索引器的参数，至少存在一个，支持存在多个。</p>
-<p>索引器通过类名和结构名后跟方括号，并在方括号中传递实参访问。<br>
-索引器支持重载。</p>
-<h2 id="访问器的访问修饰符">访问器的访问修饰符</h2>
-<p>访问器支持访问修饰符，但存在限制：</p>
-<ol>
-<li>仅当属性或索引器同时存在set和get访问器时，才能其中之一有访问修饰符。</li>
-<li>访问器的访问修饰符必须比所属成员的的访问级别有更严格的限制性。</li>
-</ol>
-<p>访问修饰符的限制性：<br>
-<img src="https://fire1000.github.io/post-images/1655458929900.png" alt="" loading="lazy"></p>
-<h2 id="分部类">分部类</h2>
-<p>partial class声明的类是分部类，分部类支持将一个类的声明分割成多个部分，这些部分可以不在一个文件内。</p>
-<h2 id="分部方法">分部方法</h2>
-<p>分部方法指将一个方法的声明拆分成两个部分，这些部分可以在分部类的不同部分中声明。</p>
-<ol>
-<li>定义部分：包含签名和返回值类型，方法体为分号。</li>
-<li>实现部分：包含签名和返回值类型，方法体与普通方法相同。</li>
-</ol>
-<p>分部方法存在以下限制：</p>
-<ol>
-<li>定义部分与实现部分的签名和返回值类型必须相同。</li>
-<li>返回值类型必须为void。</li>
-<li>void之前必须为partial。</li>
-<li>不能包含访问修饰符，分部方法是隐式private的。</li>
-<li>不能包含out参数。</li>
-</ol>
-<p>允许只存在定义部分，这样编译器将这个方法的声明和调用全部移除。<br>
-不允许只存在实现部分。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第5章 方法 笔记]]></title>
-        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-5-zhang-fang-fa-bi-ji/</id>
-        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-5-zhang-fang-fa-bi-ji/">
-        </link>
-        <updated>2022-06-16T09:16:17.000Z</updated>
-        <content type="html"><![CDATA[<p>var关键字：</p>
-<ol>
-<li>只能用于本地变量。</li>
-<li>只能用于包含initializer的变量声明，编译器依据initializer推断变量的类型。</li>
-<li>一旦编译器推断出变量的类型，它就是固定不变的。</li>
-</ol>
-<p>与C/C++不同，C#不能在一个名称的作用域内声明相同的名称，即使这个相同的名称在嵌套块内部。</p>
-<p>常量：</p>
-<ol>
-<li>通过const关键字声明。与C/C++不同，const不是修饰符，是核心声明的一部分，必须紧挨类型名，放在类型名之前。</li>
-<li>必须包含initializer。初始值必须在编译期确定，因此它不能是某个对象的引用，可以是null。</li>
-<li>声明后值不能改变。</li>
-</ol>
-<p>值参数：</p>
-<ol>
-<li>默认类型的参数。</li>
-<li>在栈上为形参分配内存。</li>
-<li>将实参的值拷贝给形参。实参可以是表达式。如果实参是变量，则必须已初始化。</li>
-</ol>
-<p>引用参数：</p>
-<ol>
-<li>形参与实参都使用ref修饰。</li>
-<li>实参必须是变量，并且必须已初始化。</li>
-<li>不为形参分配内存，形参是实参的别名。</li>
-</ol>
-<p>输出参数：</p>
-<ol>
-<li>形参与实参都使用out修饰。</li>
-<li>实参必须是变量，不需要初始化。</li>
-<li>不为形参分配内存，形参是实参的别名。</li>
-<li>形参在函数内部被读取之前，必须先赋值。</li>
-<li>形参在函数返回之前，必须赋值。</li>
-</ol>
-<p>参数数组：</p>
-<ol>
-<li>形参使用params修饰。</li>
-<li>形参的类型必须为一维数组。</li>
-<li>一个函数只允许有一个参数数组，并且必须作为最后一个形参。</li>
-<li>形参对应0或1或多个参数数组元素类型的实参，或一个参数数组类型的实参。</li>
-<li>在栈上为参数数组的引用部分分配内存，在堆上为参数数组的元素分配内存。</li>
-</ol>
-<p>值参数、引用参数、输出参数、参数数组简单对比：<br>
-<img src="https://fire1000.github.io/post-images/1655378112817.png" alt="" loading="lazy"></p>
-<p>一个类中可以拥有多个重名的方法，称为方法重载(method overload)。注意与方法覆写(method overload)区分。<br>
-方法重载的签名(signature)必须不同，签名包括名称、参数个数、参数的类型和顺序，参数修饰符，签名不包括返回值类型、参数名称。一个类拥有签名相同，返回值类型不同的方法会报错。</p>
-<p>位置参数：形参与实参位置一一对应。</p>
-<p>命名参数：实参以形参名、冒号、实参值的方式给出。形参与实参位置不需要对应。<br>
-<img src="https://fire1000.github.io/post-images/1655379920541.png" alt="" loading="lazy"><br>
-命名参数可以与位置参数一起使用，但位置参数必须写在命名参数之前。</p>
-<p>可选参数：指函数声明时，设定默认值的形参，这些形参在函数调用时可以省略对应的实参。</p>
-<ol>
-<li>可选参数只能是值参数。</li>
-<li>可选参数的默认值在编译期确定，因此引用类型只能为null。</li>
-<li>可选参数在形参列表中，必须位于必填参数之后，参数数组之前。(必填参数和参数数组可以不存在)</li>
-<li>函数调用时，使用位置参数，则可选参数对应的实参必须从后向前省略，使用命名参数无此限制。</li>
-</ol>
-<p>每个函数调用时，会创建一个栈帧并入栈，函数调用结束时弹栈。<br>
-栈帧包含返回地址(函数返回时，继续执行的地址)，为形参分配的内存，其他函数调用相关的管理数据项。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第4章 类的基本概念 笔记]]></title>
-        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-4-zhang-lei-de-ji-ben-gai-nian-bi-ji/</id>
-        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-4-zhang-lei-de-ji-ben-gai-nian-bi-ji/">
-        </link>
-        <updated>2022-06-16T08:53:34.000Z</updated>
-        <content type="html"><![CDATA[<p>C#类有9种成员类型：<br>
-<img src="https://fire1000.github.io/post-images/1655369733910.png" alt="" loading="lazy"></p>
-<p>与C/C++不同，C#不能在类型外部声明变量和函数。</p>
-<p>new关键字为引用类型的数据部分在堆上分配内存，返回地址。为值类型分配内存，返回拷贝。</p>
-<p>静态成员是与类相关，与实例无关的成员。</p>
-<p>类的成员的访问修饰符缺省时，隐式声明为private。</p>
 ]]></content>
     </entry>
 </feed>
