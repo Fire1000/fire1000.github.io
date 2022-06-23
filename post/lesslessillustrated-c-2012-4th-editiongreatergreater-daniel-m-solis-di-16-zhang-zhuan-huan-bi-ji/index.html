@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第16章 转换 笔记 | Fly_Fire1000的博客</title>
-<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1655885980589">
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1655970559824">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第16章 转换 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
@@ -24,7 +24,7 @@ C#中无符号整数类型使用零扩展(zero extension)，有符号整数类�
       <div class="main-content">
         <div class="site-header">
   <a href="https://fire1000.github.io">
-  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1655885980589" alt="">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1655970559824" alt="">
   </a>
   <h1 class="site-title">
     Fly_Fire1000的博客
@@ -123,10 +123,10 @@ checked和unchecked语句之间可以嵌套。</p>
 <p>引用类型之间的显式转换：</p>
 <ol>
 <li>存在从object到任何引用类型的显式转换。</li>
-<li>存在从基类到它的派生类的显式转换。<br>
-引用类型之间的显式转换不一定都是有效的，无效的引用转换会抛出InvalidCastException异常，但不会导致编译错误。<br>
-值为null的引用的显式转换总是有效的。</li>
+<li>存在从基类到它的派生类的显式转换。</li>
 </ol>
+<p>引用类型之间的显式转换不一定都是有效的，无效的引用转换会抛出InvalidCastException异常，但不会导致编译错误。<br>
+值为null的引用的显式转换总是有效的。</p>
 <p>装箱(boxing)是一种隐式转换。它在堆上创建值类型的副本，然后返回这个副本的引用。<br>
 <img src="https://fire1000.github.io/post-images/1655879186162.png" alt="" loading="lazy"><br>
 拆箱(unboxing)是一种显式转换。它返回装箱在堆上创建的副本的原始类型的值。尝试将一个值拆箱为非原始类型，抛出InvalidCastException异常。<br>

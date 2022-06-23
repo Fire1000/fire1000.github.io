@@ -1,0 +1,334 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第19章 LINQ 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1655970559824">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第19章 LINQ 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="LINQ概述
+LINQ，读作link，语言集成查询(Language Integrated Query)。
+对一种数据源类型实现LINQ查询的代码模块，称为LINQ提供程序(provider)。
+
+匿名类型(anonymous type)的..." />
+    <meta name="keywords" content="Illustrated C# 2012" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1655970559824" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第19章 LINQ 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-06-23
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/xtgDb0zlW/" class="post-tag">
+                  # Illustrated C# 2012
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h2 id="linq概述">LINQ概述</h2>
+<p>LINQ，读作link，语言集成查询(Language Integrated Query)。<br>
+对一种数据源类型实现LINQ查询的代码模块，称为LINQ提供程序(provider)。<br>
+<img src="https://fire1000.github.io/post-images/1655947196032.png" alt="" loading="lazy"></p>
+<p>匿名类型(anonymous type)的语法：<br>
+<img src="https://fire1000.github.io/post-images/1655947627367.png" alt="" loading="lazy"><br>
+匿名类型只能在函数体中使用。<br>
+匿名类型的成员是只读的，无法修改。<br>
+如果将匿名类型对象赋值给一个变量，则这个变量只能使用var声明。</p>
+<p>匿名类型的成员初始化语句有三种形式：赋值形式、成员访问表达式、标识符：<br>
+<img src="https://fire1000.github.io/post-images/1655947864488.png" alt="" loading="lazy"><br>
+在赋值形式中，赋值运算符两边的标识符允许重名。</p>
+<pre><code>var student = new {Age = Age, Name = Other.Name, Major = Major};
+</code></pre>
+<p>如果编译器遇到相同的匿名类型(参数名、推断类型、排列顺序都相同)，会复用这个类型，不会创建新的类型。</p>
+<p>LINQ查询有两种形式的语法：方法语法(method syntax)和查询语法(query synatx)。<br>
+方法语法使用标准的方法调用。方法语法是命令式(imperative)的，指明查询方法调用的顺序。<br>
+查询语法和SQL语句相似。查询语法是声明式(declarative)的，只描述要返回的东西。<br>
+查询语法在编译时，被编译器翻译为方法调用，因此两者性能上没有差异。但方法语法还提供了一些查询语法没有的功能。</p>
+<p>LINQ查询返回的结果称为查询变量，查询变量有两种：可枚举类型(IEnumerable&lt;T&gt;)和标量(scalar)，支持var关键字由编译器推断。<br>
+可枚举类型的查询变量：</p>
+<ol>
+<li>访问查询变量时，才进行查询。每次访问都重新查询</li>
+<li>查询之前，如果数据有更新，查询会使用最新的数据。</li>
+</ol>
+<p>标量的查询变量，立即查询并保存查询结果。</p>
+<h2 id="查询表达式">查询表达式</h2>
+<p>查询表达式的结构：<br>
+<img src="https://fire1000.github.io/post-images/1655952723134.png" alt="" loading="lazy"></p>
+<p>from子句的语法：</p>
+<pre><code>from Type Item in Items
+</code></pre>
+<ul>
+<li>Type是元素类型。Type是可选的，编译器可以自行推断。</li>
+<li>Item是迭代变量</li>
+<li>Items是要查询的集合，必须是可枚举类型。</li>
+</ul>
+<p>与foreach语句不同，from子句不指定集合中的项出现的顺序。</p>
+<p>from子句示例：<br>
+<img src="https://fire1000.github.io/post-images/1655953390719.png" alt="" loading="lazy"><br>
+from子句可以同时存在多个：<br>
+<img src="https://fire1000.github.io/post-images/1655955080067.png" alt="" loading="lazy"></p>
+<p>from子句，可以后跟任意个join子句：<br>
+<img src="https://fire1000.github.io/post-images/1655953646555.png" alt="" loading="lazy"><br>
+join子句的语法：</p>
+<pre><code>join Identifier in Collection2 on Field1 equals Field2
+</code></pre>
+<ul>
+<li>注意：使用equals关键字，而不是==。</li>
+</ul>
+<p>join子句用于联结多个集合，创建一个临时的新集合。</p>
+<p>let子句可以声明一个变量，语法如下：</p>
+<pre><code>let Identifier = Expression
+</code></pre>
+<p>let子句示例：<br>
+<img src="https://fire1000.github.io/post-images/1655956281607.png" alt="" loading="lazy"></p>
+<p>where子句可以筛选集合中的项，语法如下：</p>
+<pre><code>where BooleanExpression
+</code></pre>
+<p>where子句示例：<br>
+<img src="https://fire1000.github.io/post-images/1655956677842.png" alt="" loading="lazy"></p>
+<p>orderby子句用于排序，默认为升序，可以使用ascending和descending关键字显式设置为升序和降序，语法如下：<br>
+<img src="https://fire1000.github.io/post-images/1655956848032.png" alt="" loading="lazy"><br>
+orderby子句示例：<br>
+<img src="https://fire1000.github.io/post-images/1655957268703.png" alt="" loading="lazy"></p>
+<p>select...group子句由select子句和group...by子句组成，其中group...by子句是可选的。select子句用于拣选结果，group...by子句用于分组，语法如下：</p>
+<pre><code>select Expression
+group Expression1 by Expression2
+</code></pre>
+<p>select子句与匿名类型数组示例：<br>
+<img src="https://fire1000.github.io/post-images/1655960346499.png" alt="" loading="lazy"><br>
+group...by子句示例：<br>
+<img src="https://fire1000.github.io/post-images/1655960763173.png" alt="" loading="lazy"><br>
+group...by子依据键(key)分组，返回集合的集合：<br>
+<img src="https://fire1000.github.io/post-images/1655960827140.png" alt="" loading="lazy"></p>
+<p>into子句可以延续查询，为查询的一部分结果赋予一个名字，在查询的另一部分中使用，语法如下：<br>
+<img src="https://fire1000.github.io/post-images/1655960973993.png" alt="" loading="lazy"><br>
+into子句示例：<br>
+<img src="https://fire1000.github.io/post-images/1655961008187.png" alt="" loading="lazy"></p>
+<h2 id="标准查询运算符">标准查询运算符</h2>
+<p>标准查询运算符是系列API，被查询的对象必须实现IEnumerable&lt;T&gt;接口，称为序列。</p>
+<p>标准查询运算符共47个：<br>
+<img src="https://fire1000.github.io/post-images/1655964590361.png" alt="" loading="lazy"></p>
+<p>标准查询运算符在System.Linq.Enumerable类中声明，是IEnumerable&lt;T&gt;泛型类的扩展方法。</p>
+<p>查询表达式与标准查询运算符可以组合使用：<br>
+<img src="https://fire1000.github.io/post-images/1655964962760.png" alt="" loading="lazy"></p>
+<p>标准查询运算符中的一些还支持接受泛型委托作为参数：<br>
+<img src="https://fire1000.github.io/post-images/1655965110323.png" alt="" loading="lazy"></p>
+<p>LINQ还预定了两套泛型委托类型：Func委托和Action委托，各有17个成员，作为标准查询运算符参数的泛型委托类型。<br>
+<img src="https://fire1000.github.io/post-images/1655965372038.png" alt="" loading="lazy"><br>
+<img src="https://fire1000.github.io/post-images/1655965377200.png" alt="" loading="lazy"></p>
+<h2 id="linq-to-xml">LINQ to XML</h2>
+<p>标记标签不是文档的数量，是关于数据的数据，称为元数据。</p>
+<p>元素是XML的基本要素，元素通过标签划分，元素的数据在开始和关闭标签之间。</p>
+<p>XML的标签有两种形式：<br>
+<img src="https://fire1000.github.io/post-images/1655966568214.png" alt="" loading="lazy"></p>
+<p>XML是树状结构，必须有一个根元素。<br>
+与HTML不同，XML的标签区分大小写。<br>
+XML的特性是键/值对，值必须包含在引号内(单引号、双引号均可)。<br>
+与HTML不同，XML中多个空间不会合并为一个空格。</p>
+<p>LINQ to XML提供了一些类，其中最重要的是XElement、XAttribute和XDocument：<br>
+<img src="https://fire1000.github.io/post-images/1655967079991.png" alt="" loading="lazy"><br>
+图中的类除了XAttribute以外，都从XNode类继承。</p>
+<p>创建、保存、加载、打印XML示例：<br>
+<img src="https://fire1000.github.io/post-images/1655967440547.png" alt="" loading="lazy"></p>
+<p>查询XML的方法：<br>
+<img src="https://fire1000.github.io/post-images/1655967639730.png" alt="" loading="lazy"><br>
+查询XML示例：<br>
+<img src="https://fire1000.github.io/post-images/1655969019095.png" alt="" loading="lazy"></p>
+<p>操作XML的方法：<br>
+<img src="https://fire1000.github.io/post-images/1655969092176.png" alt="" loading="lazy"><br>
+操作XML示例：<br>
+<img src="https://fire1000.github.io/post-images/1655969354370.png" alt="" loading="lazy"></p>
+<p>在XElement构造函数中包含XAttribute构造函数可以添加特性。<br>
+XAttribute构造函数有两种形式，一种是接受name和value，另一种是接受XAttribute的引用。<br>
+在XElement节点调用Attribute()方法，传递特性名可以获取特性。<br>
+XAttribute类的Remove()方法可以移除特性。<br>
+在XElement节点，调用SetAttributeValue()方法，将某个特性的值设置为null，同样可以移除这个特性。SetAttributeValue()方法还可以改变一个特性的值。</p>
+<p>XComment节点是注释。<br>
+XDeclaration节点是XML的声明，包含XML版本号、字符编码和是否依赖外部引用。<br>
+XProcessingInstruction用于提供XML如何被使用和翻译的额外数据，如关联一个样式表。<br>
+XComment、XDeclaration、XProcessingInstruction使用示例：<br>
+<img src="https://fire1000.github.io/post-images/1655970171641.png" alt="" loading="lazy"></p>
+<p>使用LINQ to XML的LINQ查询XML，与LINQ to Objects的LINQ查询object没有什么区别，示例如下：<br>
+<img src="https://fire1000.github.io/post-images/1655970482026.png" alt="" loading="lazy"><br>
+<img src="https://fire1000.github.io/post-images/1655970487172.png" alt="" loading="lazy"></p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#linq%E6%A6%82%E8%BF%B0">LINQ概述</a></li>
+<li><a href="#%E6%9F%A5%E8%AF%A2%E8%A1%A8%E8%BE%BE%E5%BC%8F">查询表达式</a></li>
+<li><a href="#%E6%A0%87%E5%87%86%E6%9F%A5%E8%AF%A2%E8%BF%90%E7%AE%97%E7%AC%A6">标准查询运算符</a></li>
+<li><a href="#linq-to-xml">LINQ to XML</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-18-zhang-mei-ju-qi-yu-die-dai-qi-bi-ji/">
+              <h3 class="post-title">
+                《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第18章 枚举器与迭代器 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

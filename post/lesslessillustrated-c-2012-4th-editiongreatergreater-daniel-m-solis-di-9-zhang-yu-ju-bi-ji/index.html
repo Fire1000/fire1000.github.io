@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第9章 语句 笔记 | Fly_Fire1000的博客</title>
-<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1655885980589">
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1655970559824">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第9章 语句 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
@@ -23,7 +23,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://fire1000.github.io">
-  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1655885980589" alt="">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1655970559824" alt="">
   </a>
   <h1 class="site-title">
     Fly_Fire1000的博客
@@ -112,12 +112,14 @@ goto default;
 </code></pre>
 <p>using语句是语法糖，用于确保在资源使用完毕之后，调用Dispose()方法。<br>
 资源指实际了System.IDisposable接口的类型。<br>
-System.IDisposable接口只有一个方法，就是Dispose()。<br>
-using语句有两种形式：<br>
+System.IDisposable接口只有一个方法，就是Dispose()。</p>
+<p>using语句有两种形式：<br>
 <img src="https://fire1000.github.io/post-images/1655795356426.png" alt="" loading="lazy"></p>
 <ul>
-<li>using语句可以用于多个同类型的资源，以逗号分隔。<br>
-<img src="https://fire1000.github.io/post-images/1655795401127.png" alt="" loading="lazy"></li>
+<li>using语句可以用于多个同类型的资源，以逗号分隔。</li>
+</ul>
+<figure data-type="image" tabindex="1"><img src="https://fire1000.github.io/post-images/1655795401127.png" alt="" loading="lazy"></figure>
+<ul>
 <li>第二种形式资源使用之前可能已经被释放，不推荐。</li>
 </ul>
 
