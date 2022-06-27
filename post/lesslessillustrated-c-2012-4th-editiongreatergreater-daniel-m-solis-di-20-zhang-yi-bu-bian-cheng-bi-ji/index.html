@@ -1,0 +1,356 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第20章 异步编程 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1656340932800">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第20章 异步编程 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="线程
+启动程序时，系统会在内存中创建一个进程，进程是运行程序的资源的集合，包含虚地址空间、文件句柄等。
+在进程内部，系统会创建一个线程，从Main()方法开始执行。
+默认情况下，一个进程只包含一个线程。
+一个线程可以派生出其他线程，因此一个..." />
+    <meta name="keywords" content="Illustrated C# 2012" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1656340932800" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第20章 异步编程 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-06-23
+              </span>
+              <span>
+                10 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/xtgDb0zlW/" class="post-tag">
+                  # Illustrated C# 2012
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h2 id="线程">线程</h2>
+<p>启动程序时，系统会在内存中创建一个进程，进程是运行程序的资源的集合，包含虚地址空间、文件句柄等。<br>
+在进程内部，系统会创建一个线程，从Main()方法开始执行。</p>
+<p>默认情况下，一个进程只包含一个线程。<br>
+一个线程可以派生出其他线程，因此一个进程可以包含多个线程，这些线程共用这个进程的资源。<br>
+系统为处理器执行规划的单位是线程，而不是进程。</p>
+<p>System.Diagnostics命名空间中的Stopwatch类，可以用来测量一段代码执行的时间。</p>
+<pre><code>Stopwatch sw = new Stopwatch();
+sw.Start();
+// todo...
+Console.WriteLine(sw.Elapsed.TotalMilliseconds);
+</code></pre>
+<h2 id="asyncawait">async/await</h2>
+<p>C# 5.0引入构建异步方法的新特性：async/await，示例：<br>
+<img src="https://fire1000.github.io/post-images/1655983871884.png" alt="" loading="lazy"><br>
+上面例子的执行流程：</p>
+<ol>
+<li>正常执行，直到在async方法中，遇到await表达式：wb.DownloadStringTaskAsync()。</li>
+<li>因为wb.DownloadStringTaskAsync()会创建一个新的线程，所以async方法中后续代码都在这个新创建的线程中执行。(为了便于区分，将之前的执行线程称为主线程，新创建的线程称为子线程。下同)当子线程创建完毕，返回一个占位符给主线程，这里是Task&lt;int&gt;类型的对象t1和t2。
+<ul>
+<li>如果await表达式不会创建一个新的线程，那么会继续正常执行，就像await关键字不存在一样。</li>
+</ul>
+</li>
+<li>主线程与两个子线程同时执行。</li>
+<li>主线程遇到t1.Result。判断返回t1的async方法，在它对应的子线程中是否执行完毕。如果执行完毕，则t1.Result获取async方法的返回值。如果未执行完毕，则主线程挂起，直到t1对应async方法执行完毕，再从t1.Result获取async方法的返回值。
+<ul>
+<li>async方法执行完毕时，它对应的子线程自行销毁。</li>
+</ul>
+</li>
+<li>t2.Result的流程与t1.Result相同。</li>
+</ol>
+<p>async方法支持三种返回值类型：Task&lt;T&gt;、Task、void。</p>
+<ol>
+<li>返回Task&lt;T&gt;的async方法，需要return一个T类型的值。</li>
+<li>返回Task、void的async方法，不需要return任何值，随使return了某个值也会被忽略。</li>
+</ol>
+<p>Thread.Sleep()方法可以挂起当前的线程，参数以毫秒为单位。</p>
+<p>await表达式中，await修饰的表达式必须是awaitable类型的对象。<br>
+awaitable类型包含GetAwaiter()方法，返回一个awaiter类型对象。<br>
+awaiter类型对象包含以下成员：</p>
+<pre><code>bool IsCompleted {get;};
+void OnCompleted(Action);
+</code></pre>
+<p>awaiter类型对象还包含<code>void GetResult();</code>或<code>T GetResult();</code>(T为任意类型)。</p>
+<p>Task类(包含泛型版本，下同)是awaitable类型，因此不需要手动创建awaitable类型。<br>
+Task.Run()方法返回一个Task类对象。它创建一个子线程，执行作为参数的委托，它的重载如下：<br>
+<img src="https://fire1000.github.io/post-images/1656231584367.png" alt="" loading="lazy"></p>
+<p>System.Threading.Tasks命名空间中，CancellationToken和CancellationTokenSource类用于取消一个正在执行的async方法，用法如下：</p>
+<ol>
+<li>首先实例化一个CancellationTokenSource对象，通过它的Token属性获得一个CancellationToken对象。</li>
+<li>将这个CancellationToken对象传递给async方法，在方法内部不断手动检测它的IsCancellationRequested属性，如果为false则继续执行，如果为true则取消方法，即return。</li>
+<li>调用CancellationTokenSource对象的Cancel()方法，会将从它获取的CancellationToken对象的IsCancellationRequested属性置为true，从而达到取消async方法的目的。</li>
+</ol>
+<ul>
+<li>注意：IsCancellationRequested属性一旦被置为true，就不能再修改，因此CancellationToken对象是一次性的。</li>
+</ul>
+<p>在async方法中，当使用try..catch语句捕获到await表达式中的异常时，这个async方法返回的Task类对象的Status属性为RanToCompletion，表示执行完毕，IsFaulted属性为False，表示没有未处理的异常。</p>
+<p>阻塞主线程，等待async方法执行完毕：</p>
+<ol>
+<li>async方法返回的Task类对象的Wait()方法可以阻塞主线程，直到对应的async方法执行完毕。效果类似于访问它的Result属性，只是不返回一个值。</li>
+<li>Task类还提供了两个静态方法WaitAll()和WaitAny()，参数是Task类数组，WaitAll()用于阻塞主线程，直到所有数组元素对应的async方法执行完毕，WaitAny()则用于阻塞主线程，直到任意一个数组元素对应的async方法执行完毕。</li>
+</ol>
+<p>WaitAll()和WaitAny()方法还提供以下重载，用于接收取消信号和设置超时的处理：<br>
+<img src="https://fire1000.github.io/post-images/1656295904070.png" alt="" loading="lazy"></p>
+<p>创建一个子线程，直到目标async方法执行完毕，才开始执行：Task类为此提供了两个静态方法WhenAll()和WhenAny()，参数是Task类数组，WhenAll()用于所有数组元素对应的async方法都执行完毕才开始执行，WaitAny()则用于任意一个数组元素对应的async方法执行完毕就开始执行。</p>
+<ul>
+<li>WhenAll()和WhenAny()方法必须使用await修饰。</li>
+</ul>
+<p>Task.Delay()方法，用于阻塞调用它的async方法所处的线程，参数以毫秒为单位，提供以下重载：</p>
+<ul>
+<li>Task.Delay()方法必须使用await修饰。<br>
+<img src="https://fire1000.github.io/post-images/1656296534286.png" alt="" loading="lazy"></li>
+</ul>
+<p>WPF程序从消息泵获取用户输入。因此，如果处理用户输入的时间过长，程序会卡住，用户在程序卡住时的全部操作，会在程序恢复时，一瞬间完成。</p>
+<p>Task.Yield()方法，创建一个子线程，将async方法的后续代码(直到下一个会创建线程的await表达式之前)都放到这个线程中执行。</p>
+<ul>
+<li>Task.Yield()方法必须使用await修饰。</li>
+</ul>
+<p>async方法支持Lambda表达式，需要在表达式前添加async关键字。</p>
+<h2 id="backgroundworker类">BackgroundWorker类</h2>
+<p>BackgroundWorker类的对象用于为一段目标代码创建一个后台线程，当目标代码执行完毕，或提前退出时，销毁这个线程：<br>
+<img src="https://fire1000.github.io/post-images/1656316572502.png" alt="" loading="lazy"></p>
+<p>BackgroundWorker类的用法：</p>
+<ol>
+<li>创建一个BackgroundWorker类的对象。</li>
+<li>为它的WorkerReportsProgress和WorkSupportsCancellation属性赋值。
+<ol>
+<li>WorkerReportsProgress表示用户是否可以调用它的ReportProgress()方法报告目标代码执行进度。</li>
+<li>WorkSupportsCancellation表示用户是否可以调用它的CancelAsync()方法，使目标代码提前退出。</li>
+</ol>
+</li>
+<li>为它的三个事件DoWork、ProgressChanged、RunWorkerCompleted关联方法。
+<ol>
+<li>当用户调用它的RunWorkerAsync()方法时，这个方法会创建一个线程，并触发DoWork事件。通常不会在它的IsBusy属性为true时调用RunWorkerAsync()方法，因为这表示已经存在创建的线程。DoWork事件关联的方法就是目标代码。</li>
+<li>在目标代码中，通常会调用BackgroundWorker类对象的ReportProgress()方法报告进度。ReportProgress()方法会触发它的ProgressChanged事件。</li>
+<li>在目标代码中，还应该不断检查CancellationPending属性，当这个属性为true时及时return。</li>
+<li>当目标代码return后，RunWorkerCompleted事件会触发，在这个事件关联的方法中，通常也会检查CancellationPending属性，以确定目标代码是执行完毕，还是提前退出。在这个事件关联的方法执行完毕后，线程会自行销毁。</li>
+</ol>
+</li>
+<li>调用它的RunWorkerAsync()方法，开始执行目标代码。</li>
+<li>在目标代码执行过程中，可以随时调用BackgroundWorker类对象的CancelAsync()方法，这个方法会使得它的CancellationPending属性为true，从而使得目标代码提前退出。</li>
+</ol>
+<h2 id="并行库task-parellel-library">并行库(Task Parellel Library)</h2>
+<p>在System.Threading.Tasks命名空间中提供了Parallel.For和Parallel.ForEach两个并行循环。</p>
+<p>Parallel.For有12个重载，最简单的用法如下：</p>
+<pre><code>Parallel.For(0, 15, i =&gt; Console.WriteLine(&quot;The square of {0} is {1}&quot;, i, i * i));
+</code></pre>
+<ul>
+<li>第一个参数是起始索引，第二参数比最后一个索引大1，第三个参数是Action委托。</li>
+<li>注意：因为是并行执行的，所以不保证迭代顺序。</li>
+</ul>
+<p>Parallel.ForEach也有相当多的重载，最简单的用法如下：</p>
+<pre><code>string[] squares = new string[] {&quot;We&quot;, &quot;hold&quot;, &quot;these&quot;, &quot;truths&quot;, &quot;to&quot;, &quot;be&quot;, &quot;self-evident&quot;, &quot;that&quot;, &quot;all&quot;, &quot;men&quot;, &quot;are&quot;, &quot;created&quot;, &quot;equal&quot;};
+Parallel.ForEach(squares, i =&gt; Console.WriteLine(string.Format(&quot;{0} has {1} letters&quot;, i, i.Length)));
+</code></pre>
+<ul>
+<li>与Parallel.For相同，Parallel.ForEach也不保证迭代顺序。</li>
+</ul>
+<h2 id="beigninvoke和endinvoke">BeignInvoke和EndInvoke</h2>
+<p>委托对象的BeignInvoke()方法可以创建一个线程，在这个线程中调用委托的调用列表中的函数。<br>
+BeignInvoke()返回一个AsyncResult对象的IAsyncResult接口引用，IAsyncResult接口的IsCompleted属性可以检查委托是否执行完毕。<br>
+BeignInvoke()的前几个参数对应调用委托的形参，最后两个参数依次为callback和state。callback为AsyncCallBack委托类型，接收一个IAsyncResult类型参数返回void。callback在调用委托执行完毕时调用。state参数是object类型，会赋值给callback接收到IAsyncResult类型参数的AsyncState属性，用于传递信息。<br>
+<img src="https://fire1000.github.io/post-images/1656338839347.png" alt="" loading="lazy"></p>
+<p>委托对象的EndInvoke()方法与BeignInvoke()对应，接收一个BeignInvoke()返回IAsyncResult类型参数，返回BeignInvoke()调用委托的返回值，并清理线程。如果调用EndInvoke()方法时，调用未执行完毕，则挂起EndInvoke()方法所处的线程，直到调用委托执行完毕。<br>
+EndInvoke()方法还可以返回委托形参列表中的ref和out参数，只要在EndInvoke()的实参列表中，按相同的顺序排列，并使用对应的ref和out，排列在IAsyncResult类型参数之前。</p>
+<p>每一个BeignInvoke()方法调用都必须对应一个EndInvoke()方法调用。</p>
+<h2 id="异步编程模式">异步编程模式</h2>
+<p>异步编程通常有三种模式：<br>
+<img src="https://fire1000.github.io/post-images/1656339885607.png" alt="" loading="lazy"></p>
+<p>等待一直到完成(wait-until-done)，与async方法相似，原始线程发起异步方法后，进行一些其他处理。然后检查异步方法是否执行完毕，如果未执行完毕，则阻塞原始线程，直到它执行完毕。</p>
+<p>轮询(polling)，原始线程发起异步方法后，定期检查异步方法是否执行完毕，如果未执行完毕，就去处理其他事情，直到它执行完毕才继续。</p>
+<p>回调(callback)，原始线程发起异步方法后，就不管异步方法了。直到异步方法执行完毕，在EndInvoke清理线程之前，调用回调方法。</p>
+<h2 id="计时器">计时器</h2>
+<p>System.Threading命名空间中的Timer类，它由系统的线程池定期开启线程执行给定的方法。调用的方法必须是TimerCallback委托类型，对应的方法形式为<code>void TimerCallback( object state)</code>。<br>
+Timer类最常用的构造函数为：</p>
+<pre><code>Timer(TimerCallback callback, object state, uint dueTime, uint period)
+</code></pre>
+<ul>
+<li>callback为定期调用的方法。</li>
+<li>state是传递给callback的参数。</li>
+<li>dueTime为第一次调用时间，设置为0会立刻调用，设置为Timeout.Infinite，则计时器不会工作，即callback一次也不会被调用。</li>
+<li>period为两次调用之间的时间间隔，如果设置Timeout.Infinite，则callback只调用一次。</li>
+</ul>
+<p>.NET BCL还提供了其他几个计时器：<br>
+<img src="https://fire1000.github.io/post-images/1656340917567.png" alt="" loading="lazy"></p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E7%BA%BF%E7%A8%8B">线程</a></li>
+<li><a href="#asyncawait">async/await</a></li>
+<li><a href="#backgroundworker%E7%B1%BB">BackgroundWorker类</a></li>
+<li><a href="#%E5%B9%B6%E8%A1%8C%E5%BA%93task-parellel-library">并行库(Task Parellel Library)</a></li>
+<li><a href="#beigninvoke%E5%92%8Cendinvoke">BeignInvoke和EndInvoke</a></li>
+<li><a href="#%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%BC%8F">异步编程模式</a></li>
+<li><a href="#%E8%AE%A1%E6%97%B6%E5%99%A8">计时器</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-19-zhang-linq-bi-ji/">
+              <h3 class="post-title">
+                《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第19章 LINQ 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
