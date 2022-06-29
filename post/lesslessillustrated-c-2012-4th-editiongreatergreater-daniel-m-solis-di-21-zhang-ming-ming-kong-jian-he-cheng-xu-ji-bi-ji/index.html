@@ -1,0 +1,246 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第21章 命名空间和程序集 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1656508666878">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第21章 命名空间和程序集 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="C#编译器编译源代码生成程序集，不论是.dll还是.exe都是程序集，.dll又称为类库。
+要使用其他程序集，需要先在编译器中引用。
+mscorlib库包含Console类，它总是被引用，VS不把它放在引用列表中。
+命名空间是解决类库之间类..." />
+    <meta name="keywords" content="Illustrated C# 2012" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1656508666878" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第21章 命名空间和程序集 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-06-28
+              </span>
+              <span>
+                5 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/xtgDb0zlW/" class="post-tag">
+                  # Illustrated C# 2012
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>C#编译器编译源代码生成程序集，不论是.dll还是.exe都是程序集，.dll又称为类库。<br>
+要使用其他程序集，需要先在编译器中引用。<br>
+mscorlib库包含Console类，它总是被引用，VS不把它放在引用列表中。</p>
+<p>命名空间是解决类库之间类名冲突的方案。<br>
+命名空间可以通过点号，划分成多个层次。<br>
+不同源文件，甚至不同程序集中都可以声明相同的命名空间，只要命名空间的成员不重名。<br>
+命名空间支持嵌套：<br>
+<img src="https://fire1000.github.io/post-images/1656369840372.png" alt="" loading="lazy"><br>
+注意：即使嵌套，命名空间之间还是独立，仅using父命名空间，并不能直接访问子命名空间的成员。</p>
+<p>using命名空间指令必须放在任何声明之前。<br>
+using别名指令支持给一个命名空间或一个类起一个别名。</p>
+<p>大部分程序集由一个单独的文件构成，结构如下：<br>
+<img src="https://fire1000.github.io/post-images/1656370190744.png" alt="" loading="lazy"><br>
+多文件程序集包含一个主模块(primary module)和多个次要模块(secondary modules)，次要模块后辍名为.netmodule，结构如下：<br>
+<img src="https://fire1000.github.io/post-images/1656371739947.png" alt="" loading="lazy"></p>
+<p>程序集的标识符(identity)由4部分组成：</p>
+<ol>
+<li>简单名：不包含扩展名的文件名，也称为程序集名或友好名称(friendly name)，如MyProgram。</li>
+<li>版本号：由4个整数组成，格式为MayjorVersion.MinorVersion.Build.Revsion，如2.0.345.9。</li>
+<li>文化信息：2-5个字符的字符串，代表一种语言和地域，如en-US。</li>
+<li>公钥：128字节字符串，是生产程序集的公司唯一的。</li>
+</ol>
+<p>完全限定名称：由简单名、版本号、文化信息和16字节公钥凭据组成。</p>
+<p>强命名(strongly named)程序集有数学签名，数学签名是根据组成程序集的字节序列、简单名、版本号、文化信息、公钥/私钥对散列处理生成的，因此强命名程序集不会被更改。<br>
+弱命名的(weakly named)程序集没有数学签名，因此它是不安全的。<br>
+在VS中在工程属性中选择签名页，选择Sign the Assembly复选框并输入密钥文件的位置或创建一个新的，编译代码时，编译器生成一个强命名的程序集。</p>
+<ul>
+<li>命令行工具Strong Name也可以创建强命名程序集，Strong Name是随VS自动安装的。</li>
+</ul>
+<p>程序集的私有部署：指将程序集复制到一个位置，只要它依赖的文件都在同一目录下，它就能正常工作。这样部署的程序集称为私有程序集，部署方法也称为复制文件(XCopy)部署。<br>
+私有程序集可以是强命名也可是弱命名，不需要在注册表中注册，只需要删除它，就卸载了这个程序集。<br>
+私有程序集所在的目录，称为应用程序目录。</p>
+<p>共享程序集：放到全局程序集缓存(GAC)中的程序集，称为共享程序集，其他程序集也能使用。<br>
+只有强命名的程序集可以被添加到GAC中。GAC早期版本只支持.dll，现在也支持.exe。<br>
+GAC在Windows中，.NET 4.0之前位于\Windows\Assembly中，.NET 4.0开始位于\Windows\Microsoft.NET\assembly中。</p>
+<p>命令行工具gacutil.exe支持将程序集添加到GAC，或从GAC中删除程序集。它的参数：</p>
+<ol>
+<li>/i表示添加程序集。</li>
+<li>/u表示删除程序集。</li>
+<li>/l表示列出GAC中的程序集。</li>
+</ol>
+<p>因为程序集的标识符由4部分组成，所以GAC中的程序集可以有相同的文件名，这被称为并肩执行(side-by-side Execution)。</p>
+<p>如果你不想要重新编译程序，又希望程序使用新版本的程序集，那么你可以创建一个配置文件，它可以告诉CLR使用新版本而不是旧版本。配置文件的名称由可执行文件全名(含扩展名)加上扩展名.config组成。配置文件的内容是XML，如何编写超出了本书的范围。<br>
+<img src="https://fire1000.github.io/post-images/1656386988159.png" alt="" loading="lazy"></p>
+<p>延迟签名(delayed signing)：因为公司不希望它的公钥/私钥，被不可靠的人拿到，伪装成公司的程序发布。所以强命名通常在开发末尾进行。但是弱命名的程序集又无法被添加到GAC，对开发人员造成影响，延迟签名又称为部分签名(partial signing)用于解决这个问题，方法如下：<br>
+<img src="https://fire1000.github.io/post-images/1656389861886.png" alt="" loading="lazy"><br>
+将延迟签名的程序员添加到GAC，还需要取消这个程序员在这台机器上的签名确认，类似以下代码即可：</p>
+<pre><code>sn -vr MyAssemly.dll
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-20-zhang-yi-bu-bian-cheng-bi-ji/">
+              <h3 class="post-title">
+                《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第20章 异步编程 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

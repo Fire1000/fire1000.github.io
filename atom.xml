@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://fire1000.github.io</id>
     <title>Fly_Fire1000的博客</title>
-    <updated>2022-06-27T14:42:45.787Z</updated>
+    <updated>2022-06-29T13:18:07.102Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://fire1000.github.io"/>
     <link rel="self" href="https://fire1000.github.io/atom.xml"/>
@@ -10,6 +10,296 @@
     <logo>https://fire1000.github.io/images/avatar.png</logo>
     <icon>https://fire1000.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Fly_Fire1000的博客</rights>
+    <entry>
+        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第25章 其他主题 笔记]]></title>
+        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-25-zhang-qi-ta-zhu-ti-bi-ji/</id>
+        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-25-zhang-qi-ta-zhu-ti-bi-ji/">
+        </link>
+        <updated>2022-06-29T06:06:31.000Z</updated>
+        <content type="html"><![CDATA[<p>C#中字符串是不可被修改的。<br>
+string类型有以下成员：<br>
+<img src="https://fire1000.github.io/post-images/1656482895523.png" alt="" loading="lazy"></p>
+<p>StringBuilder类在System.Text命名空间中定义。<br>
+StringBuilder对象的字符串是可以修改的。<br>
+StringBuilder对象的字符串通过ToString()方法获取。</p>
+<p>预定义的简单类型都有一个Parse()和TryParse()静态方法，它可以把字符串转换为这个类型。<br>
+Parse()方法遇到不能转换为对应类型的字符串会抛出异常。<br>
+TryParse()方法遇到不能转换为对应类型的字符串返回false，它通过out参数输出转换后的数值。</p>
+<p>值类型后跟一个问号可以创建这个值类型对应的可空值类型。<br>
+可空值类型是一个语法糖，本质上System.Nullable&lt;T&gt;类型的结构，因此可空值类型虽然可以赋值为null，但它仍然是值类型。<br>
+可空值类型有两个重要的只读属性HasValue和Value。</p>
+<ol>
+<li>HasValue是布尔类型，当可空值类型对象为null时，返回false，否则返回true。将可空值类型对象与null进行比较也可以判断它是不是null。</li>
+<li>Value是可空值类型对应的值类型，用于读取可空值类型对象的值，当可空值类型对象为null时，会抛出异常。将可空值类型对象强转为对应的值类型，同样可以访问它的值，当为null时，同样会抛出异常。</li>
+<li>由结构后跟问号创建的可空值类型，外部只通过Value属性访问它的成员，无法直接访问它的成员。</li>
+</ol>
+<p>值类型对象可以隐式转换为对应的可空值类型。<br>
+相同的可空值类型之间可以互相赋值。</p>
+<p>??运算符，称为空接合运算符(null coalescing operator)。当左操作数为null时返回右操作数，否则返回左操作数。</p>
+<p>C#支持四种形式的Main()方法，返回值类型可以是void或int，形参存在没有或为string[] args。<br>
+Main()方法必须被static修饰。<br>
+Main()方法可以是public或private，当声明为private时其他程序集无法访问。</p>
+<p>C#支持XML文档注释，支持以下标签：<br>
+<img src="https://fire1000.github.io/post-images/1656498142133.png" alt="" loading="lazy"></p>
+<p>C#的类和结构支持嵌套。<br>
+嵌套类型的声明支持所有5种访问修饰符，嵌套类型的成员的声明的访问修饰符只支持public、internal、private。<br>
+嵌套类型的成员与包含这个嵌套类型的类型的成员之间的可访问性如下：<br>
+<img src="https://fire1000.github.io/post-images/1656507178152.png" alt="" loading="lazy"><br>
+嵌套类型中的this指嵌套类型的对象。</p>
+<p>析构函数：</p>
+<ol>
+<li>一个类只能有一个析构函数。</li>
+<li>析构函数不能有参数。</li>
+<li>析构函数不能有访问修饰符。</li>
+<li>析构函数不能被static修饰。</li>
+<li>析构函数不能被显式调用，由GC调用。</li>
+</ol>
+<p>使用析构函数的原则：</p>
+<ol>
+<li>不需要时不应该实现析构函数，会严重影响性能。</li>
+<li>析构函数应该只释放对象拥有的外部资源。</li>
+<li>析构函数不应该访问其他对象，因它们可能已经被销毁。</li>
+</ol>
+<p>析构函数在C# 3.0之前有时也称为终结器(finalizer)。</p>
+<p>因为析构函数不会在超出作用域时及时调用，如果希望尽快释放非托管资源，则应该实现IDisposable接口，通过调用Dispose()方法释放非托管资源。<br>
+实现IDisposable接口的类，还应该在析构函数中调用Dispose()方法。</p>
+<p>Dispose()方法的编写原则：</p>
+<ol>
+<li>Dispose()方法最后应该调用GC.SuppressFinalize()方法，通知CLR不要再调用析构函数。</li>
+<li>Dispose()方法被多次调用应该是安全的，不会抛出异常。</li>
+</ol>
+<p>标准dispose模式：实现两个Dispose()方法，一个public，一个protected。protected版本接受一 个布尔参数用于区分是被析构函数调用，还是其他函数调用，具体如下：<br>
+<img src="https://fire1000.github.io/post-images/1656508186022.png" alt="" loading="lazy"></p>
+<p>C# 4.0为COM编程专门增加了“省略ref”特性，当调用包含ref参数的方法，却不需要接受ref参数的返回值时，实参可以无需使用ref关键字，可以不是变量。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第24章 反射和特性 笔记]]></title>
+        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-24-zhang-fan-she-he-te-xing-bi-ji/</id>
+        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-24-zhang-fan-she-he-te-xing-bi-ji/">
+        </link>
+        <updated>2022-06-28T09:44:10.000Z</updated>
+        <content type="html"><![CDATA[<p>有关程序及其类型的数据称为元数据，保存在程序集中。<br>
+程序运行时，查看本身或其他程序集元数据的行为称为反射。<br>
+使用反射，必须using System.Reflection命名空间。</p>
+<p>Type类是一个抽象类，被设计用来包含类型信息。<br>
+程序运行时，CLR会为每一个用到的类型，都创建一个从Type派生的类的实例，然后返回这个实例的Type类的引用。<br>
+因此每一个类型都对应一个Type类对象。不论一个类型有多少实例，它们都对应同一个Type类对象。<br>
+从Type类对象可以获取到对应类型的几乎所有信息：<br>
+<img src="https://fire1000.github.io/post-images/1656410112097.png" alt="" loading="lazy"><br>
+object类型对象的GetType()方法和typeof运算符都返回一个Type类对象。typeof运算符的参数为类型名。</p>
+<p>特性(attribute)允许向程序集添加元数据。<br>
+.NET预定了很多特性，支持声明自定义特性。<br>
+根据惯例，特性名使用Pascal命名法并且以Attribute后辍结尾。当为目标应用特性时，可以不使用后辍。<br>
+特性可以带参数，也可以不带参数：<br>
+<img src="https://fire1000.github.io/post-images/1656412500628.png" alt="" loading="lazy"></p>
+<p>Obsolete特性标注一个程序结构为过期，在编译时输出一条警告或错误信息。Obsolete特性有两个重载：</p>
+<pre><code>[Obsolete(&quot;Use method SuperPrintOut&quot;)]
+static void PrintOut(string str)
+{ ...
+</code></pre>
+<p>输出警告信息：</p>
+<pre><code>'AttrObs.Program.PrintOut(string)' is obsolete: 'Use method SuperPrintOut'
+</code></pre>
+<pre><code>[Obsolete(&quot;Use method SuperPrintOut&quot;, true)]
+static void PrintOut(string str)
+{ ...
+</code></pre>
+<p>输出错误信息，内容与之前相同。</p>
+<p>Conditional特性只能用于方法，参数是一个字符串表示一个编译符号。当编译符号定义时，与普通方法相同。当编译符号未定义时，编译器在程序集中删除所有调用这个方法的代码，但不会删除这个方法的定义。</p>
+<p>调用者信息特性：CallerFilePath、CallerLineNumber和CallerMemberName分别用于获取文件路径、代码行数、调用者名称。<br>
+调用者信息特性只能用于可选参数，用法如下：<br>
+<img src="https://fire1000.github.io/post-images/1656468136596.png" alt="" loading="lazy"></p>
+<p>DebuggerStepThrough用于告诉编译器调试时，不进入标注的程序结构内部。<br>
+DebuggerStepThrough只能用于类、结构、方法或访问器。</p>
+<p>其他重要的预定义特性：<br>
+<img src="https://fire1000.github.io/post-images/1656468553549.png" alt="" loading="lazy"></p>
+<p>一个结构可以应用多个特性，有两种形式：</p>
+<pre><code>[Serializeble]
+[MyAtrribute(&quot;Simple class&quot;, &quot;Version 3.57&quot;)]
+</code></pre>
+<pre><code>[MyAtrribute(&quot;Simple class&quot;, &quot;Version 3.57&quot;), Serializable]
+</code></pre>
+<p>应用特性时还可以显式标注应用到的目标结构，例如：</p>
+<pre><code>[method: MyAttribute(&quot;Prints out a message.&quot;, &quot;Version 3.6&quot;)]
+[return: MyAttribute(&quot;This value represents ...&quot;, &quot;Version 2.3&quot;)]
+public long Return Setting()
+{ ...
+</code></pre>
+<p>特性的支持以下目标：<br>
+<img src="https://fire1000.github.io/post-images/1656470010541.png" alt="" loading="lazy"></p>
+<ul>
+<li>typevar表示泛型结构的类型参数。</li>
+</ul>
+<p>assembly和module表示程序集和模块，必须写在任何命名空间之外，通常写在AssemblyInfo.cs文件中。</p>
+<p>特性类是派生自System.Atrribute的类。<br>
+特性类按惯例以Attribute结尾。<br>
+特性类建议声明为密封类。<br>
+特性类的public成员只能是字段、属性、构造函数。<br>
+特性类必须至少有一个public的构造函数，应用特性就是指定要使用的构造函数，构造函数的实参必须是编译时能确定的值。<br>
+特性的构造函数不是在应用特性时调用，应用特性只是将特性与目标关联，并指定需要构造特性时，使用哪个构造函数。<br>
+如果特性的构造函数是无参数，以下两种形式等价：</p>
+<pre><code>[MyAttr]
+class SomeClass ...
+
+[MyAtrr()]
+class OtherClass ...
+</code></pre>
+<p>特性的构造函数支持命名参数。</p>
+<p>预定义特性AttributeUsage可以限制特性类使用的目标，用法如下：</p>
+<pre><code>[AtrributeUsage(AttributeTarget.Method)]
+public sealed class MyAtrributeAttribute : System.Attribute
+{ ...
+</code></pre>
+<p>AttributeUsage的public属性：<br>
+<img src="https://fire1000.github.io/post-images/1656474373054.png" alt="" loading="lazy"><br>
+AttributeUsage的构造函数接受一个AttributeTarget枚举类型参数用于设置ValidOn属性，枚举之间可以组合：<br>
+<img src="https://fire1000.github.io/post-images/1656474480069.png" alt="" loading="lazy"><br>
+AttributeUsage的构造函数还接受两个可选的命名参数用于设置Inherited和AllowMutiple属性：</p>
+<pre><code>[AtrributeUsage(AttributeTarget.Class, Inherited = false, AllowMultiple = false)]
+public sealed class MyAtrributeAttribute : System.Attribute
+{ ...
+</code></pre>
+<p>Type对象的IsDefined()方法可以检测某个特性是否应用于某个类型。<br>
+IsDefined()方法接受两个参数，第一个是用于检测的特性类的Type对象，第二个参数是布尔，用于指定是否沿继承树查找这个特性，当为true时表示沿继承树搜索。</p>
+<p>Type对象的GetCustomAttributes()方法，返回应用到指定程序结构的特性的数组，返回object数组，需要强转为特性类访问。GetCustomAttributes()方法接受一个布尔参数，用于指定是否沿继承树搜索，当为true时表示是。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第23章 预处理指令 笔记]]></title>
+        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-23-zhang-yu-chu-li-zhi-ling-bi-ji/</id>
+        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-23-zhang-yu-chu-li-zhi-ling-bi-ji/">
+        </link>
+        <updated>2022-06-28T06:44:53.000Z</updated>
+        <content type="html"><![CDATA[<p>预处理指令(preprocessor directive)指示编译器如何处理源代码。<br>
+C#没有实际的预处理程序，预处理指令由编译器处理。</p>
+<p>C#中预处理指令以#开头，#与关键字之间允许存在空格，预处理指令结尾不需要分号。预处理指令之后允许<code>//</code>注释，不能使用<code>/*...*/</code>注释。</p>
+<p>C#预处理指令：<br>
+<img src="https://fire1000.github.io/post-images/1656399045668.png" alt="" loading="lazy"></p>
+<p>#define指令定义一个编译符号，#undef取消定义一个编译符号。编译符号可以是true、false以外的任何标识符。与C/C++不同，C#的编译符号没有值。<br>
+#define和#undef指令只能在C#代码之前使用，即源代码开头。<br>
+编译符号的作用域仅所处的源文件。编译符号允许重复定义。</p>
+<p>#if、#else、#elif、#endif用于条件编译。<br>
+#if和#elif指令中可以使用true、false和以下条件，支持圆括号：<br>
+<img src="https://fire1000.github.io/post-images/1656399668400.png" alt="" loading="lazy"></p>
+<p>诊断指令：</p>
+<pre><code>#warning Message
+#error Message
+</code></pre>
+<p>Message是字符串，但不需要被引号包围。<br>
+编译器遇到#warning指令输出警告消息，遇到#error指令输出错误消息。</p>
+<p>行号指令#line可以改变编译器警告和错误消息报告的行数，笖变编译源文件的文件名，对交互式调试器隐藏一些行，语法如下：<br>
+<img src="https://fire1000.github.io/post-images/1656400024269.png" alt="" loading="lazy"></p>
+<p>区域指令#region和#end region必须成对出现，允许为一段代码命名，语法如下：</p>
+<pre><code>#region Constructors
+    MyClass()
+    { ... }
+    MyClass(string s)
+    { ... }
+#endregion
+</code></pre>
+<p>区域指令支持嵌套。<br>
+区域指令会被编译器忽略，但可以被源代码工具使用。</p>
+<p>#pragma warning指令支持关闭和重新开启警告消息，语法如下：</p>
+<ol>
+<li><code>#pragma warning disable 618, 414</code>，下一行开始关闭618和414两个警告消息。</li>
+<li><code>#pragma warning restore 618</code>，下一行开始重新开启警告消息618。</li>
+<li><code>#pragma warning disable</code>，下一行开始关闭所有警告消息。</li>
+<li><code>#pragma warning restore</code>，下一行开始重新开启所有警告消息。</li>
+</ol>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第22章 异常 笔记]]></title>
+        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-22-zhang-yi-chang-bi-ji/</id>
+        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-22-zhang-yi-chang-bi-ji/">
+        </link>
+        <updated>2022-06-28T06:02:18.000Z</updated>
+        <content type="html"><![CDATA[<p>try...catch语句的结构：<br>
+<img src="https://fire1000.github.io/post-images/1656396226762.png" alt="" loading="lazy"></p>
+<p>BCL定义了许多异常类，每个类对应一种异常，异常类的对象只包含只读属性：<br>
+<img src="https://fire1000.github.io/post-images/1656396490758.png" alt="" loading="lazy"></p>
+<p>catch子句有三种形式：<br>
+<img src="https://fire1000.github.io/post-images/1656396573651.png" alt="" loading="lazy"></p>
+<p>catch子句可以包含多个，当异常发生时，从上到下搜索第一个匹配的catch子句并执行。<br>
+因此catch子句有两个排序原则：</p>
+<ol>
+<li>派生类应排在基类之前。</li>
+<li>一般catch子句应排在末尾，并且只存在一个。</li>
+</ol>
+<p>无论是否发生异常finally块都会执行。<br>
+<img src="https://fire1000.github.io/post-images/1656396895572.png" alt="" loading="lazy"><br>
+即使try块中包含return语句，finally块也会执行：<br>
+<img src="https://fire1000.github.io/post-images/1656396976384.png" alt="" loading="lazy"></p>
+<p>如果发生异常时，所处try块没有匹配的catch子句捕获异常，会沿调用栈向栈底搜索，尽可能找到一个能捕获异常的try...catch语句：<br>
+<img src="https://fire1000.github.io/post-images/1656397202031.png" alt="" loading="lazy"><br>
+沿调用栈，找到一个的try...catch语句，不执行，当栈不断弹出，直到try...catch语句所处的帧栈时执行：<br>
+<img src="https://fire1000.github.io/post-images/1656397582053.png" alt="" loading="lazy"></p>
+<p>throw语句可以显式抛出一个异常：</p>
+<pre><code>throw ExceptionObject;
+</code></pre>
+<p>在catch子句中，throw语句还可以不带异常对象，将这个catch子句捕获的异常再次抛出，语法如下：</p>
+<pre><code>throw;
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第21章 命名空间和程序集 笔记]]></title>
+        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-21-zhang-ming-ming-kong-jian-he-cheng-xu-ji-bi-ji/</id>
+        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-21-zhang-ming-ming-kong-jian-he-cheng-xu-ji-bi-ji/">
+        </link>
+        <updated>2022-06-27T22:31:39.000Z</updated>
+        <content type="html"><![CDATA[<p>C#编译器编译源代码生成程序集，不论是.dll还是.exe都是程序集，.dll又称为类库。<br>
+要使用其他程序集，需要先在编译器中引用。<br>
+mscorlib库包含Console类，它总是被引用，VS不把它放在引用列表中。</p>
+<p>命名空间是解决类库之间类名冲突的方案。<br>
+命名空间可以通过点号，划分成多个层次。<br>
+不同源文件，甚至不同程序集中都可以声明相同的命名空间，只要命名空间的成员不重名。<br>
+命名空间支持嵌套：<br>
+<img src="https://fire1000.github.io/post-images/1656369840372.png" alt="" loading="lazy"><br>
+注意：即使嵌套，命名空间之间还是独立，仅using父命名空间，并不能直接访问子命名空间的成员。</p>
+<p>using命名空间指令必须放在任何声明之前。<br>
+using别名指令支持给一个命名空间或一个类起一个别名。</p>
+<p>大部分程序集由一个单独的文件构成，结构如下：<br>
+<img src="https://fire1000.github.io/post-images/1656370190744.png" alt="" loading="lazy"><br>
+多文件程序集包含一个主模块(primary module)和多个次要模块(secondary modules)，次要模块后辍名为.netmodule，结构如下：<br>
+<img src="https://fire1000.github.io/post-images/1656371739947.png" alt="" loading="lazy"></p>
+<p>程序集的标识符(identity)由4部分组成：</p>
+<ol>
+<li>简单名：不包含扩展名的文件名，也称为程序集名或友好名称(friendly name)，如MyProgram。</li>
+<li>版本号：由4个整数组成，格式为MayjorVersion.MinorVersion.Build.Revsion，如2.0.345.9。</li>
+<li>文化信息：2-5个字符的字符串，代表一种语言和地域，如en-US。</li>
+<li>公钥：128字节字符串，是生产程序集的公司唯一的。</li>
+</ol>
+<p>完全限定名称：由简单名、版本号、文化信息和16字节公钥凭据组成。</p>
+<p>强命名(strongly named)程序集有数学签名，数学签名是根据组成程序集的字节序列、简单名、版本号、文化信息、公钥/私钥对散列处理生成的，因此强命名程序集不会被更改。<br>
+弱命名的(weakly named)程序集没有数学签名，因此它是不安全的。<br>
+在VS中在工程属性中选择签名页，选择Sign the Assembly复选框并输入密钥文件的位置或创建一个新的，编译代码时，编译器生成一个强命名的程序集。</p>
+<ul>
+<li>命令行工具Strong Name也可以创建强命名程序集，Strong Name是随VS自动安装的。</li>
+</ul>
+<p>程序集的私有部署：指将程序集复制到一个位置，只要它依赖的文件都在同一目录下，它就能正常工作。这样部署的程序集称为私有程序集，部署方法也称为复制文件(XCopy)部署。<br>
+私有程序集可以是强命名也可是弱命名，不需要在注册表中注册，只需要删除它，就卸载了这个程序集。<br>
+私有程序集所在的目录，称为应用程序目录。</p>
+<p>共享程序集：放到全局程序集缓存(GAC)中的程序集，称为共享程序集，其他程序集也能使用。<br>
+只有强命名的程序集可以被添加到GAC中。GAC早期版本只支持.dll，现在也支持.exe。<br>
+GAC在Windows中，.NET 4.0之前位于\Windows\Assembly中，.NET 4.0开始位于\Windows\Microsoft.NET\assembly中。</p>
+<p>命令行工具gacutil.exe支持将程序集添加到GAC，或从GAC中删除程序集。它的参数：</p>
+<ol>
+<li>/i表示添加程序集。</li>
+<li>/u表示删除程序集。</li>
+<li>/l表示列出GAC中的程序集。</li>
+</ol>
+<p>因为程序集的标识符由4部分组成，所以GAC中的程序集可以有相同的文件名，这被称为并肩执行(side-by-side Execution)。</p>
+<p>如果你不想要重新编译程序，又希望程序使用新版本的程序集，那么你可以创建一个配置文件，它可以告诉CLR使用新版本而不是旧版本。配置文件的名称由可执行文件全名(含扩展名)加上扩展名.config组成。配置文件的内容是XML，如何编写超出了本书的范围。<br>
+<img src="https://fire1000.github.io/post-images/1656386988159.png" alt="" loading="lazy"></p>
+<p>延迟签名(delayed signing)：因为公司不希望它的公钥/私钥，被不可靠的人拿到，伪装成公司的程序发布。所以强命名通常在开发末尾进行。但是弱命名的程序集又无法被添加到GAC，对开发人员造成影响，延迟签名又称为部分签名(partial signing)用于解决这个问题，方法如下：<br>
+<img src="https://fire1000.github.io/post-images/1656389861886.png" alt="" loading="lazy"><br>
+将延迟签名的程序员添加到GAC，还需要取消这个程序员在这台机器上的签名确认，类似以下代码即可：</p>
+<pre><code>sn -vr MyAssemly.dll
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第20章 异步编程 笔记]]></title>
         <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-20-zhang-yi-bu-bian-cheng-bi-ji/</id>
@@ -159,8 +449,7 @@ Timer类最常用的构造函数为：</p>
 <li>dueTime为第一次调用时间，设置为0会立刻调用，设置为Timeout.Infinite，则计时器不会工作，即callback一次也不会被调用。</li>
 <li>period为两次调用之间的时间间隔，如果设置Timeout.Infinite，则callback只调用一次。</li>
 </ul>
-<p>.NET BCL还提供了其他几个计时器：<br>
-<img src="https://fire1000.github.io/post-images/1656340917567.png" alt="" loading="lazy"></p>
+<p>.NET BCL还提供了其他的计时器，如System.Windows.Forms.Timer、System.Timer.Timer等。</p>
 ]]></content>
     </entry>
     <entry>
@@ -434,251 +723,6 @@ checked和unchecked语句之间可以嵌套。</p>
 is运算符只能用于标准引用转换、装箱和拆箱，不能用于自定义转换。</p>
 <p>as运算符同样可以检测一次转换是否会成功，成功时返回目标类型的引用，否则返回null。<br>
 因为as运算符的目标类型限定为引用类型，所以只用于标准引用转换和装箱，不能用于到值类型的转换，也不能用于自定义转换。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第15章 接口 笔记]]></title>
-        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-15-zhang-jie-kou-bi-ji/</id>
-        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-15-zhang-jie-kou-bi-ji/">
-        </link>
-        <updated>2022-06-22T03:38:20.000Z</updated>
-        <content type="html"><![CDATA[<p>BCL声明了名为IComparable的接口：</p>
-<pre><code>public interface IComparable
-{
-    int CompareTo(object obj);
-}
-</code></pre>
-<ul>
-<li>当this小于obj时返回负值，当this等于obj时返回0，当this大于obj时返回正值。</li>
-</ul>
-<p>Array.Sort()依赖IComparable接口进行排序，如果元素类型没有实现IComparable接口，将抛出异常。</p>
-<p>接口不能包含数据成员和静态成员。<br>
-接口可以包含非静态的方法、属性、事件、索引器。<br>
-接口的函数成员声明的函数体必须为分号。<br>
-接口的命名惯例是以大写I起始。<br>
-接口支持分部接口声明。<br>
-接口支持所有访问修饰符，但它的成员不支持访问修饰符，它的成员是隐式public的。</p>
-<p>只有类和结构能实现接口。<br>
-实现接口必须实现它的所有成员。<br>
-当一个类从基类继承并实现了接口，在它的声明中，基类必须写在最左边。</p>
-<pre><code>class Derived: MyBaseClass, IIfc1, IEnumerable, IComparable
-{
-    ...
-}
-</code></pre>
-<p>接口是引用类型。</p>
-<p>使用as运算符，将类对象转换为一个接口对象。</p>
-<ol>
-<li>如果类实现了这个接口，返回接口引用。</li>
-<li>如果类没有实现这个接口，返回null，不抛出异常。</li>
-</ol>
-<p>当一个类实现的两个接口，有完全相同的成员，即签名与返回值类型都相同。那么两个接口可以共享同一个实现：</p>
-<pre><code>interface IIfc1
-{
-    void PrintOut(sring s);
-}
-interface IIfc2
-{
-    void PrintOut(sring s);
-}
-class MyClass : IIfc1, IIfc2
-{
-    public void PrintOunt(sring s) // 两个接口的单一实现
-    {
-        Console.WriteLine(&quot;Calling through: {0}&quot;, s);
-    }
-}
-</code></pre>
-<p>实现接口的类可以从它的父类继承实现代码：</p>
-<pre><code>interface IIfc1
-{
-    void PrintOut(sring s);
-}
-class MyBaseClass
-{
-    public void PrintOunt(sring s)
-    {
-        Console.WriteLine(&quot;Calling through: {0}&quot;, s);
-    }
-}
-class Derived : MyBaseClass, IIfc1
-{
-}
-</code></pre>
-<p>当一个类实现多个接口时，显式接口成员实现支持每个接口的成员都有各自的实现，即使它们的成员完全相同(签名和返回值类型)。</p>
-<pre><code>class MyClass : IIfc1, IIfc2
-{
-    void IIfc1.PrintOut (sring s)
-    { ... }
-    void IIfc2..PrintOut (sring s)
-    { ... }
-}
-</code></pre>
-<p>显式接口成员实现，只能通过接口引用访问。</p>
-<p>接口支持继承接口。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第14章 事件 笔记]]></title>
-        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-14-zhang-shi-jian-bi-ji/</id>
-        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-14-zhang-shi-jian-bi-ji/">
-        </link>
-        <updated>2022-06-22T02:11:32.000Z</updated>
-        <content type="html"><![CDATA[<p>事件是为发布者/订阅者模式(publisher/subscriber pattern)设计的。</p>
-<p>不包含事件访问器的事件与自动实现属性类似，封装了一个委托，外部无法直接访问这个委托。执行事件，就是执行它封装的委托。<br>
-包含事件访问器的事件与属性类似，add访问器对应+=运算符，remove访问器对应-=运算符。两个访问器都包含一个名为value的隐式值参数，对应+=和-=运算符的右操作数，都不能包含return语句。</p>
-<p>事件使用event关键字声明。<br>
-事件只能作为类或结构的成员，不能作为本地变量。<br>
-不包含事件访问器的事件，如果声明时不显式初始化，则隐式初始化为null，即委托的调用列表为空。</p>
-<p>事件不能转换为对应的委托，因此不能出现在赋值运算符的右边。<br>
-事件在所属的类或结构外部，只支持作为+=和-=运算符的左操作数。<br>
-不包含事件访问器的事件，在所属的类或结构内部，还支持作为=运算符的左操作数。</p>
-<p>BCL在System命名空间中声明了EventHandler委托类型，使用这个委托类型声明的事件，称为标准事件。</p>
-<pre><code>public delegate void EventHandler(object send, EventArgs e);
-</code></pre>
-<ul>
-<li>sender用于保存触发事件的引用。</li>
-<li>e用于传递参数，但EventArgs本身并不能传递参数，因此需要自定义EventArgs的派生类用于传递参数。</li>
-</ul>
-<pre><code>public delegate void EventHandler&lt;TEventArgs&gt;(object sender, TEventArgs e);
-</code></pre>
-<ul>
-<li>当需要传递参数时，通常使用EventHandler的泛型版本，TEventArgs通常是EventArgs的派生类。</li>
-</ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第13章 委托 笔记]]></title>
-        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-13-zhang-wei-tuo-bi-ji/</id>
-        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-13-zhang-wei-tuo-bi-ji/">
-        </link>
-        <updated>2022-06-21T12:25:00.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="委托">委托</h2>
-<p>需要先声明委托类型，再使用这个委托类型声明委托对象。<br>
-委托类型使用delegate关键字声明。<br>
-委托类型不需在类或结构体内声明。</p>
-<p>委托是持有0或1或多个方法的对象，执行委托时，委托执行它持有的方法。<br>
-委托持有的方法必须与委托类型的函数签名，返回值类型都相同。<br>
-委托持有的方法可以是静态方法。</p>
-<p>委托对象可以使用new关键字初始化，也可以使用快捷语法：</p>
-<pre><code>delVar = new MyDel( myInstObj.MyM1 );
-dVar = new MyDel( SClass.OtherM2 );
-</code></pre>
-<pre><code>delVar = myInstObj.MyM1;
-dVar = SClass.OtherM2;
-</code></pre>
-<p>组合委托(combining delegate)：</p>
-<pre><code>MyDel delA = myInstObj.MyM1;
-MyDel delB = SClass.OtherM2;
-
-MyDel delC = delA + delB;
-</code></pre>
-<p>但委托对象在初始化之后就不再改变，改变的只是它持有的方法列表：<br>
-<img src="https://fire1000.github.io/post-images/1655815823415.png" alt="" loading="lazy"></p>
-<p>委托支持通过+=和-=运算符添加和删除持有的方法。<br>
--=运算符从调用列表末尾开始搜索，删除第一个匹配的方法。如果不存在匹配的方法，没有效果。</p>
-<p>执行调用列表为空的委托会抛出异常。<br>
-委托可以通过与null比较，判断方法列表是否为空。</p>
-<p>当一个方法在调用列表中出现多次，执行委托时会执行多次。</p>
-<p>执行委托时传递的参数，会传递给每一个它持有的方法。</p>
-<p>执行带返回值的委托，返回调用列表中最后一个方法的返回值。<br>
-执行带引用参数的委托，调用时调用列表中下一个方法使用上一个方法调用结束时参数的值。</p>
-<h2 id="匿名方法anonymous-method">匿名方法(anonymous method)</h2>
-<p>声明委托对象作为初始化表达式，为委托对象赋值时在=和+=运算符的右边，可以使用匿名方法。</p>
-<p>匿名方法由delegate关键字、参数列表、方法体组成。<br>
-匿名方法不声明返回值类型，返回值类型对应委托的返回值类型。<br>
-匿名方法的参数列表必须与对应的委托相匹配。</p>
-<ol>
-<li>当委托的参数列表不包含out参数，同时匿名方法不使用任何参数时，参数列表可以只保留圆括号或完全省略。</li>
-<li>当委托的参数列表包含params参数，匿名方法中params关键字必须省略。</li>
-</ol>
-<p>在匿名方法中支持访问外部作用域的变量。</p>
-<ol>
-<li>匿名方法外的这个变量为外部变量(outer variable)</li>
-<li>匿名方法内的这个变量为被方法捕获(capured)。</li>
-</ol>
-<ul>
-<li>被捕获的变量的生命周期被延长。</li>
-</ul>
-<h2 id="lambda表达式">Lambda表达式</h2>
-<p>C# 3.0进入Lambda表达式替代C# 2.0引入的匿名方法。<br>
-Lambda表达式不使用delegate关键字，使用Lambda运算符=&gt;，读作“goes to”。</p>
-<p>Lambda表达式允许在不包含ref或out参数时，省略形参的类型名。当只有一个形参时，并且省略了类型名，可以省略圆括号。当方法体只包含一条return语句时，支持使用return语句中的表达式替代方法体。<br>
-<img src="https://fire1000.github.io/post-images/1655819253293.png" alt="" loading="lazy"></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第12章 数组 笔记]]></title>
-        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-12-zhang-shu-zu-bi-ji/</id>
-        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-12-zhang-shu-zu-bi-ji/">
-        </link>
-        <updated>2022-06-21T10:14:54.000Z</updated>
-        <content type="html"><![CDATA[<p>数组的维度称作秩(rank)。<br>
-C#有两种多维数组：矩形数组(rectangular array)和交错数组(jagged array)。</p>
-<ul>
-<li>矩形数组：<code>int x = mayArray2[4, 6, 1]</code></li>
-<li>交错数组：<code>jagArray1[2][7][4]</code></li>
-</ul>
-<p>数组继承自System.Array。System.Array提供了很多属性和方法：<br>
-<img src="https://fire1000.github.io/post-images/1655811997129.png" alt="" loading="lazy"></p>
-<p>数组声明时，只确定数组的维度。<br>
-维度长度不是数组类型的一部分，维度长度在数组实例化时才确定。<br>
-与C/C++不同，方括号写在类型后，而不是变量名后。</p>
-<p>数组实例化时同样使用new关键字，但不使用圆括号。<br>
-数组实例化，元素被初始为元素类型的默认值。<br>
-数组支持使用初始化列表初始化，由编译器推断维度长度。</p>
-<pre><code>int[] intArr = new int[] {10, 20, 30, 40}; // int[4]
-int[, ] intArray2 = new int[, ] { {10, 1}, {20, 2}, {30, 3} };  // int[3, 2]
-</code></pre>
-<p>如果在声明时初始化数组，C#提供了快捷语法和隐式类型数组(由编译器推断元素类型)：<br>
-<img src="https://fire1000.github.io/post-images/1655810851145.png" alt="" loading="lazy"><br>
-<img src="https://fire1000.github.io/post-images/1655810955554.png" alt="" loading="lazy"></p>
-<p>交错数组初始化时，只能确定顶层维度长度：</p>
-<pre><code>int[][] jagArr = new int[3][];
-</code></pre>
-<p>在CIL中，一维数组特定的性能优化指令，因此使用一维数组的交错数组，有时性能比矩形数组性能更好。</p>
-<p>foreach语句中，迭代变量是只读的，可以使用var关键字声明。<br>
-foreach语句必须嵌套才能遍历交错数组。</p>
-<p>数组的协变：当数组元素为引用类型时，如果某个对象存在从自身类型到数组元素类型的隐式或显式转换，支持将这个元素赋值给数组元素。<br>
-<img src="https://fire1000.github.io/post-images/1655811934220.png" alt="" loading="lazy"></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第11章 枚举 笔记]]></title>
-        <id>https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-11-zhang-mei-ju-bi-ji/</id>
-        <link href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-11-zhang-mei-ju-bi-ji/">
-        </link>
-        <updated>2022-06-21T08:02:18.000Z</updated>
-        <content type="html"><![CDATA[<p>枚举是值类型。<br>
-枚举的成员是命名的整数常量。</p>
-<p>枚举的成员的默认类型为int，可以声明为任意整数类型：</p>
-<pre><code>enum TrafficLight : ulong
-{
-    ...
-</code></pre>
-<p>枚举还常用作标志位。<br>
-枚举的HasFlag方法和&amp;运算符，都可以检测一个枚举是否包含某个标志位。</p>
-<pre><code>bool useFancyNumbers = ops.HasFlag(CardDeckSetttings.FancyNumbers);
-</code></pre>
-<ul>
-<li>其中CardDeckSetttings是枚举类型，ops是CardDeckSetttings的实例。</li>
-<li>HasFlag的实参可以是多个枚举|运算的结果。</li>
-</ul>
-<p>用作标志位的枚举常使用Flags特性修饰。<br>
-Flags特性会重载枚举的ToString()方法，打印枚举对象时，会打印它包含的各个标志位对应的枚举成员名称，而不是输出一个数字。</p>
-<p><img src="https://fire1000.github.io/post-images/1655801975966.png" alt="" loading="lazy"><br>
-以上代码，当为CardDeckSetttings添加Flags特性，输出变为：</p>
-<pre><code>FancyNumbers
-FancyNumbers, Animation
-</code></pre>
-<p>相同类型的枚举成员之间可以使用比较运算符，但不同类型的枚举不行。</p>
-<p>枚举对应.NET的Enum类型，提供以下方法：</p>
-<ol>
-<li>GetName()方法接收一个枚举类型对象和一个整数，返回一个枚举成员名称。</li>
-<li>GetNames()方法接收一个枚举类型对象，返回这个枚举的所有成员名称。</li>
-</ol>
-<p>GetName()和GetNames()方法示例：<br>
-<img src="https://fire1000.github.io/post-images/1655802503144.png" alt="" loading="lazy"></p>
 ]]></content>
     </entry>
 </feed>

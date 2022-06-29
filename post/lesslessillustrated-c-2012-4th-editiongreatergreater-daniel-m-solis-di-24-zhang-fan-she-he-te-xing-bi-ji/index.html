@@ -1,0 +1,282 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第24章 反射和特性 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1656508666878">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第24章 反射和特性 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="有关程序及其类型的数据称为元数据，保存在程序集中。
+程序运行时，查看本身或其他程序集元数据的行为称为反射。
+使用反射，必须using System.Reflection命名空间。
+Type类是一个抽象类，被设计用来包含类型信息。
+程序运行时..." />
+    <meta name="keywords" content="Illustrated C# 2012" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1656508666878" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第24章 反射和特性 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-06-28
+              </span>
+              <span>
+                5 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/xtgDb0zlW/" class="post-tag">
+                  # Illustrated C# 2012
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>有关程序及其类型的数据称为元数据，保存在程序集中。<br>
+程序运行时，查看本身或其他程序集元数据的行为称为反射。<br>
+使用反射，必须using System.Reflection命名空间。</p>
+<p>Type类是一个抽象类，被设计用来包含类型信息。<br>
+程序运行时，CLR会为每一个用到的类型，都创建一个从Type派生的类的实例，然后返回这个实例的Type类的引用。<br>
+因此每一个类型都对应一个Type类对象。不论一个类型有多少实例，它们都对应同一个Type类对象。<br>
+从Type类对象可以获取到对应类型的几乎所有信息：<br>
+<img src="https://fire1000.github.io/post-images/1656410112097.png" alt="" loading="lazy"><br>
+object类型对象的GetType()方法和typeof运算符都返回一个Type类对象。typeof运算符的参数为类型名。</p>
+<p>特性(attribute)允许向程序集添加元数据。<br>
+.NET预定了很多特性，支持声明自定义特性。<br>
+根据惯例，特性名使用Pascal命名法并且以Attribute后辍结尾。当为目标应用特性时，可以不使用后辍。<br>
+特性可以带参数，也可以不带参数：<br>
+<img src="https://fire1000.github.io/post-images/1656412500628.png" alt="" loading="lazy"></p>
+<p>Obsolete特性标注一个程序结构为过期，在编译时输出一条警告或错误信息。Obsolete特性有两个重载：</p>
+<pre><code>[Obsolete(&quot;Use method SuperPrintOut&quot;)]
+static void PrintOut(string str)
+{ ...
+</code></pre>
+<p>输出警告信息：</p>
+<pre><code>'AttrObs.Program.PrintOut(string)' is obsolete: 'Use method SuperPrintOut'
+</code></pre>
+<pre><code>[Obsolete(&quot;Use method SuperPrintOut&quot;, true)]
+static void PrintOut(string str)
+{ ...
+</code></pre>
+<p>输出错误信息，内容与之前相同。</p>
+<p>Conditional特性只能用于方法，参数是一个字符串表示一个编译符号。当编译符号定义时，与普通方法相同。当编译符号未定义时，编译器在程序集中删除所有调用这个方法的代码，但不会删除这个方法的定义。</p>
+<p>调用者信息特性：CallerFilePath、CallerLineNumber和CallerMemberName分别用于获取文件路径、代码行数、调用者名称。<br>
+调用者信息特性只能用于可选参数，用法如下：<br>
+<img src="https://fire1000.github.io/post-images/1656468136596.png" alt="" loading="lazy"></p>
+<p>DebuggerStepThrough用于告诉编译器调试时，不进入标注的程序结构内部。<br>
+DebuggerStepThrough只能用于类、结构、方法或访问器。</p>
+<p>其他重要的预定义特性：<br>
+<img src="https://fire1000.github.io/post-images/1656468553549.png" alt="" loading="lazy"></p>
+<p>一个结构可以应用多个特性，有两种形式：</p>
+<pre><code>[Serializeble]
+[MyAtrribute(&quot;Simple class&quot;, &quot;Version 3.57&quot;)]
+</code></pre>
+<pre><code>[MyAtrribute(&quot;Simple class&quot;, &quot;Version 3.57&quot;), Serializable]
+</code></pre>
+<p>应用特性时还可以显式标注应用到的目标结构，例如：</p>
+<pre><code>[method: MyAttribute(&quot;Prints out a message.&quot;, &quot;Version 3.6&quot;)]
+[return: MyAttribute(&quot;This value represents ...&quot;, &quot;Version 2.3&quot;)]
+public long Return Setting()
+{ ...
+</code></pre>
+<p>特性的支持以下目标：<br>
+<img src="https://fire1000.github.io/post-images/1656470010541.png" alt="" loading="lazy"></p>
+<ul>
+<li>typevar表示泛型结构的类型参数。</li>
+</ul>
+<p>assembly和module表示程序集和模块，必须写在任何命名空间之外，通常写在AssemblyInfo.cs文件中。</p>
+<p>特性类是派生自System.Atrribute的类。<br>
+特性类按惯例以Attribute结尾。<br>
+特性类建议声明为密封类。<br>
+特性类的public成员只能是字段、属性、构造函数。<br>
+特性类必须至少有一个public的构造函数，应用特性就是指定要使用的构造函数，构造函数的实参必须是编译时能确定的值。<br>
+特性的构造函数不是在应用特性时调用，应用特性只是将特性与目标关联，并指定需要构造特性时，使用哪个构造函数。<br>
+如果特性的构造函数是无参数，以下两种形式等价：</p>
+<pre><code>[MyAttr]
+class SomeClass ...
+
+[MyAtrr()]
+class OtherClass ...
+</code></pre>
+<p>特性的构造函数支持命名参数。</p>
+<p>预定义特性AttributeUsage可以限制特性类使用的目标，用法如下：</p>
+<pre><code>[AtrributeUsage(AttributeTarget.Method)]
+public sealed class MyAtrributeAttribute : System.Attribute
+{ ...
+</code></pre>
+<p>AttributeUsage的public属性：<br>
+<img src="https://fire1000.github.io/post-images/1656474373054.png" alt="" loading="lazy"><br>
+AttributeUsage的构造函数接受一个AttributeTarget枚举类型参数用于设置ValidOn属性，枚举之间可以组合：<br>
+<img src="https://fire1000.github.io/post-images/1656474480069.png" alt="" loading="lazy"><br>
+AttributeUsage的构造函数还接受两个可选的命名参数用于设置Inherited和AllowMutiple属性：</p>
+<pre><code>[AtrributeUsage(AttributeTarget.Class, Inherited = false, AllowMultiple = false)]
+public sealed class MyAtrributeAttribute : System.Attribute
+{ ...
+</code></pre>
+<p>Type对象的IsDefined()方法可以检测某个特性是否应用于某个类型。<br>
+IsDefined()方法接受两个参数，第一个是用于检测的特性类的Type对象，第二个参数是布尔，用于指定是否沿继承树查找这个特性，当为true时表示沿继承树搜索。</p>
+<p>Type对象的GetCustomAttributes()方法，返回应用到指定程序结构的特性的数组，返回object数组，需要强转为特性类访问。GetCustomAttributes()方法接受一个布尔参数，用于指定是否沿继承树搜索，当为true时表示是。</p>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-23-zhang-yu-chu-li-zhi-ling-bi-ji/">
+              <h3 class="post-title">
+                《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第23章 预处理指令 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

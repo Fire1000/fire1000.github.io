@@ -1,0 +1,232 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第23章 预处理指令 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1656508666878">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第23章 预处理指令 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="预处理指令(preprocessor directive)指示编译器如何处理源代码。
+C#没有实际的预处理程序，预处理指令由编译器处理。
+C#中预处理指令以#开头，#与关键字之间允许存在空格，预处理指令结尾不需要分号。预处理指令之后允许//..." />
+    <meta name="keywords" content="Illustrated C# 2012" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1656508666878" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第23章 预处理指令 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-06-28
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/xtgDb0zlW/" class="post-tag">
+                  # Illustrated C# 2012
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>预处理指令(preprocessor directive)指示编译器如何处理源代码。<br>
+C#没有实际的预处理程序，预处理指令由编译器处理。</p>
+<p>C#中预处理指令以#开头，#与关键字之间允许存在空格，预处理指令结尾不需要分号。预处理指令之后允许<code>//</code>注释，不能使用<code>/*...*/</code>注释。</p>
+<p>C#预处理指令：<br>
+<img src="https://fire1000.github.io/post-images/1656399045668.png" alt="" loading="lazy"></p>
+<p>#define指令定义一个编译符号，#undef取消定义一个编译符号。编译符号可以是true、false以外的任何标识符。与C/C++不同，C#的编译符号没有值。<br>
+#define和#undef指令只能在C#代码之前使用，即源代码开头。<br>
+编译符号的作用域仅所处的源文件。编译符号允许重复定义。</p>
+<p>#if、#else、#elif、#endif用于条件编译。<br>
+#if和#elif指令中可以使用true、false和以下条件，支持圆括号：<br>
+<img src="https://fire1000.github.io/post-images/1656399668400.png" alt="" loading="lazy"></p>
+<p>诊断指令：</p>
+<pre><code>#warning Message
+#error Message
+</code></pre>
+<p>Message是字符串，但不需要被引号包围。<br>
+编译器遇到#warning指令输出警告消息，遇到#error指令输出错误消息。</p>
+<p>行号指令#line可以改变编译器警告和错误消息报告的行数，笖变编译源文件的文件名，对交互式调试器隐藏一些行，语法如下：<br>
+<img src="https://fire1000.github.io/post-images/1656400024269.png" alt="" loading="lazy"></p>
+<p>区域指令#region和#end region必须成对出现，允许为一段代码命名，语法如下：</p>
+<pre><code>#region Constructors
+    MyClass()
+    { ... }
+    MyClass(string s)
+    { ... }
+#endregion
+</code></pre>
+<p>区域指令支持嵌套。<br>
+区域指令会被编译器忽略，但可以被源代码工具使用。</p>
+<p>#pragma warning指令支持关闭和重新开启警告消息，语法如下：</p>
+<ol>
+<li><code>#pragma warning disable 618, 414</code>，下一行开始关闭618和414两个警告消息。</li>
+<li><code>#pragma warning restore 618</code>，下一行开始重新开启警告消息618。</li>
+<li><code>#pragma warning disable</code>，下一行开始关闭所有警告消息。</li>
+<li><code>#pragma warning restore</code>，下一行开始重新开启所有警告消息。</li>
+</ol>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-22-zhang-yi-chang-bi-ji/">
+              <h3 class="post-title">
+                《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第22章 异常 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

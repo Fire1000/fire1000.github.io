@@ -1,0 +1,254 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第25章 其他主题 笔记 | Fly_Fire1000的博客</title>
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1656508666878">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第25章 其他主题 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="C#中字符串是不可被修改的。
+string类型有以下成员：
+
+StringBuilder类在System.Text命名空间中定义。
+StringBuilder对象的字符串是可以修改的。
+StringBuilder对象的字符串通过ToStri..." />
+    <meta name="keywords" content="Illustrated C# 2012" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://fire1000.github.io">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1656508666878" alt="">
+  </a>
+  <h1 class="site-title">
+    Fly_Fire1000的博客
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第25章 其他主题 笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-06-29
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="https://fire1000.github.io/tag/xtgDb0zlW/" class="post-tag">
+                  # Illustrated C# 2012
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>C#中字符串是不可被修改的。<br>
+string类型有以下成员：<br>
+<img src="https://fire1000.github.io/post-images/1656482895523.png" alt="" loading="lazy"></p>
+<p>StringBuilder类在System.Text命名空间中定义。<br>
+StringBuilder对象的字符串是可以修改的。<br>
+StringBuilder对象的字符串通过ToString()方法获取。</p>
+<p>预定义的简单类型都有一个Parse()和TryParse()静态方法，它可以把字符串转换为这个类型。<br>
+Parse()方法遇到不能转换为对应类型的字符串会抛出异常。<br>
+TryParse()方法遇到不能转换为对应类型的字符串返回false，它通过out参数输出转换后的数值。</p>
+<p>值类型后跟一个问号可以创建这个值类型对应的可空值类型。<br>
+可空值类型是一个语法糖，本质上System.Nullable&lt;T&gt;类型的结构，因此可空值类型虽然可以赋值为null，但它仍然是值类型。<br>
+可空值类型有两个重要的只读属性HasValue和Value。</p>
+<ol>
+<li>HasValue是布尔类型，当可空值类型对象为null时，返回false，否则返回true。将可空值类型对象与null进行比较也可以判断它是不是null。</li>
+<li>Value是可空值类型对应的值类型，用于读取可空值类型对象的值，当可空值类型对象为null时，会抛出异常。将可空值类型对象强转为对应的值类型，同样可以访问它的值，当为null时，同样会抛出异常。</li>
+<li>由结构后跟问号创建的可空值类型，外部只通过Value属性访问它的成员，无法直接访问它的成员。</li>
+</ol>
+<p>值类型对象可以隐式转换为对应的可空值类型。<br>
+相同的可空值类型之间可以互相赋值。</p>
+<p>??运算符，称为空接合运算符(null coalescing operator)。当左操作数为null时返回右操作数，否则返回左操作数。</p>
+<p>C#支持四种形式的Main()方法，返回值类型可以是void或int，形参存在没有或为string[] args。<br>
+Main()方法必须被static修饰。<br>
+Main()方法可以是public或private，当声明为private时其他程序集无法访问。</p>
+<p>C#支持XML文档注释，支持以下标签：<br>
+<img src="https://fire1000.github.io/post-images/1656498142133.png" alt="" loading="lazy"></p>
+<p>C#的类和结构支持嵌套。<br>
+嵌套类型的声明支持所有5种访问修饰符，嵌套类型的成员的声明的访问修饰符只支持public、internal、private。<br>
+嵌套类型的成员与包含这个嵌套类型的类型的成员之间的可访问性如下：<br>
+<img src="https://fire1000.github.io/post-images/1656507178152.png" alt="" loading="lazy"><br>
+嵌套类型中的this指嵌套类型的对象。</p>
+<p>析构函数：</p>
+<ol>
+<li>一个类只能有一个析构函数。</li>
+<li>析构函数不能有参数。</li>
+<li>析构函数不能有访问修饰符。</li>
+<li>析构函数不能被static修饰。</li>
+<li>析构函数不能被显式调用，由GC调用。</li>
+</ol>
+<p>使用析构函数的原则：</p>
+<ol>
+<li>不需要时不应该实现析构函数，会严重影响性能。</li>
+<li>析构函数应该只释放对象拥有的外部资源。</li>
+<li>析构函数不应该访问其他对象，因它们可能已经被销毁。</li>
+</ol>
+<p>析构函数在C# 3.0之前有时也称为终结器(finalizer)。</p>
+<p>因为析构函数不会在超出作用域时及时调用，如果希望尽快释放非托管资源，则应该实现IDisposable接口，通过调用Dispose()方法释放非托管资源。<br>
+实现IDisposable接口的类，还应该在析构函数中调用Dispose()方法。</p>
+<p>Dispose()方法的编写原则：</p>
+<ol>
+<li>Dispose()方法最后应该调用GC.SuppressFinalize()方法，通知CLR不要再调用析构函数。</li>
+<li>Dispose()方法被多次调用应该是安全的，不会抛出异常。</li>
+</ol>
+<p>标准dispose模式：实现两个Dispose()方法，一个public，一个protected。protected版本接受一 个布尔参数用于区分是被析构函数调用，还是其他函数调用，具体如下：<br>
+<img src="https://fire1000.github.io/post-images/1656508186022.png" alt="" loading="lazy"></p>
+<p>C# 4.0为COM编程专门增加了“省略ref”特性，当调用包含ref参数的方法，却不需要接受ref参数的返回值时，实参可以无需使用ref关键字，可以不是变量。</p>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://fire1000.github.io/post/lesslessillustrated-c-2012-4th-editiongreatergreater-daniel-m-solis-di-24-zhang-fan-she-he-te-xing-bi-ji/">
+              <h3 class="post-title">
+                《Illustrated C# 2012, 4th Edition》Daniel M. Solis 第24章 反射和特性 笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '660966b39935a77f9dcd',
+    clientSecret: '7c7b060856a916461e6a5d6e9c2141d9a2d2a045',
+    repo: 'fire1000.github.io',
+    owner: 'Fire1000',
+    admin: ['Fire1000'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://fire1000.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
