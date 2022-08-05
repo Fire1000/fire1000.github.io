@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>《The C Programming Language, 2nd Edition》K&amp;R Chapter 1 - A Tutorial Introduction 笔记 | Fly_Fire1000的博客</title>
-<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1656508666878">
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1659691691030">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="《The C Programming Language, 2nd Edition》K&amp;R Chapter 1 - A Tutorial Introduction 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
@@ -23,7 +23,7 @@ printf(&quot;%6d&quot;, -17);，输出□□□-17，其中□表示空格。(%6
       <div class="main-content">
         <div class="site-header">
   <a href="https://fire1000.github.io">
-  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1656508666878" alt="">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1659691691030" alt="">
   </a>
   <h1 class="site-title">
     Fly_Fire1000的博客
@@ -107,18 +107,23 @@ printf(&quot;%6d&quot;, -17);，输出□□□-17，其中□表示空格。(%6
 <p>文件结束符EOF，在&lt;stdio.h&gt;中定义，int类型，值在char的取值范围之外。</p>
 <p>'A'是字符常量，本质是整数，值取决于编译器认为的源文件字符集。在ASCII中，'A'为65，'\n'为10。在任何字符集中'0'、'1'、'2'、...、'9'都是连续递增的。</p>
 <h2 id="运算符">运算符</h2>
-<p>算术运算符所有操作数都为整型，则执行整型运算(如舍位除法)。其中一个操作数为浮点，则执行浮点运算。</p>
+<p>如果算术运算符所有操作数都为整型，则执行整型运算(如舍位除法)。其中一个操作数为浮点，则执行浮点运算。</p>
 <p><code>nl = nw = nc = 0;</code>的执行顺序为<code>nl = (nw = (nc = 0));</code>。</p>
 <p>||和&amp;&amp;是短路运算符。</p>
 <h2 id="定义与声明">定义与声明</h2>
 <p>定义包含声明，定义会分配内存，而声明不会。</p>
-<p>函数在调用之前必须声明函数原型。<br>
-ANSI C之前，允许隐式声明函数原型，默认返回int。声明函数原型时，不支持包含形参列表，如<code>int power();</code>。ANSI C兼容旧式函数原型声明。<br>
-ANSI C支持声明函数原型时包含形参列表，其中形参名是可选的。如<code>int power(int, int);</code>。<br>
-当函数原型声明中包含形参列表时，编译器会检查实参列表，并进行适当的强转。不包含时，编译器不检查实参列表，整数强转为int，浮点强转为double。<br>
-在函数原型声明中，不包含形参列表与形参列表为void的含义不同，前者表示编译器不检查实参列表，后者表示编译器检查实参列表，如果实参存在，则报错。<br>
-ANSI C之前，函数定义的语法与ANSI C差异较大。ANSI C兼容旧式函数定义。</p>
-<p>在函数外部定义的变量称为外部变量。外部变量定义后，在程序运行期间一直存在，在全局范围可访问。在外部变量定义之前访问，必须使用extern显式声明。在定义之后访问，可以使用extern显式声明，或隐式声明。访问在其他文件中定义的外部变量，也必须使用extern显式声明。</p>
+<p>ANSI C之前，函数原型声明包含返回值类型，不包含形参列表，如<code>int power();</code>。</p>
+<p>函数在调用之前必须存在函数原型声明。<br>
+因此，ANSI C之前，如果一个函数，缺省函数原型声，编译器认为这个函数隐式声明返回值类型为int。</p>
+<p>ANSI C兼容旧式函数原型声明。</p>
+<p>ANSI C支持函数原型声明包含形参列表，其中形参名是可选的。如<code>int power(int, int);</code>。</p>
+<p>当函数原型声明中包含形参列表时，编译器会检查实参列表，并进行适当的强转。不包含时，编译器不检查实参列表，整数强转为int，浮点强转为double。</p>
+<p>在函数原型声明中，不包含形参列表与形参列表为void的含义不同，前者表示编译器不检查实参列表，后者表示编译器检查实参列表，如果实参存在，则报错。</p>
+<p>ANSI C之前，函数定义的语法与ANSI C差异较大。ANSI C兼容旧式函数定义。</p>
+<p>在函数外部定义的变量称为外部变量。<br>
+外部变量定义后，外部变量是静态的(在程序运行期间一直存在)。<br>
+在外部变量定义之前访问它，必须使用extern显式声明。在定义之后访问它，可选使用extern显式声明。<br>
+访问在其他文件中定义的外部变量(前提是外部链接)，必须使用extern显式声明。</p>
 <h2 id="函数">函数</h2>
 <p><code>return;</code>不返回有用的值，而不是不返回值。例如：</p>
 <pre><code>#include &lt;stdio.h&gt;
@@ -135,7 +140,8 @@ main()
 </code></pre>
 <p>MinGW gcc输出<code>1</code>。</p>
 <p>函数的参数是值传递的，保存在临时变量形参中，修改形参的值不影响实参的值。</p>
-<p>在函数调用期间存在，函数退出时销毁的局部变量称为自动变量。(注意auto关键字与自动变量的差异，就像static与静态变量)</p>
+<p>在函数调用期间存在，函数退出时销毁的局部变量称为自动变量。<br>
+auto变量是自动变量，static变量是静态变量，反之不成立。</p>
 <h2 id="例程">例程</h2>
 <h3 id="复制文件">复制文件</h3>
 <pre><code>#include &lt;stdio.h&gt;
@@ -153,7 +159,7 @@ main()
 {
     double nc;
 
-    for (nc = 0; gechar() != EOF; ++nc)
+    for (nc = 0; getchar() != EOF; ++nc)
          ;
     printf(&quot;%.0f\n&quot;, nc);
 }

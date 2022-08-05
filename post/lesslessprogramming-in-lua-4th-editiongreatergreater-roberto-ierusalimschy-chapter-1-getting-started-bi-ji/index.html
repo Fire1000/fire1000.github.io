@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>《Programming in Lua, 4th Edition》Roberto Ierusalimschy Chapter 1. Getting Started 笔记 | Fly_Fire1000的博客</title>
-<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1656508666878">
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1659691691030">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="《Programming in Lua, 4th Edition》Roberto Ierusalimschy Chapter 1. Getting Started 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
@@ -12,9 +12,18 @@
 
 
     <meta name="description" content="交互模式
-% lua进入交互模式。键入EOF退出。调用os.exit()也可以退出。
-从5.3版本开始，在交互模式键入表达时，能输出它的值。如&gt; a^2 ---&gt; 225
-旧的版本需要在表达式之前加等号，5.3兼容这种方式。如&..." />
+进入交互模式：
+% lua
+
+退出交互模式有两种方法：
+
+输入文件结束符(EOF)。
+执行os.exit()。
+
+从5.3版本开始，在交互模式输入表达式并回车，输出它的值：
+&gt; a^2 ---&gt; 225
+
+5.3之前的..." />
     <meta name="keywords" content="Programming in Lua" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
@@ -24,7 +33,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://fire1000.github.io">
-  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1656508666878" alt="">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1659691691030" alt="">
   </a>
   <h1 class="site-title">
     Fly_Fire1000的博客
@@ -96,20 +105,36 @@
             <div class="post-content-wrapper">
               <div class="post-content">
                 <h1 id="交互模式">交互模式</h1>
-<p><code>% lua</code>进入交互模式。键入EOF退出。调用os.exit()也可以退出。</p>
-<p>从5.3版本开始，在交互模式键入表达时，能输出它的值。如<code>&gt; a^2 ---&gt; 225</code><br>
-旧的版本需要在表达式之前加等号，5.3兼容这种方式。如<code>&gt; = a^2 ---&gt; 225</code><br>
-因为交互模式下输入表达式会打印它的值，要执行这个表达式的话，可以在末尾加个分号，比如：</p>
+<p>进入交互模式：</p>
+<pre><code>% lua
+</code></pre>
+<p>退出交互模式有两种方法：</p>
+<ol>
+<li>输入文件结束符(EOF)。</li>
+<li>执行os.exit()。</li>
+</ol>
+<p>从5.3版本开始，在交互模式输入表达式并回车，输出它的值：</p>
+<pre><code>&gt; a^2 ---&gt; 225
+</code></pre>
+<p>5.3之前的版本，需要在表达式之前加等号并回车，才能输出它的值，5.3兼容这种方式：</p>
+<pre><code>&gt; = a^2 ---&gt; 225
+</code></pre>
+<p>想要在交互模式执行表达式，需要在末尾加分号：</p>
 <pre><code>&gt; io.flush() --&gt; true
 &gt; io.flush();
 </code></pre>
-<p>交互模式将完整的行视为一个chunk，当一行不完整时，才会将多行视为一个chunk。<br>
-<code>% lua -i prog</code>，执行完prog之后，进入交互模式，方便调试。</p>
-<p><code>a = io.read(&quot;*n&quot;)</code>从输入接收一个数字，赋值给a。</p>
-<p>dofile能将一个文件作为一个chunk执行，如<code>dofile(&quot;lib1.lua&quot;)</code>。每次dofile都会执行最新的代码。</p>
+<p>交互模式将完整的行视为一个chunk，当一行不完整时，才会接受多行直到一个完整的chunk。</p>
+<pre><code>% lua -i prog
+</code></pre>
+<p>执行完prog之后，进入交互模式。</p>
+<pre><code>a = io.read(&quot;*n&quot;)
+</code></pre>
+<p>从输入接受一个数字，赋值给a。</p>
+<p>dofile能将一个文件作为一个chunk执行，每次dofile都会执行最新的代码：</p>
+<pre><code>dofile(&quot;lib1.lua&quot;)
+</code></pre>
 <h2 id="名字">名字</h2>
-<p>Lua名字大小写敏感。<br>
-保留字：</p>
+<p>Lua名字大小写敏感，保留字如下：</p>
 <pre><code>and break do else elseif
 end false for function goto
 if in local nil not
@@ -117,7 +142,7 @@ or repeat return then true
 until while
 </code></pre>
 <p>以下划线开头后跟1个以上大写字母的名字，保留作特殊用途。如<code>_VERSION</code>值为解释器的lua版本。<br>
-_名字，通常作为虚拟变量。如<code>local _, x = string.find(s, p)</code>，之后只使用x。</p>
+_名字，通常作为虚拟变量。如<code>local _, x = string.find(s, p)</code>，只使用x。</p>
 <h2 id="注释">注释</h2>
 <p>长注释：</p>
 <pre><code>--[[A multi-line
@@ -137,10 +162,10 @@ print(10) --&gt; 10
 <h2 id="变量类型">变量&amp;类型</h2>
 <p>Lua全局变量不需要声明。<br>
 Lua中未初始化的变量，值为nil。<br>
-Lua不区分值为未初始化和赋值为nil的变量，Lua会回收这样的变量的内存。</p>
+Lua不区分值为未初始化和赋值为nil的变量，Lua会回收值为nil的变量的内存。</p>
 <p>Lua不定义类型，但值携带自己的类型。<br>
 Lua中有八种基本类型：nil、布尔、数字、字符串、userdata、函数、线程和表。<br>
-type函数给出任何给定值的类型名称。</p>
+type函数返回实参的类型名：</p>
 <pre><code>&gt; type(nil) --&gt; nil
 &gt; type(true) --&gt; boolean
 &gt; type(10.4 * 3) --&gt; number
@@ -165,8 +190,9 @@ type函数给出任何给定值的类型名称。</p>
 <p>Lua中任何值都可以表示条件，布尔false和nil视为false，其他值视为true。</p>
 <p>Lua语句不需要分隔符，<code>a = 1 b = a * 2</code>是合法的。</p>
 <h2 id="逻辑运算符">逻辑运算符</h2>
+<p>在条件测试(如控制结构的条件)中false和nil都视为false，其他值视为true。</p>
 <p>and运算符的第一个操作数为false，结果为第一个操作数。否则结果是它的第二个操作数。<br>
-or运算符的第一个操作数不为false，结果为第一个操作数。否则结果是它的第二个操作数。</p>
+or运算符的第一个操作数为true，结果为第一个操作数。否则结果是它的第二个操作数。</p>
 <pre><code>&gt; 4 and 5 --&gt; 5
 &gt; nil and 13 --&gt; nil
 &gt; false and 13 --&gt; false
@@ -174,10 +200,10 @@ or运算符的第一个操作数不为false，结果为第一个操作数。否�
 &gt; false or &quot;hi&quot; --&gt; &quot;hi&quot;
 &gt; nil or false --&gt; false
 </code></pre>
-<p>and和or都使用短路求值</p>
+<p>and和or都是短路运算符：</p>
 <ol>
 <li><code>i ~= 0 and a/i &gt; b</code>不会发生错误。</li>
-<li><code>x = x or v</code>等价于<code>if not x then x = v end</code>，常用于设置默认值。</li>
+<li><code>x = x or v</code>等价于<code>if not x then x = v end</code>，当x不为false时，常用于设置默认值。</li>
 <li><code>a and b or c</code>，当b不为false时，相当于<code>a ? b : c</code>。</li>
 </ol>
 <h2 id="独立lua解释器">独立Lua解释器</h2>
@@ -193,7 +219,7 @@ or运算符的第一个操作数不为false，结果为第一个操作数。否�
 <li>POSIX系统需要双引号来阻止解释括号。</li>
 </ul>
 <p>-l选项加载一个库。<code>% lua -i -llib -e &quot;x = 10&quot;</code>表示加载lib库。</p>
-<p>Lua解释器在运行它的参数之前，解释器查找名为LUA_INIT_5_3环境变量或其他，如果没有这样的变量，则查找LUA_INIT。如果有这些变量之一，并且它的内容是@filename，那么解释器执行给定的文件。如果LUA_INIT_5_3(或LUA_INIT)被定义，但它不以at符号起始，那么解释器假定它包含Lua代码，然后运行它。当配置独立解释器时，LUA_INIT给了我们很大的权力，因为我们在配置中拥有Lua的全部权力。我们可以预加载包，改变路径，定义我们自已的函数，重命名和删除函数等等。</p>
+<p>Lua解释器在运行它的参数之前，解释器查找名为LUA_INIT_5_3环境变量或其他，如果没有这样的变量，则查找LUA_INIT。如果有这些变量之一，并且它的内容是@filename，那么解释器执行给定的文件。如果LUA_INIT_5_3(或LUA_INIT)被定义，但它不以@符号起始，那么解释器假定它包含Lua代码，然后运行它。当配置独立解释器时，LUA_INIT给了我们很大的权力，因为我们在配置中拥有Lua的全部权力。我们可以预加载包，改变路径，定义我们自已的函数，重命名和删除函数等等。</p>
 <p>全局变量arg可以获取到命令行参数，脚本名为索引0，之前的为负索引，比如<code>% lua -e &quot;sin=math.sin&quot; script a b</code>的arg值如下：</p>
 <pre><code>arg[-3] = &quot;lua&quot;
 arg[-2] = &quot;-e&quot;

@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>《The C Programming Language, 2nd Edition》K&amp;R Chapter 5 - Pointers and Arrays 笔记 | Fly_Fire1000的博客</title>
-<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1656508666878">
+<link rel="shortcut icon" href="https://fire1000.github.io/favicon.ico?v=1659691691030">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fire1000.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="《The C Programming Language, 2nd Edition》K&amp;R Chapter 5 - Pointers and Arrays 笔记 | Fly_Fire1000的博客 - Atom Feed" href="https://fire1000.github.io/atom.xml">
@@ -12,7 +12,7 @@
 
 
     <meta name="description" content="指针
-指针是足够存放一个地址的一组存储单元，通常是2或4字节。
+指针是足够存放一个地址的一组存储单元，通常是4或8字节。
 &amp;和*
 地址运算符&amp;只能应用于内存中的对象，不能用于表达式、常量或register变量。&amp;z[0]的值为z[0]的地址，即z的地址。
 *是间接寻址或间接..." />
@@ -25,7 +25,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://fire1000.github.io">
-  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1656508666878" alt="">
+  <img class="avatar" src="https://fire1000.github.io/images/avatar.png?v=1659691691030" alt="">
   </a>
   <h1 class="site-title">
     Fly_Fire1000的博客
@@ -97,7 +97,7 @@
             <div class="post-content-wrapper">
               <div class="post-content">
                 <h2 id="指针">指针</h2>
-<p>指针是足够存放一个地址的一组存储单元，通常是2或4字节。</p>
+<p>指针是足够存放一个地址的一组存储单元，通常是4或8字节。</p>
 <h2 id="和">&amp;和*</h2>
 <p>地址运算符&amp;只能应用于内存中的对象，不能用于表达式、常量或register变量。&amp;z[0]的值为z[0]的地址，即z的地址。<br>
 *是间接寻址或间接引用运算符。<code>int *ip;</code>表示*ip是int类型。<br>
@@ -552,7 +552,7 @@ int numcmp(char *s1, char *s2)
 }
 </code></pre>
 <h3 id="将声明转换为文字描述">将声明转换为文字描述</h3>
-<p>(只支简单数据类型，不支持限定符和函数)</p>
+<p>(只支持简单数据类型，不支持限定符和函数)</p>
 <p>转换示例：</p>
 <pre><code>char **argv
     argv: pointer to pointer to char
